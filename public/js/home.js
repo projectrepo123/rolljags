@@ -69,7 +69,7 @@ async function init() {
     weeksEl.innerHTML = "";
 
     if (!data.years || data.years.length === 0) {
-      weeksEl.innerHTML = '<p class="empty-state">No photos yet — check back after the next game.</p>';
+      weeksEl.innerHTML = '<p class="empty-state">No photos yet. Check back after the next game.</p>';
       return;
     }
 

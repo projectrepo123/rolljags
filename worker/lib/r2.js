@@ -55,7 +55,17 @@ export function formatWeekLabel(weekNum, date) {
   if (!date) return label;
   const d = new Date(`${date}T12:00:00`);
   const dateLabel = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  return `${label} — ${dateLabel}`;
+  return `${label} (${dateLabel})`;
+}
+
+// Optional one-line caption for a week, stored as a plain text object at
+// the week folder's root (not inside any level folder). Returns null if
+// no caption has been set, so callers can treat it as "nothing to show".
+export async function getCaption(bucket, weekPrefix) {
+  const obj = await bucket.get(`${weekPrefix}caption.txt`);
+  if (!obj) return null;
+  const text = (await obj.text()).trim();
+  return text || null;
 }
 
 // Finds the real R2 week folder for a given year + week number (e.g. "01"),

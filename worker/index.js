@@ -1,6 +1,7 @@
 import { handleWeeks } from "./routes/weeks.js";
-import { handleWeek } from "./routes/week.js";
+import { handleWeek, getWeekData } from "./routes/week.js";
 import { handleZip } from "./routes/zip.js";
+import { injectWeekMeta } from "./lib/meta.js";
 
 export default {
   async fetch(request, env, ctx) {
@@ -28,6 +29,20 @@ export default {
       }
 
       return Response.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (url.pathname === "/week.html" || url.pathname === "/week") {
+      // The assets binding 307-redirects "/week.html" -> "/week" (its
+      // canonical extensionless URL) internally, even when called from
+      // here, so fetch the canonical path directly to get real content
+      // instead of a redirect response to rewrite.
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = "/week";
+      const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+      const year = url.searchParams.get("year");
+      const week = url.searchParams.get("week");
+      const data = year && week ? await getWeekData(env, year, week) : null;
+      return injectWeekMeta(asset, data, url);
     }
 
     return env.ASSETS.fetch(request);

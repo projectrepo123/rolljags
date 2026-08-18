@@ -5,6 +5,7 @@ const year = params.get("year");
 const week = params.get("week");
 
 const titleEl = document.getElementById("week-title");
+const captionEl = document.getElementById("week-caption");
 const tabsEl = document.getElementById("level-tabs");
 const toolbarEl = document.getElementById("level-toolbar");
 const gridEl = document.getElementById("photo-grid");
@@ -64,7 +65,7 @@ function showComingSoon() {
   tabsEl.innerHTML = "";
   toolbarEl.innerHTML = "";
   gridEl.innerHTML = "";
-  statusEl.innerHTML = '<p class="coming-soon-banner">Photos haven\'t been posted yet — check back after the game.</p>';
+  statusEl.innerHTML = '<p class="coming-soon-banner">Photos haven\'t been posted yet. Check back after the game.</p>';
 }
 
 async function init() {
@@ -82,7 +83,8 @@ async function init() {
     const data = await res.json();
 
     titleEl.textContent = data.label;
-    document.title = `${data.label} — Jaguar Football`;
+    document.title = `${data.label} | Jaguar Football`;
+    captionEl.textContent = data.caption || "";
 
     if (data.status === "coming-soon") {
       showComingSoon();

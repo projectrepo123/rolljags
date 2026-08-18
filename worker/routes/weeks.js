@@ -1,5 +1,5 @@
 import { LEVELS, listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, publicUrl } from "../lib/r2.js";
-import { SCHEDULE } from "../lib/schedule.js";
+import { SCHEDULE, scheduleCaption } from "../lib/schedule.js";
 
 async function loadRealWeeks(env, year, yearPrefix) {
   const weekPrefixes = await listPrefixes(env.PHOTOS, yearPrefix);
@@ -49,17 +49,18 @@ export async function handleWeeks(env) {
     years.set(year, await loadRealWeeks(env, year, yearPrefix));
   }
 
-  for (const [year, weekNums] of Object.entries(SCHEDULE)) {
+  for (const [year, games] of Object.entries(SCHEDULE)) {
     if (!years.has(year)) years.set(year, new Map());
     const weeks = years.get(year);
-    for (const weekNum of weekNums) {
-      if (weeks.has(weekNum)) continue;
-      weeks.set(weekNum, {
+    for (const game of games) {
+      if (weeks.has(game.week)) continue;
+      weeks.set(game.week, {
         year,
-        week: weekNum,
-        weekNum,
-        date: null,
-        label: formatWeekLabel(weekNum, null),
+        week: game.week,
+        weekNum: game.week,
+        date: game.date,
+        label: formatWeekLabel(game.week, game.date),
+        caption: scheduleCaption(game),
         photoCount: 0,
         cover: null,
         status: "coming-soon",

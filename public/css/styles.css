@@ -36,7 +36,7 @@ a {
   color: var(--navy);
 }
 
-/* Shared page container — used by the header, main content, and footer so
+/* Shared page container. Used by the header, main content, and footer so
    everything lines up on the same left/right edges. */
 .container {
   max-width: var(--container-width);
@@ -179,6 +179,15 @@ main {
 .week-title {
   margin: 0 0 1rem;
   font-size: 1.3rem;
+}
+
+.week-caption {
+  margin: -0.6rem 0 1rem;
+  color: var(--text-muted);
+}
+
+.week-caption:empty {
+  display: none;
 }
 
 .level-tabs {
@@ -338,6 +347,19 @@ footer.site-footer {
   color: var(--text-muted);
   font-size: 0.85rem;
   padding: 1.5rem 0;
+}
+
+footer.site-footer p {
+  margin: 0;
+}
+
+footer.site-footer p + p {
+  margin-top: 0.3rem;
+}
+
+.footer-credit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 @media (max-width: 480px) {

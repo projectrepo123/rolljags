@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Uploads one team level's photos for one week to R2, generating a thumbnail
-// for each. Run once per level per week — see README.md for usage.
+// for each and stripping EXIF/GPS metadata from the originals. Run once per
+// level per week, see README.md for usage.
 //
 //   node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
-//     --level varsity --dir ~/Photos/wk3-varsity
+//     --level varsity --dir ~/Photos/wk3-varsity --caption "vs. Fox, W 28-14"
 
 import { parseArgs } from "node:util";
 import { readdir, readFile } from "node:fs/promises";
@@ -23,6 +24,7 @@ const { values } = parseArgs({
     date: { type: "string" },
     level: { type: "string" },
     dir: { type: "string" },
+    caption: { type: "string" },
   },
 });
 
@@ -50,7 +52,8 @@ if (!VALID_LEVELS.includes(level)) {
 
 const weekNum = String(parseInt(week, 10)).padStart(2, "0");
 const weekFolder = `week-${weekNum}_${date}`;
-const prefix = `${year}/${weekFolder}/${level}/`;
+const weekRootPrefix = `${year}/${weekFolder}/`;
+const prefix = `${weekRootPrefix}${level}/`;
 
 const required = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
 for (const key of required) {
@@ -87,7 +90,19 @@ async function main() {
   for (const fileName of files) {
     const filePath = path.join(dir, fileName);
     const buffer = await readFile(filePath);
+
+    // Re-encode the original through sharp too, not just the thumbnail.
+    // .rotate() bakes in the EXIF orientation tag before it's discarded,
+    // and sharp strips all other metadata (including GPS) by default
+    // unless .withMetadata() is called, so this is also how photos of
+    // minors taken in public get their location data removed.
+    const originalBuffer = await sharp(buffer)
+      .rotate()
+      .jpeg({ quality: 95, chromaSubsampling: "4:4:4" })
+      .toBuffer();
+
     const thumbBuffer = await sharp(buffer)
+      .rotate()
       .resize({ width: THUMB_WIDTH, withoutEnlargement: true })
       .jpeg({ quality: 78 })
       .toBuffer();
@@ -96,7 +111,7 @@ async function main() {
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET,
         Key: `${prefix}${fileName}`,
-        Body: buffer,
+        Body: originalBuffer,
         ContentType: "image/jpeg",
         ContentDisposition: `attachment; filename="${fileName}"`,
       })
@@ -113,6 +128,18 @@ async function main() {
 
     done += 1;
     console.log(`  [${done}/${files.length}] ${fileName}`);
+  }
+
+  if (values.caption) {
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: `${weekRootPrefix}caption.txt`,
+        Body: values.caption,
+        ContentType: "text/plain; charset=utf-8",
+      })
+    );
+    console.log(`Caption set: "${values.caption}"`);
   }
 
   console.log(`\nDone. ${prefix} now has ${files.length} photos.`);

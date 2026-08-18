@@ -1,7 +1,7 @@
-# Jaguar Football Photos — rolljags.com
+# Jaguar Football Photos | rolljags.com
 
 Static site + Cloudflare Worker + R2 for sharing season photos. No accounts,
-no build step, no admin UI — weeks are uploaded from the command line and the
+no build step, no admin UI. Weeks are uploaded from the command line and the
 site reads directly from R2.
 
 ## How it's organized
@@ -11,10 +11,11 @@ Photos live in R2 under:
 ```
 {year}/week-{NN}_{yyyy-mm-dd}/{level}/IMG_0001.jpg
 {year}/week-{NN}_{yyyy-mm-dd}/{level}/thumbs/IMG_0001.jpg
+{year}/week-{NN}_{yyyy-mm-dd}/caption.txt   (optional)
 ```
 
 `level` is `varsity`, `jv`, or `freshman`. There's no separate config file for
-weeks that already have photos — the site parses everything it needs (year,
+weeks that already have photos. The site parses everything it needs (year,
 week number, date, team level, photo count) straight from the folder names,
 so uploading a new week's photos with the right folder name is the entire
 "publishing" step.
@@ -22,7 +23,7 @@ so uploading a new week's photos with the right folder name is the entire
 ### Showing a week before photos exist ("Coming soon")
 
 To have a week appear on the site (as "Coming soon") before you've uploaded
-anything — e.g. the day of a game, before you've had a chance to upload —
+anything, e.g. the day of a game, before you've had a chance to upload,
 add its week number to `worker/lib/schedule.js`:
 
 ```js
@@ -33,8 +34,16 @@ export const SCHEDULE = {
 
 Once you run `upload-week.mjs` for that week, real data (date, photo count,
 cover thumbnail) automatically takes over and the "Coming soon" badge goes
-away — no need to remove the entry from the schedule. To start a new season,
+away. No need to remove the entry from the schedule. To start a new season,
 add a new year key the same way.
+
+### Per-week caption
+
+To show an optional one-line caption near the top of a week's page (e.g. the
+opponent and final score), either pass `--caption "..."` when uploading (see
+below), or add/edit a plain text object called `caption.txt` at the week's
+folder root directly in the R2 dashboard's object browser at any time. No
+redeploy needed either way. Leave it unset and nothing renders.
 
 ## One-time setup
 
@@ -55,8 +64,8 @@ Access → Enable**, then **Custom Domains → Add** and enter
 to already be on Cloudflare (it will be, since the site itself is deployed
 there too). Wait for the domain status to go from Initializing to Active.
 
-This is a **separate subdomain** from the site itself (`rolljags.com`) —
-photos are served directly from R2/Cloudflare's CDN with no Worker involved,
+This is a **separate subdomain** from the site itself (`rolljags.com`).
+Photos are served directly from R2/Cloudflare's CDN with no Worker involved,
 which keeps downloads fast and free of egress cost.
 
 ### 3. API token for the upload script
@@ -73,7 +82,7 @@ npm install
 ```
 
 `R2_ACCOUNT_ID` is your Cloudflare account ID, shown in the dashboard URL or
-sidebar. This token is only used by the upload script — it's unrelated to
+sidebar. This token is only used by the upload script, it's unrelated to
 `wrangler login`.
 
 ### 4. Deploy the site
@@ -86,33 +95,44 @@ npx wrangler deploy
 `wrangler.jsonc` already points the Worker at `rolljags.com` and binds the
 R2 bucket, so this provisions DNS/TLS and ships the site + API in one step.
 
-Note: bulk zip downloads need **Workers Paid** ($5/mo flat) — the free plan
+Note: bulk zip downloads need **Workers Paid** ($5/mo flat). The free plan
 caps requests at 50 subrequests, and reading 100+ photos out of R2 for one
 zip exceeds that. Everything else (storage, photo views, single-photo
 downloads) comfortably fits in free-tier limits.
 
+### 5. Web Analytics (optional)
+
+In the Cloudflare dashboard: **Analytics & Logs → Web Analytics → Add a
+site**, and select `rolljags.com`. This uses automatic setup, so Cloudflare
+injects the tracking beacon at the edge with no code changes here. It's
+cookie-free, so no cookie banner is needed.
+
 ## Uploading a new week
 
 Run once per team level that has photos that week (skip levels with nothing
-to upload — their tab just won't appear on the site):
+to upload, their tab just won't appear on the site):
 
 ```
 cd scripts
 node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
-  --level varsity --dir ~/Photos/wk3-varsity
+  --level varsity --dir ~/Photos/wk3-varsity --caption "vs. Fox, W 28-14"
 
 node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
   --level jv --dir ~/Photos/wk3-jv
 ```
 
-- `--week` is just the number (`3`, not `03` — the script pads it).
+- `--week` is just the number (`3`, not `03`, the script pads it).
 - `--date` is the game date, `YYYY-MM-DD`.
-- `--dir` is a local folder of `.jpg`/`.jpeg` files (already-exported JPEGs —
+- `--dir` is a local folder of `.jpg`/`.jpeg` files (already-exported JPEGs,
   the script doesn't convert HEIC).
+- `--caption` is optional and only needs to be passed once per week (it's
+  stored at the week level, not per team level).
 - The script generates a thumbnail for each photo and uploads both the
-  original (tagged for direct download) and the thumbnail to R2.
+  original (tagged for direct download) and the thumbnail to R2. Both are
+  re-encoded through `sharp` on the way up, which strips all EXIF metadata,
+  including GPS location, from the originals automatically.
 
-That's it — no redeploy needed. The site lists whatever's in R2, live, with
+That's it, no redeploy needed. The site lists whatever's in R2, live, with
 a short cache (~5 minutes) on the home page listing.
 
 ## Local development
@@ -136,7 +156,9 @@ npx wrangler r2 object put rolljags-photos/2026/week-01_2026-09-06/varsity/IMG_0
 
 ## Notes
 
-- The "Download all (.zip)" response streams directly from R2 rather than being built in memory, so it scales to 100+ photos without issue — but because it's streamed, browsers won't show a file size or an accurate progress bar during download (the file itself is complete and valid, this is just a missing size hint).
+- The "Download all (.zip)" response streams directly from R2 rather than being built in memory, so it scales to 100+ photos without issue. Because it's streamed, browsers won't show a file size or an accurate progress bar during download (the file itself is complete and valid, this is just a missing size hint).
+- Week pages (`/week.html?year=&week=`) get their Open Graph preview tags (title, description, image) injected server-side by the Worker based on that week's real data, so links shared in group chats show the week's cover photo. The homepage and 404 page use static tags with the site logo.
+- `public/404.html` is served automatically for any unmatched path, configured via `not_found_handling` in `wrangler.jsonc`.
 
 ## Project layout
 
