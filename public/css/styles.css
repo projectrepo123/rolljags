@@ -483,6 +483,116 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
+/* Records Sections */
+
+.records-section {
+  display: block;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.records-section summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--card-bg);
+  cursor: pointer;
+  border-bottom: 2px solid var(--border);
+  transition: background-color 0.15s ease;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  list-style: none;
+}
+
+.records-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.records-section summary::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.75rem;
+  transition: transform 0.2s ease;
+  color: var(--navy);
+  font-weight: bold;
+}
+
+.records-section[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.records-section summary:hover {
+  background-color: var(--bg);
+}
+
+.record-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg);
+}
+
+.records-table thead {
+  background: var(--navy);
+  color: #fff;
+}
+
+.records-table th {
+  padding: 0.85rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+.records-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.records-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.records-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.records-table tbody tr:hover {
+  background-color: var(--bg);
+}
+
+.records-table tfoot tr {
+  background-color: rgba(27, 58, 107, 0.05);
+  border-top: 2px solid var(--border);
+  font-weight: 600;
+}
+
+.records-table tfoot td {
+  padding: 0.9rem 0.85rem;
+  border-bottom: none;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll .records-table {
+  min-width: 100%;
+}
+
 @media (max-width: 480px) {
   main {
     padding: 1rem 0;
