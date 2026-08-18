@@ -1,6 +1,5 @@
 const seasonsEl = document.getElementById("seasons");
 const leaderboardsEl = document.getElementById("leaderboards");
-const recordsEl = document.getElementById("records");
 
 function computeRecord(games) {
   let wins = 0, losses = 0, ties = 0;
