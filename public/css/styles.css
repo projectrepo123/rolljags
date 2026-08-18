@@ -51,6 +51,14 @@ header.site-header {
   border-bottom: 3px solid var(--gold);
 }
 
+header.site-header.site-header--hero {
+  background-color: var(--navy);
+  background-image: linear-gradient(180deg, rgba(20, 44, 82, 0.88), rgba(27, 58, 107, 0.82)), url("/JagStadium.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 header.site-header .header-inner {
   display: flex;
   align-items: center;
