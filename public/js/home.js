@@ -1,0 +1,71 @@
+const weeksEl = document.getElementById("weeks");
+
+function weekUrl(year, week) {
+  return `/week.html?year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`;
+}
+
+function renderYear(yearGroup) {
+  const section = document.createElement("section");
+  section.className = "year-section";
+
+  const heading = document.createElement("h2");
+  heading.textContent = `${yearGroup.year} Season`;
+  section.appendChild(heading);
+
+  const grid = document.createElement("div");
+  grid.className = "week-grid";
+
+  for (const week of yearGroup.weeks) {
+    const card = document.createElement("a");
+    card.className = "week-card";
+    card.href = weekUrl(week.year, week.week);
+
+    const img = document.createElement("img");
+    img.className = "cover";
+    img.loading = "lazy";
+    img.alt = week.label;
+    if (week.cover) img.src = week.cover;
+    card.appendChild(img);
+
+    const body = document.createElement("div");
+    body.className = "card-body";
+
+    const title = document.createElement("p");
+    title.className = "card-title";
+    title.textContent = week.label;
+    body.appendChild(title);
+
+    const count = document.createElement("p");
+    count.className = "card-count";
+    count.textContent = `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
+    body.appendChild(count);
+
+    card.appendChild(body);
+    grid.appendChild(card);
+  }
+
+  section.appendChild(grid);
+  return section;
+}
+
+async function init() {
+  try {
+    const res = await fetch("/api/weeks");
+    const data = await res.json();
+
+    weeksEl.innerHTML = "";
+
+    if (!data.years || data.years.length === 0) {
+      weeksEl.innerHTML = '<p class="empty-state">No photos yet — check back after the next game.</p>';
+      return;
+    }
+
+    for (const yearGroup of data.years) {
+      weeksEl.appendChild(renderYear(yearGroup));
+    }
+  } catch (err) {
+    weeksEl.innerHTML = '<p class="empty-state">Couldn\'t load photos right now. Try refreshing.</p>';
+  }
+}
+
+init();
