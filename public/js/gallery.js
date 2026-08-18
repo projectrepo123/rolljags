@@ -82,7 +82,7 @@ async function init() {
     const data = await res.json();
 
     titleEl.textContent = data.label;
-    document.title = `${data.label} — Seckman Football`;
+    document.title = `${data.label} — Jaguar Football`;
 
     if (data.status === "coming-soon") {
       showComingSoon();

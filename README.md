@@ -1,4 +1,4 @@
-# Seckman Football Photos — rolljags.com
+# Jaguar Football Photos — rolljags.com
 
 Static site + Cloudflare Worker + R2 for sharing season photos. No accounts,
 no build step, no admin UI — weeks are uploaded from the command line and the
