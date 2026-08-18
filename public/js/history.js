@@ -221,22 +221,22 @@ function renderTeamSeasonStats(list, programTotals) {
     const tr = document.createElement("tr");
     tr.appendChild(createCell(row.year));
     tr.appendChild(createCell(row.coachTenureRecord ? `${row.coach} ${row.coachTenureRecord}` : row.coach));
-    tr.appendChild(createCell(row.record));
-    tr.appendChild(createCell(row.winPct));
-    tr.appendChild(createCell(row.pf));
-    tr.appendChild(createCell(row.pa));
-    tr.appendChild(createCell(row.oppg));
-    tr.appendChild(createCell(row.dppg));
-    tr.appendChild(createCell(row.rushYds));
-    tr.appendChild(createCell(row.rushYpg));
-    tr.appendChild(createCell(row.passYds));
-    tr.appendChild(createCell(row.passYpg));
-    tr.appendChild(createCell(row.totalYds));
-    tr.appendChild(createCell(row.totalYpg));
-    tr.appendChild(createCell(row.defInt));
-    tr.appendChild(createCell(row.defFumbles));
-    tr.appendChild(createCell(row.turnovers));
-    tr.appendChild(createCell(row.sacks));
+    tr.appendChild(formatStatCell(row.record));
+    tr.appendChild(formatStatCell(row.winPct));
+    tr.appendChild(formatStatCell(row.pf));
+    tr.appendChild(formatStatCell(row.pa));
+    tr.appendChild(formatStatCell(row.oppg));
+    tr.appendChild(formatStatCell(row.dppg));
+    tr.appendChild(formatStatCell(row.rushYds));
+    tr.appendChild(formatStatCell(row.rushYpg));
+    tr.appendChild(formatStatCell(row.passYds));
+    tr.appendChild(formatStatCell(row.passYpg));
+    tr.appendChild(formatStatCell(row.totalYds));
+    tr.appendChild(formatStatCell(row.totalYpg));
+    tr.appendChild(formatStatCell(row.defInt));
+    tr.appendChild(formatStatCell(row.defFumbles));
+    tr.appendChild(formatStatCell(row.turnovers));
+    tr.appendChild(formatStatCell(row.sacks));
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
@@ -246,18 +246,18 @@ function renderTeamSeasonStats(list, programTotals) {
     const footRow = document.createElement("tr");
     footRow.appendChild(createCell("Program Total"));
     footRow.appendChild(createCell(""));
-    footRow.appendChild(createCell(programTotals.record));
-    footRow.appendChild(createCell(programTotals.winPct));
-    footRow.appendChild(createCell(programTotals.pf));
-    footRow.appendChild(createCell(programTotals.pa));
-    footRow.appendChild(createCell(programTotals.oppg));
-    footRow.appendChild(createCell(programTotals.dppg));
-    footRow.appendChild(createCell(programTotals.rushYds));
-    footRow.appendChild(createCell(programTotals.rushYpg));
-    footRow.appendChild(createCell(programTotals.passYds));
-    footRow.appendChild(createCell(programTotals.passYpg));
-    footRow.appendChild(createCell(programTotals.totalYds));
-    footRow.appendChild(createCell(programTotals.totalYpg));
+    footRow.appendChild(formatStatCell(programTotals.record));
+    footRow.appendChild(formatStatCell(programTotals.winPct));
+    footRow.appendChild(formatStatCell(programTotals.pf));
+    footRow.appendChild(formatStatCell(programTotals.pa));
+    footRow.appendChild(formatStatCell(programTotals.oppg));
+    footRow.appendChild(formatStatCell(programTotals.dppg));
+    footRow.appendChild(formatStatCell(programTotals.rushYds));
+    footRow.appendChild(formatStatCell(programTotals.rushYpg));
+    footRow.appendChild(formatStatCell(programTotals.passYds));
+    footRow.appendChild(formatStatCell(programTotals.passYpg));
+    footRow.appendChild(formatStatCell(programTotals.totalYds));
+    footRow.appendChild(formatStatCell(programTotals.totalYpg));
     footRow.appendChild(createCell(""));
     footRow.appendChild(createCell(""));
     footRow.appendChild(createCell(""));
@@ -275,6 +275,23 @@ function renderTeamSeasonStats(list, programTotals) {
 function createCell(text) {
   const td = document.createElement("td");
   td.textContent = text;
+  return td;
+}
+
+function formatStatCell(raw) {
+  const td = document.createElement("td");
+  if (raw === null || raw === undefined || raw === "") return td;
+  const str = String(raw);
+  const match = str.match(/^(.+?)\s*\((\d+)\)$/);
+  if (!match) {
+    td.textContent = str;
+    return td;
+  }
+  td.appendChild(document.createTextNode(match[1]));
+  const rank = document.createElement("sup");
+  rank.className = "stat-rank";
+  rank.textContent = match[2];
+  td.appendChild(rank);
   return td;
 }
 

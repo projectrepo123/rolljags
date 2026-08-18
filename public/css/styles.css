@@ -541,6 +541,12 @@ footer.site-footer p + p {
   min-width: 100%;
 }
 
+.stat-rank {
+  font-size: 0.65em;
+  color: var(--text-muted);
+  margin-left: 1px;
+}
+
 .leaderboards-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
