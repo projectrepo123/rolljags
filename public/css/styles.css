@@ -593,6 +593,80 @@ footer.site-footer p + p {
   min-width: 100%;
 }
 
+.leaderboards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.leaderboard-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.leaderboard-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 2px 8px rgba(27, 58, 107, 0.1);
+}
+
+.leaderboard-card h3 {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.leaderboard-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-item .player {
+  flex: 1;
+  font-weight: 500;
+}
+
+.leaderboard-item .value {
+  color: var(--navy);
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.leaderboard-link {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--navy);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.leaderboard-link:hover {
+  color: var(--gold);
+}
+
 @media (max-width: 480px) {
   main {
     padding: 1rem 0;

@@ -1,4 +1,6 @@
 const seasonsEl = document.getElementById("seasons");
+const leaderboardsEl = document.getElementById("leaderboards");
+const recordsEl = document.getElementById("records");
 
 function computeRecord(games) {
   let wins = 0, losses = 0, ties = 0;
@@ -61,6 +63,7 @@ function renderSeasons(data) {
 
 function renderCareerScoring(list) {
   const details = document.createElement("details");
+  details.id = "section-career-scoring";
   details.className = "records-section";
 
   const summary = document.createElement("summary");
@@ -100,6 +103,7 @@ function renderCareerScoring(list) {
 
 function renderSeasonScoring(list) {
   const details = document.createElement("details");
+  details.id = "section-season-scoring";
   details.className = "records-section";
 
   const summary = document.createElement("summary");
@@ -135,6 +139,7 @@ function renderSeasonScoring(list) {
 
 function renderGameTouchdowns(list) {
   const details = document.createElement("details");
+  details.id = "section-game-touchdowns";
   details.className = "records-section";
 
   const summary = document.createElement("summary");
@@ -171,6 +176,7 @@ function renderGameTouchdowns(list) {
 
 function renderTeamSeasonStats(list, programTotals) {
   const details = document.createElement("details");
+  details.id = "section-team-season";
   details.className = "records-section";
 
   const summary = document.createElement("summary");
@@ -255,6 +261,102 @@ function createCell(text) {
   return td;
 }
 
+function parseNumericValue(str) {
+  if (!str) return 0;
+  const match = str.toString().match(/^(\d+(?:\.\d+)?)/);
+  return match ? parseFloat(match[1]) : 0;
+}
+
+function renderLeaderboardCard(title, items, sectionId) {
+  const card = document.createElement("div");
+  card.className = "leaderboard-card";
+  card.onclick = () => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    const details = document.getElementById(sectionId);
+    if (details && !details.open) details.open = true;
+  };
+
+  const titleEl = document.createElement("h3");
+  titleEl.textContent = title;
+  card.appendChild(titleEl);
+
+  const listEl = document.createElement("ol");
+  listEl.className = "leaderboard-list";
+  for (let i = 0; i < Math.min(5, items.length); i++) {
+    const item = items[i];
+    const li = document.createElement("li");
+    li.className = "leaderboard-item";
+    li.innerHTML = `<span class="player">${item.name}</span> <span class="value">${item.value}</span>`;
+    listEl.appendChild(li);
+  }
+  card.appendChild(listEl);
+
+  const link = document.createElement("a");
+  link.className = "leaderboard-link";
+  link.href = "#";
+  link.textContent = "View all";
+  link.onclick = (e) => {
+    e.preventDefault();
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+  };
+  card.appendChild(link);
+
+  return card;
+}
+
+function renderLeaderboards(records) {
+  if (!leaderboardsEl) return;
+
+  leaderboardsEl.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.className = "leaderboards-container";
+
+  const careerPoints = records.careerScoring
+    .map(r => ({ name: r.name, value: r.totalPoints }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10);
+
+  const seasonTds = records.seasonScoring
+    .map(r => ({ name: r.player, value: r.tds, year: r.year }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: `${r.name} (${r.year || "—"})`, value: r.value }));
+
+  const gameTds = records.gameTouchdowns
+    .map(r => ({ name: r.player, value: r.tds, year: r.year, opp: r.opponent }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: `${r.player} vs ${r.opp}`, value: r.value }));
+
+  const passYards = records.teamSeasonStats
+    .map(r => ({ name: `${r.year}`, value: r.passYds }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: r.name, value: r.value }));
+
+  const rushYards = records.teamSeasonStats
+    .map(r => ({ name: `${r.year}`, value: r.rushYds }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: r.name, value: r.value }));
+
+  const sacks = records.teamSeasonStats
+    .map(r => ({ name: `${r.year}`, value: r.sacks }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: r.name, value: r.value }));
+
+  container.appendChild(renderLeaderboardCard("Career Points", careerPoints, "section-career-scoring"));
+  container.appendChild(renderLeaderboardCard("Season TD Leaders", seasonTds, "section-season-scoring"));
+  container.appendChild(renderLeaderboardCard("Single Game TD Records", gameTds, "section-game-touchdowns"));
+  container.appendChild(renderLeaderboardCard("Passing Yards", passYards, "section-team-season"));
+  container.appendChild(renderLeaderboardCard("Rushing Yards", rushYards, "section-team-season"));
+  container.appendChild(renderLeaderboardCard("Sacks", sacks, "section-team-season"));
+
+  leaderboardsEl.appendChild(container);
+}
+
 async function init() {
   try {
     const res = await fetch("/data/history.json");
@@ -269,6 +371,8 @@ async function init() {
   try {
     const res = await fetch("/data/records.json");
     const records = await res.json();
+
+    renderLeaderboards(records);
 
     recordsEl.innerHTML = "";
     recordsEl.appendChild(renderCareerScoring(records.careerScoring));
