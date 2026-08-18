@@ -10,10 +10,10 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <div class="brand">
+      <a class="brand" href="/">
         <img class="site-logo" src="/logo.webp" alt="Jaguar Football logo" />
         <h1>Jaguar Football</h1>
-      </div>
+      </a>
       <nav class="site-nav">
         <a href="/">Photos</a>
         <a href="/history" class="active">History</a>
@@ -26,19 +26,21 @@
       <a class="back-link" href="/history">&larr; All seasons</a>
       <h2 class="season-title" id="season-title">Loading…</h2>
       <div class="season-record" id="season-record"></div>
-      <table class="season-table" id="season-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Opponent</th>
-            <th>H/A</th>
-            <th>Result</th>
-            <th>Game Type</th>
-          </tr>
-        </thead>
-        <tbody id="season-tbody">
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="season-table" id="season-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Opponent</th>
+              <th>H/A</th>
+              <th>Result</th>
+              <th>Game Type</th>
+            </tr>
+          </thead>
+          <tbody id="season-tbody">
+          </tbody>
+        </table>
+      </div>
       <div id="season-status"></div>
       <section id="season-leaders"></section>
     </div>
