@@ -62,7 +62,7 @@ export async function handleWeeks(env) {
         label: formatWeekLabel(game.week, game.date),
         caption: scheduleCaption(game),
         photoCount: 0,
-        cover: null,
+        cover: game.cover || null,
         status: "coming-soon",
       });
     }

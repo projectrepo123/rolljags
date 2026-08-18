@@ -5,7 +5,7 @@
 // with its own array of games.
 export const SCHEDULE = {
   "2026": [
-    { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home" },
+    { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
     { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home" },
     { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away" },
     { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away" },
