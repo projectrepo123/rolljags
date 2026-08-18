@@ -483,59 +483,7 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
-/* Records Sections */
-
-.records-section {
-  display: block;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 1.5rem;
-  padding: 0;
-  overflow: hidden;
-}
-
-.records-section summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.25rem;
-  background: var(--card-bg);
-  cursor: pointer;
-  border-bottom: 2px solid var(--border);
-  transition: background-color 0.15s ease;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-  list-style: none;
-}
-
-.records-section summary::-webkit-details-marker {
-  display: none;
-}
-
-.records-section summary::before {
-  content: "▶";
-  display: inline-block;
-  margin-right: 0.75rem;
-  transition: transform 0.2s ease;
-  color: var(--navy);
-  font-weight: bold;
-}
-
-.records-section[open] summary::before {
-  transform: rotate(90deg);
-}
-
-.records-section summary:hover {
-  background-color: var(--bg);
-}
-
-.record-count {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-weight: 400;
-}
+/* Records Tables (used in modals) */
 
 .records-table {
   width: 100%;
@@ -595,12 +543,26 @@ footer.site-footer p + p {
 
 .leaderboards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   margin-bottom: 2.5rem;
 }
 
+@media (max-width: 768px) {
+  .leaderboards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .leaderboards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 .leaderboard-card {
+  display: flex;
+  flex-direction: column;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -661,10 +623,121 @@ footer.site-footer p + p {
   text-decoration: none;
   font-weight: 600;
   transition: color 0.15s ease;
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 .leaderboard-link:hover {
   color: var(--gold);
+}
+
+.section-heading {
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 700;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+/* Records Modal */
+
+.records-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 16, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.records-modal.open {
+  display: flex;
+}
+
+.records-modal-content {
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.records-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 51;
+}
+
+.records-modal-inner {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.records-modal-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.records-modal .table-scroll {
+  margin: 0;
+}
+
+.records-modal .records-table {
+  font-size: 0.85rem;
+}
+
+.records-modal .records-table th {
+  padding: 0.7rem;
+  font-size: 0.8rem;
+}
+
+.records-modal .records-table td {
+  padding: 0.6rem 0.7rem;
+}
+
+/* Season win/loss indicators */
+
+.season-card.season-win .season-record-display::before {
+  content: "●";
+  margin-right: 0.5rem;
+  color: var(--navy);
+  font-size: 0.8rem;
+}
+
+.season-card.season-loss .season-record-display::before {
+  content: "○";
+  margin-right: 0.5rem;
+  color: var(--navy);
+  font-size: 0.8rem;
+}
+
+.season-card.season-loss .season-record-display {
+  color: var(--text-muted);
+}
+
+.season-card.season-even .season-record-display::before {
+  content: "◐";
+  margin-right: 0.5rem;
+  color: var(--navy);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 480px) {

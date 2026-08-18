@@ -26,6 +26,14 @@ function renderSeasons(data) {
   seasonsEl.innerHTML = "";
   const years = Object.keys(data).sort((a, b) => b.localeCompare(a));
 
+  const headingWrapper = document.createElement("div");
+  headingWrapper.className = "year-section";
+  const heading = document.createElement("h2");
+  heading.className = "section-heading";
+  heading.textContent = "Seasons";
+  headingWrapper.appendChild(heading);
+  seasonsEl.appendChild(headingWrapper);
+
   const section = document.createElement("section");
   section.className = "year-section";
 
@@ -38,6 +46,15 @@ function renderSeasons(data) {
 
     const card = document.createElement("a");
     card.className = "week-card season-card";
+
+    if (record.wins > record.losses) {
+      card.classList.add("season-win");
+    } else if (record.wins < record.losses) {
+      card.classList.add("season-loss");
+    } else {
+      card.classList.add("season-even");
+    }
+
     card.href = seasonUrl(year);
 
     const body = document.createElement("div");
@@ -267,14 +284,67 @@ function parseNumericValue(str) {
   return match ? parseFloat(match[1]) : 0;
 }
 
-function renderLeaderboardCard(title, items, sectionId) {
+let recordsModalOverlay = null;
+let recordsModalContent = null;
+let cachedRecords = null;
+
+function ensureRecordsModalBuilt() {
+  if (recordsModalOverlay) return;
+
+  recordsModalOverlay = document.createElement("div");
+  recordsModalOverlay.className = "records-modal";
+
+  recordsModalContent = document.createElement("div");
+  recordsModalContent.className = "records-modal-content";
+
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "records-modal-close";
+  closeBtn.textContent = "×";
+  closeBtn.onclick = closeRecordsModal;
+  recordsModalContent.appendChild(closeBtn);
+
+  const contentArea = document.createElement("div");
+  contentArea.className = "records-modal-inner";
+  recordsModalContent.appendChild(contentArea);
+
+  recordsModalOverlay.appendChild(recordsModalContent);
+  recordsModalOverlay.onclick = (e) => {
+    if (e.target === recordsModalOverlay) closeRecordsModal();
+  };
+
+  document.body.appendChild(recordsModalOverlay);
+
+  document.addEventListener("keydown", (e) => {
+    if (!recordsModalOverlay.classList.contains("open")) return;
+    if (e.key === "Escape") closeRecordsModal();
+  });
+}
+
+function openRecordsModal(title, contentElement) {
+  ensureRecordsModalBuilt();
+  const inner = recordsModalContent.querySelector(".records-modal-inner");
+  inner.innerHTML = "";
+
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+  heading.className = "records-modal-title";
+  inner.appendChild(heading);
+
+  inner.appendChild(contentElement);
+  recordsModalOverlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeRecordsModal() {
+  if (recordsModalOverlay) {
+    recordsModalOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+}
+
+function renderLeaderboardCard(title, items, renderFn) {
   const card = document.createElement("div");
   card.className = "leaderboard-card";
-  card.onclick = () => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-    const details = document.getElementById(sectionId);
-    if (details && !details.open) details.open = true;
-  };
 
   const titleEl = document.createElement("h3");
   titleEl.textContent = title;
@@ -297,7 +367,7 @@ function renderLeaderboardCard(title, items, sectionId) {
   link.textContent = "View all";
   link.onclick = (e) => {
     e.preventDefault();
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    openRecordsModal(title, renderFn(cachedRecords));
   };
   card.appendChild(link);
 
@@ -307,7 +377,18 @@ function renderLeaderboardCard(title, items, sectionId) {
 function renderLeaderboards(records) {
   if (!leaderboardsEl) return;
 
+  cachedRecords = records;
   leaderboardsEl.innerHTML = "";
+
+  const heading = document.createElement("h3");
+  heading.className = "year-section";
+  heading.style.fontSize = "1rem";
+  heading.style.marginBottom = "1.5rem";
+  const headingText = document.createElement("h2");
+  headingText.className = "section-heading";
+  headingText.textContent = "Program Leaders";
+  heading.appendChild(headingText);
+  leaderboardsEl.appendChild(heading);
 
   const container = document.createElement("div");
   container.className = "leaderboards-container";
@@ -327,7 +408,7 @@ function renderLeaderboards(records) {
     .map(r => ({ name: r.player, value: r.tds, year: r.year, opp: r.opponent }))
     .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
     .slice(0, 10)
-    .map(r => ({ name: `${r.player} vs ${r.opp}`, value: r.value }));
+    .map(r => ({ name: `${r.name} vs ${r.opp}`, value: r.value }));
 
   const passYards = records.teamSeasonStats
     .map(r => ({ name: `${r.year}`, value: r.passYds }))
@@ -347,12 +428,12 @@ function renderLeaderboards(records) {
     .slice(0, 10)
     .map(r => ({ name: r.name, value: r.value }));
 
-  container.appendChild(renderLeaderboardCard("Career Points", careerPoints, "section-career-scoring"));
-  container.appendChild(renderLeaderboardCard("Season TD Leaders", seasonTds, "section-season-scoring"));
-  container.appendChild(renderLeaderboardCard("Single Game TD Records", gameTds, "section-game-touchdowns"));
-  container.appendChild(renderLeaderboardCard("Passing Yards", passYards, "section-team-season"));
-  container.appendChild(renderLeaderboardCard("Rushing Yards", rushYards, "section-team-season"));
-  container.appendChild(renderLeaderboardCard("Sacks", sacks, "section-team-season"));
+  container.appendChild(renderLeaderboardCard("Career Points", careerPoints, () => renderCareerScoring(records.careerScoring)));
+  container.appendChild(renderLeaderboardCard("Season TD Leaders", seasonTds, () => renderSeasonScoring(records.seasonScoring)));
+  container.appendChild(renderLeaderboardCard("Single Game TD Records", gameTds, () => renderGameTouchdowns(records.gameTouchdowns)));
+  container.appendChild(renderLeaderboardCard("Passing Yards", passYards, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals)));
+  container.appendChild(renderLeaderboardCard("Rushing Yards", rushYards, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals)));
+  container.appendChild(renderLeaderboardCard("Sacks", sacks, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals)));
 
   leaderboardsEl.appendChild(container);
 }
@@ -366,21 +447,12 @@ async function init() {
     seasonsEl.innerHTML = '<p class="empty-state">Couldn\'t load history. Try refreshing.</p>';
   }
 
-  if (!recordsEl) return;
-
   try {
     const res = await fetch("/data/records.json");
     const records = await res.json();
-
     renderLeaderboards(records);
-
-    recordsEl.innerHTML = "";
-    recordsEl.appendChild(renderCareerScoring(records.careerScoring));
-    recordsEl.appendChild(renderSeasonScoring(records.seasonScoring));
-    recordsEl.appendChild(renderGameTouchdowns(records.gameTouchdowns));
-    recordsEl.appendChild(renderTeamSeasonStats(records.teamSeasonStats, records.programTotals));
   } catch (err) {
-    recordsEl.innerHTML = '<p class="empty-state">Couldn\'t load records. Try refreshing.</p>';
+    leaderboardsEl.innerHTML = '<p class="empty-state">Couldn\'t load leaders. Try refreshing.</p>';
   }
 }
 
