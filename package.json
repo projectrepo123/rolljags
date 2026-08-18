@@ -8,9 +8,9 @@
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
-    "wrangler": "^4.0.0"
+    "wrangler": "4.123.0"
   },
   "dependencies": {
-    "client-zip": "^2.4.5"
+    "client-zip": "2.5.0"
   }
 }

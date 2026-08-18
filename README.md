@@ -107,6 +107,31 @@ site**, and select `rolljags.com`. This uses automatic setup, so Cloudflare
 injects the tracking beacon at the edge with no code changes here. It's
 cookie-free, so no cookie banner is needed.
 
+### 6. Rate limiting rule (recommended)
+
+The zip endpoint already has an in-Worker rate limit (`wrangler.jsonc`'s
+`ratelimits` binding, 6 zip downloads per IP per minute), but every
+Cloudflare plan, including Free, also includes **one free WAF rate limiting
+rule**. Using it here adds a second layer that blocks abusive requests at
+the edge, before they even reach the Worker or R2: **Security → WAF → Rate
+limiting rules → Create rule**, match requests where the URL path starts
+with `/api/zip/`, and set a similar threshold (e.g. block after 10 requests
+in 1 minute per IP).
+
+### 7. Billing and usage alerts (recommended)
+
+Since this site is public and unauthenticated, set up alerts so you're
+warned before a cost spike rather than after: **Manage Account →
+Notifications → Add**, and add usage-based alerts for R2 storage/operations
+and for Workers requests.
+
+### 8. Confirm HTTPS is enforced
+
+Under **SSL/TLS → Edge Certificates**, confirm **Always Use HTTPS** is
+enabled for the zone. The Worker also sends a `Strict-Transport-Security`
+header as a backstop, but this dashboard setting is what actually redirects
+stray HTTP requests.
+
 ## Uploading a new week
 
 Run once per team level that has photos that week (skip levels with nothing
@@ -159,6 +184,7 @@ npx wrangler r2 object put rolljags-photos/2026/week-01_2026-09-06/varsity/IMG_0
 - The "Download all (.zip)" response streams directly from R2 rather than being built in memory, so it scales to 100+ photos without issue. Because it's streamed, browsers won't show a file size or an accurate progress bar during download (the file itself is complete and valid, this is just a missing size hint).
 - Week pages (`/week.html?year=&week=`) get their Open Graph preview tags (title, description, image) injected server-side by the Worker based on that week's real data, so links shared in group chats show the week's cover photo. The homepage and 404 page use static tags with the site logo.
 - `public/404.html` is served automatically for any unmatched path, configured via `not_found_handling` in `wrangler.jsonc`.
+- The Worker validates `year`/`week`/`level` before touching R2 (rejects malformed requests with 400), rate-limits the zip endpoint per IP (429 once tripped), and sets security headers (CSP, HSTS, etc.) on every response. `/api/week/:year/:week` and `/week.html` share the same 5-minute cache as `/api/weeks`, so repeat visits to the same week don't re-list R2 each time.
 
 ## Project layout
 

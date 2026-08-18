@@ -2,30 +2,68 @@ import { handleWeeks } from "./routes/weeks.js";
 import { handleWeek, getWeekData } from "./routes/week.js";
 import { handleZip } from "./routes/zip.js";
 import { injectWeekMeta } from "./lib/meta.js";
+import { isValidYear, isValidWeekNum } from "./lib/validate.js";
+import { LEVELS } from "./lib/r2.js";
+
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+  "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
+  "Content-Security-Policy": [
+    "default-src 'self'",
+    "img-src 'self' https://photos.rolljags.com",
+    "style-src 'self'",
+    "script-src 'self' https://static.cloudflareinsights.com",
+    "connect-src 'self'",
+    "base-uri 'none'",
+    "form-action 'none'",
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+  ].join("; "),
+};
 
 export default {
   async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-    const parts = url.pathname.split("/").filter(Boolean);
+    const response = await handle(request, env, ctx);
+    return withSecurityHeaders(response);
+  },
+};
 
+async function handle(request, env, ctx) {
+  const url = new URL(request.url);
+  const parts = url.pathname.split("/").filter(Boolean);
+
+  try {
     if (parts[0] === "api") {
-      try {
-        // GET /api/weeks
-        if (parts[1] === "weeks" && parts.length === 2) {
-          return withCache(request, ctx, () => handleWeeks(env));
+      // GET /api/weeks
+      if (parts[1] === "weeks" && parts.length === 2) {
+        return withCache(request, ctx, () => handleWeeks(env));
+      }
+
+      // GET /api/week/:year/:week
+      if (parts[1] === "week" && parts.length === 4) {
+        const [, , year, week] = parts;
+        if (!isValidYear(year) || !isValidWeekNum(week)) {
+          return Response.json({ error: "Invalid week" }, { status: 400 });
+        }
+        return withCache(request, ctx, () => handleWeek(env, year, week));
+      }
+
+      // GET /api/zip/:year/:week/:level
+      if (parts[1] === "zip" && parts.length === 5) {
+        const [, , year, week, level] = parts;
+        if (!isValidYear(year) || !isValidWeekNum(week) || !LEVELS.includes(level)) {
+          return Response.json({ error: "Invalid request" }, { status: 400 });
         }
 
-        // GET /api/week/:year/:week
-        if (parts[1] === "week" && parts.length === 4) {
-          return handleWeek(env, parts[2], parts[3]);
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const { success } = await env.ZIP_RATE_LIMITER.limit({ key: ip });
+        if (!success) {
+          return Response.json({ error: "Too many requests. Try again in a minute." }, { status: 429 });
         }
 
-        // GET /api/zip/:year/:week/:level
-        if (parts[1] === "zip" && parts.length === 5) {
-          return handleZip(env, parts[2], parts[3], parts[4]);
-        }
-      } catch (err) {
-        return Response.json({ error: err.message }, { status: 500 });
+        return handleZip(env, year, week, level);
       }
 
       return Response.json({ error: "Not found" }, { status: 404 });
@@ -36,18 +74,39 @@ export default {
       // canonical extensionless URL) internally, even when called from
       // here, so fetch the canonical path directly to get real content
       // instead of a redirect response to rewrite.
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = "/week";
-      const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
       const year = url.searchParams.get("year");
       const week = url.searchParams.get("week");
-      const data = year && week ? await getWeekData(env, year, week) : null;
-      return injectWeekMeta(asset, data, url);
+      const validParams = year && week && isValidYear(year) && isValidWeekNum(week);
+
+      const buildResponse = async () => {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = "/week";
+        const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+        const data = validParams ? await getWeekData(env, year, week) : null;
+        return injectWeekMeta(asset, data, url);
+      };
+
+      return validParams ? withCache(request, ctx, buildResponse) : buildResponse();
     }
 
     return env.ASSETS.fetch(request);
-  },
-};
+  } catch (err) {
+    console.error(err);
+    return Response.json({ error: "Something went wrong" }, { status: 500 });
+  }
+}
+
+function withSecurityHeaders(response) {
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    headers.set(key, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
 
 async function withCache(request, ctx, handler) {
   const cache = caches.default;

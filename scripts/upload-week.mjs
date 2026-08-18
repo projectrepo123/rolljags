@@ -114,6 +114,7 @@ async function main() {
         Body: originalBuffer,
         ContentType: "image/jpeg",
         ContentDisposition: `attachment; filename="${fileName}"`,
+        CacheControl: "public, max-age=31536000, immutable",
       })
     );
 
@@ -123,6 +124,7 @@ async function main() {
         Key: `${prefix}thumbs/${fileName}`,
         Body: thumbBuffer,
         ContentType: "image/jpeg",
+        CacheControl: "public, max-age=31536000, immutable",
       })
     );
 
@@ -137,6 +139,7 @@ async function main() {
         Key: `${weekRootPrefix}caption.txt`,
         Body: values.caption,
         ContentType: "text/plain; charset=utf-8",
+        CacheControl: "public, max-age=300",
       })
     );
     console.log(`Caption set: "${values.caption}"`);
