@@ -16,20 +16,30 @@
       </div>
       <nav class="site-nav">
         <a href="/">Photos</a>
-        <a href="/history">History</a>
+        <a href="/history" class="active">History</a>
       </nav>
     </div>
   </header>
 
   <main>
     <div class="container">
-      <a class="back-link" href="/">&larr; All weeks</a>
-      <h2 class="week-title" id="week-title">Loading…</h2>
-      <p class="week-caption" id="week-caption"></p>
-      <div class="level-tabs" id="level-tabs"></div>
-      <div class="level-toolbar" id="level-toolbar"></div>
-      <div class="photo-grid" id="photo-grid"></div>
-      <div id="week-status"></div>
+      <a class="back-link" href="/history">&larr; All seasons</a>
+      <h2 class="season-title" id="season-title">Loading…</h2>
+      <div class="season-record" id="season-record"></div>
+      <table class="season-table" id="season-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Opponent</th>
+            <th>H/A</th>
+            <th>Result</th>
+            <th>Game Type</th>
+          </tr>
+        </thead>
+        <tbody id="season-tbody">
+        </tbody>
+      </table>
+      <div id="season-status"></div>
     </div>
   </main>
 
@@ -40,6 +50,6 @@
     </div>
   </footer>
 
-  <script src="/js/gallery.js" type="module"></script>
+  <script src="/js/season.js" type="module"></script>
 </body>
 </html>

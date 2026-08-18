@@ -85,6 +85,29 @@ header.site-header .back-link {
   color: var(--gold);
 }
 
+header.site-header .site-nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+header.site-header .site-nav a {
+  font-size: 0.95rem;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+header.site-header .site-nav a:hover {
+  color: var(--gold);
+}
+
+header.site-header .site-nav a.active {
+  color: var(--gold);
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.2rem;
+}
+
 main {
   flex: 1 0 auto;
   padding: 1.5rem 0;
@@ -359,6 +382,104 @@ footer.site-footer p + p {
 
 .footer-credit {
   font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Team History */
+
+.season-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: auto;
+  min-height: 120px;
+}
+
+.season-card .card-body {
+  width: 100%;
+  text-align: center;
+}
+
+.season-card-body {
+  padding: 1.5rem;
+}
+
+.season-year {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.season-record-display {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.season-title {
+  margin: 0 0 1rem;
+  font-size: 1.3rem;
+}
+
+.season-record {
+  margin: 0 0 1.5rem;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.season-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card-bg);
+}
+
+.season-table thead {
+  background: var(--navy);
+  color: #fff;
+}
+
+.season-table th {
+  padding: 0.85rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+.season-table td {
+  padding: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.season-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.season-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.season-table tbody tr:hover {
+  background-color: var(--bg);
+}
+
+.season-table .result-cell {
+  font-weight: 600;
+}
+
+.season-table .game-win .result-cell {
+  color: #1a7f3d;
+}
+
+.season-table .game-loss .result-cell {
+  color: #c41e3a;
+}
+
+.season-table .game-tie .result-cell {
   color: var(--text-muted);
 }
 

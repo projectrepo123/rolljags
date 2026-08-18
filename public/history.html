@@ -3,9 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jaguar Football</title>
+  <title>Team History | Jaguar Football</title>
   <link rel="icon" href="/logo.webp" type="image/webp" />
   <link rel="stylesheet" href="/css/styles.css" />
+  <meta property="og:title" content="Team History | Jaguar Football" />
+  <meta property="og:description" content="Jaguar Football season records and game results from 2004 to present." />
+  <meta property="og:image" content="https://rolljags.com/logo.webp" />
+  <meta property="og:url" content="https://rolljags.com/history" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
   <header class="site-header">
@@ -16,20 +22,17 @@
       </div>
       <nav class="site-nav">
         <a href="/">Photos</a>
-        <a href="/history">History</a>
+        <a href="/history" class="active">History</a>
       </nav>
     </div>
   </header>
 
   <main>
     <div class="container">
-      <a class="back-link" href="/">&larr; All weeks</a>
-      <h2 class="week-title" id="week-title">Loading…</h2>
-      <p class="week-caption" id="week-caption"></p>
-      <div class="level-tabs" id="level-tabs"></div>
-      <div class="level-toolbar" id="level-toolbar"></div>
-      <div class="photo-grid" id="photo-grid"></div>
-      <div id="week-status"></div>
+      <h2>Team History</h2>
+      <div id="seasons">
+        <p class="empty-state">Loading seasons…</p>
+      </div>
     </div>
   </main>
 
@@ -40,6 +43,6 @@
     </div>
   </footer>
 
-  <script src="/js/gallery.js" type="module"></script>
+  <script src="/js/history.js" type="module"></script>
 </body>
 </html>
