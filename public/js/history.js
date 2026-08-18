@@ -190,7 +190,7 @@ function renderGameTouchdowns(list) {
   return details;
 }
 
-function renderTeamSeasonStats(list, programTotals) {
+function renderTeamSeasonStats(list, programTotals, category = null) {
   const details = document.createElement("details");
   details.id = "section-team-season";
   details.className = "records-section";
@@ -198,6 +198,36 @@ function renderTeamSeasonStats(list, programTotals) {
   const summary = document.createElement("summary");
   summary.innerHTML = `<strong>Team Season Records</strong> <span class="record-count">${list.length} seasons</span>`;
   details.appendChild(summary);
+
+  const allColumns = [
+    { key: "year", label: "Year" },
+    { key: "coach", label: "Coach" },
+    { key: "record", label: "Record" },
+    { key: "winPct", label: "Win%" },
+    { key: "pf", label: "PF" },
+    { key: "pa", label: "PA" },
+    { key: "oppg", label: "Opp/G" },
+    { key: "dppg", label: "Def/G" },
+    { key: "rushYds", label: "Rush Yds" },
+    { key: "rushYpg", label: "Rush/G" },
+    { key: "passYds", label: "Pass Yds" },
+    { key: "passYpg", label: "Pass/G" },
+    { key: "totalYds", label: "Total Yds" },
+    { key: "totalYpg", label: "Total/G" },
+    { key: "defInt", label: "INT" },
+    { key: "defFumbles", label: "Fum Rec" },
+    { key: "turnovers", label: "TO" },
+    { key: "sacks", label: "Sacks" },
+  ];
+
+  let columns = allColumns;
+  if (category === "Passing Yards") {
+    columns = allColumns.filter(c => ["year", "coach", "record", "winPct", "passYds", "passYpg", "totalYds", "totalYpg"].includes(c.key));
+  } else if (category === "Rushing Yards") {
+    columns = allColumns.filter(c => ["year", "coach", "record", "winPct", "rushYds", "rushYpg", "totalYds", "totalYpg"].includes(c.key));
+  } else if (category === "Sacks") {
+    columns = allColumns.filter(c => ["year", "coach", "record", "winPct", "sacks", "defInt", "defFumbles", "turnovers"].includes(c.key));
+  }
 
   const scrollContainer = document.createElement("div");
   scrollContainer.className = "table-scroll";
@@ -207,9 +237,9 @@ function renderTeamSeasonStats(list, programTotals) {
 
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
-  for (const col of ["Year", "Coach", "Record", "Win%", "PF", "PA", "Opp/G", "Def/G", "Rush Yds", "Rush/G", "Pass Yds", "Pass/G", "Total Yds", "Total/G", "INT", "Fum Rec", "TO", "Sacks"]) {
+  for (const col of columns) {
     const th = document.createElement("th");
-    th.textContent = col;
+    th.textContent = col.label;
     headerRow.appendChild(th);
   }
   thead.appendChild(headerRow);
@@ -218,24 +248,15 @@ function renderTeamSeasonStats(list, programTotals) {
   const tbody = document.createElement("tbody");
   for (const row of list) {
     const tr = document.createElement("tr");
-    tr.appendChild(createCell(row.year));
-    tr.appendChild(createCell(row.coachTenureRecord ? `${row.coach} ${row.coachTenureRecord}` : row.coach));
-    tr.appendChild(formatStatCell(row.record));
-    tr.appendChild(formatStatCell(row.winPct));
-    tr.appendChild(formatStatCell(row.pf));
-    tr.appendChild(formatStatCell(row.pa));
-    tr.appendChild(formatStatCell(row.oppg));
-    tr.appendChild(formatStatCell(row.dppg));
-    tr.appendChild(formatStatCell(row.rushYds));
-    tr.appendChild(formatStatCell(row.rushYpg));
-    tr.appendChild(formatStatCell(row.passYds));
-    tr.appendChild(formatStatCell(row.passYpg));
-    tr.appendChild(formatStatCell(row.totalYds));
-    tr.appendChild(formatStatCell(row.totalYpg));
-    tr.appendChild(formatStatCell(row.defInt));
-    tr.appendChild(formatStatCell(row.defFumbles));
-    tr.appendChild(formatStatCell(row.turnovers));
-    tr.appendChild(formatStatCell(row.sacks));
+    for (const col of columns) {
+      if (col.key === "coach") {
+        tr.appendChild(createCell(row.coachTenureRecord ? `${row.coach} ${row.coachTenureRecord}` : row.coach));
+      } else if (col.key === "year") {
+        tr.appendChild(createCell(row.year));
+      } else {
+        tr.appendChild(formatStatCell(row[col.key]));
+      }
+    }
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
@@ -243,24 +264,17 @@ function renderTeamSeasonStats(list, programTotals) {
   if (programTotals) {
     const tfoot = document.createElement("tfoot");
     const footRow = document.createElement("tr");
-    footRow.appendChild(createCell("Program Total"));
-    footRow.appendChild(createCell(""));
-    footRow.appendChild(formatStatCell(programTotals.record));
-    footRow.appendChild(formatStatCell(programTotals.winPct));
-    footRow.appendChild(formatStatCell(programTotals.pf));
-    footRow.appendChild(formatStatCell(programTotals.pa));
-    footRow.appendChild(formatStatCell(programTotals.oppg));
-    footRow.appendChild(formatStatCell(programTotals.dppg));
-    footRow.appendChild(formatStatCell(programTotals.rushYds));
-    footRow.appendChild(formatStatCell(programTotals.rushYpg));
-    footRow.appendChild(formatStatCell(programTotals.passYds));
-    footRow.appendChild(formatStatCell(programTotals.passYpg));
-    footRow.appendChild(formatStatCell(programTotals.totalYds));
-    footRow.appendChild(formatStatCell(programTotals.totalYpg));
-    footRow.appendChild(createCell(""));
-    footRow.appendChild(createCell(""));
-    footRow.appendChild(createCell(""));
-    footRow.appendChild(createCell(""));
+    for (const col of columns) {
+      if (col.key === "year") {
+        footRow.appendChild(createCell("Program Total"));
+      } else if (col.key === "coach") {
+        footRow.appendChild(createCell(""));
+      } else if (["defInt", "defFumbles", "turnovers", "sacks", "pf", "pa", "oppg", "dppg"].includes(col.key)) {
+        footRow.appendChild(createCell(""));
+      } else {
+        footRow.appendChild(formatStatCell(programTotals[col.key]));
+      }
+    }
     tfoot.appendChild(footRow);
     table.appendChild(tfoot);
   }
@@ -447,9 +461,9 @@ function renderLeaderboards(records) {
   container.appendChild(renderLeaderboardCard("Career Points", careerPoints, () => renderCareerScoring(records.careerScoring)));
   container.appendChild(renderLeaderboardCard("Season TD Leaders", seasonTds, () => renderSeasonScoring(records.seasonScoring)));
   container.appendChild(renderLeaderboardCard("Single Game TD Records", gameTds, () => renderGameTouchdowns(records.gameTouchdowns)));
-  container.appendChild(renderLeaderboardCard("Passing Yards", passYards, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals)));
-  container.appendChild(renderLeaderboardCard("Rushing Yards", rushYards, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals)));
-  container.appendChild(renderLeaderboardCard("Sacks", sacks, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals)));
+  container.appendChild(renderLeaderboardCard("Passing Yards", passYards, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals, "Passing Yards")));
+  container.appendChild(renderLeaderboardCard("Rushing Yards", rushYards, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals, "Rushing Yards")));
+  container.appendChild(renderLeaderboardCard("Sacks", sacks, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals, "Sacks")));
 
   leaderboardsEl.appendChild(container);
 }
