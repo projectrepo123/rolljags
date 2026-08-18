@@ -15,7 +15,9 @@ function renderYear(yearGroup) {
   const grid = document.createElement("div");
   grid.className = "week-grid";
 
-  for (const week of yearGroup.weeks) {
+  // Only show the first week
+  for (let i = 0; i < Math.min(1, yearGroup.weeks.length); i++) {
+    const week = yearGroup.weeks[i];
     const card = document.createElement("a");
     card.className = "week-card";
     card.href = weekUrl(week.year, week.week);
@@ -56,6 +58,13 @@ function renderYear(yearGroup) {
     card.appendChild(body);
     grid.appendChild(card);
   }
+
+  /* TODO: Show other weeks
+  for (let i = 1; i < yearGroup.weeks.length; i++) {
+    const week = yearGroup.weeks[i];
+    // Week card for: ${week.label}
+  }
+  */
 
   section.appendChild(grid);
   return section;
