@@ -8,6 +8,7 @@ const titleEl = document.getElementById("week-title");
 const tabsEl = document.getElementById("level-tabs");
 const toolbarEl = document.getElementById("level-toolbar");
 const gridEl = document.getElementById("photo-grid");
+const statusEl = document.getElementById("week-status");
 
 let levels = [];
 let activeLevel = null;
@@ -38,7 +39,7 @@ function renderLevel() {
   toolbarEl.appendChild(count);
 
   const zipLink = document.createElement("a");
-  zipLink.className = "btn";
+  zipLink.className = "btn btn-gold";
   zipLink.href = `/api/zip/${encodeURIComponent(year)}/${encodeURIComponent(week)}/${encodeURIComponent(lvl.level)}`;
   zipLink.textContent = "Download all (.zip)";
   toolbarEl.appendChild(zipLink);
@@ -59,6 +60,13 @@ function renderLevel() {
   });
 }
 
+function showComingSoon() {
+  tabsEl.innerHTML = "";
+  toolbarEl.innerHTML = "";
+  gridEl.innerHTML = "";
+  statusEl.innerHTML = '<p class="coming-soon-banner">Photos haven\'t been posted yet — check back after the game.</p>';
+}
+
 async function init() {
   if (!year || !week) {
     titleEl.textContent = "Week not found";
@@ -74,7 +82,13 @@ async function init() {
     const data = await res.json();
 
     titleEl.textContent = data.label;
-    document.title = `${data.label} — Football Photos`;
+    document.title = `${data.label} — Seckman Football`;
+
+    if (data.status === "coming-soon") {
+      showComingSoon();
+      return;
+    }
+
     levels = data.levels;
     activeLevel = levels[0]?.level;
 

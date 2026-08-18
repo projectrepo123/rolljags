@@ -13,10 +13,28 @@ Photos live in R2 under:
 {year}/week-{NN}_{yyyy-mm-dd}/{level}/thumbs/IMG_0001.jpg
 ```
 
-`level` is `varsity`, `jv`, or `freshman`. There's no separate config file —
-the site parses everything it needs (year, week number, date, team level,
-photo count) straight from the folder names, so uploading a new week's
-photos with the right folder name is the entire "publishing" step.
+`level` is `varsity`, `jv`, or `freshman`. There's no separate config file for
+weeks that already have photos — the site parses everything it needs (year,
+week number, date, team level, photo count) straight from the folder names,
+so uploading a new week's photos with the right folder name is the entire
+"publishing" step.
+
+### Showing a week before photos exist ("Coming soon")
+
+To have a week appear on the site (as "Coming soon") before you've uploaded
+anything — e.g. the day of a game, before you've had a chance to upload —
+add its week number to `worker/lib/schedule.js`:
+
+```js
+export const SCHEDULE = {
+  "2026": ["01", "02"],
+};
+```
+
+Once you run `upload-week.mjs` for that week, real data (date, photo count,
+cover thumbnail) automatically takes over and the "Coming soon" badge goes
+away — no need to remove the entry from the schedule. To start a new season,
+add a new year key the same way.
 
 ## One-time setup
 

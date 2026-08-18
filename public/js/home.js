@@ -20,12 +20,18 @@ function renderYear(yearGroup) {
     card.className = "week-card";
     card.href = weekUrl(week.year, week.week);
 
-    const img = document.createElement("img");
-    img.className = "cover";
-    img.loading = "lazy";
-    img.alt = week.label;
-    if (week.cover) img.src = week.cover;
-    card.appendChild(img);
+    if (week.cover) {
+      const img = document.createElement("img");
+      img.className = "cover";
+      img.loading = "lazy";
+      img.alt = week.label;
+      img.src = week.cover;
+      card.appendChild(img);
+    } else {
+      const placeholder = document.createElement("div");
+      placeholder.className = "cover";
+      card.appendChild(placeholder);
+    }
 
     const body = document.createElement("div");
     body.className = "card-body";
@@ -35,10 +41,17 @@ function renderYear(yearGroup) {
     title.textContent = week.label;
     body.appendChild(title);
 
-    const count = document.createElement("p");
-    count.className = "card-count";
-    count.textContent = `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
-    body.appendChild(count);
+    if (week.status === "coming-soon") {
+      const badge = document.createElement("span");
+      badge.className = "badge-coming-soon";
+      badge.textContent = "Coming soon";
+      body.appendChild(badge);
+    } else {
+      const count = document.createElement("p");
+      count.className = "card-count";
+      count.textContent = `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
+      body.appendChild(count);
+    }
 
     card.appendChild(body);
     grid.appendChild(card);

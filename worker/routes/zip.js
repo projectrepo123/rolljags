@@ -1,8 +1,13 @@
 import { downloadZip } from "client-zip";
-import { listObjects } from "../lib/r2.js";
+import { listObjects, findWeekFolder } from "../lib/r2.js";
 
-export async function handleZip(env, year, week, level) {
-  const prefix = `${year}/${week}/${level}/`;
+export async function handleZip(env, year, weekNum, level) {
+  const found = await findWeekFolder(env.PHOTOS, year, weekNum);
+  if (!found) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const prefix = `${found.weekPrefix}${level}/`;
   const objects = await listObjects(env.PHOTOS, prefix);
 
   if (objects.length === 0) {
@@ -29,7 +34,7 @@ export async function handleZip(env, year, week, level) {
   }
 
   const zipResponse = downloadZip(files(), { metadata });
-  const filename = `${year}-${week}-${level}.zip`;
+  const filename = `${year}-week-${weekNum}-${level}.zip`;
   zipResponse.headers.set("Content-Disposition", `attachment; filename="${filename}"`);
 
   return zipResponse;

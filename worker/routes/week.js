@@ -1,11 +1,25 @@
-import { LEVELS, levelLabel, listObjects, parseWeekFolder, formatWeekLabel, publicUrl } from "../lib/r2.js";
+import { LEVELS, levelLabel, listObjects, findWeekFolder, formatWeekLabel, publicUrl } from "../lib/r2.js";
+import { SCHEDULE } from "../lib/schedule.js";
 
-export async function handleWeek(env, year, week) {
-  const { weekNum, date } = parseWeekFolder(week);
+export async function handleWeek(env, year, weekNum) {
+  const found = await findWeekFolder(env.PHOTOS, year, weekNum);
+
+  if (!found) {
+    if ((SCHEDULE[year] || []).includes(weekNum)) {
+      return Response.json({
+        year,
+        week: weekNum,
+        label: formatWeekLabel(weekNum, null),
+        status: "coming-soon",
+        levels: [],
+      });
+    }
+    return Response.json({ error: "Week not found" }, { status: 404 });
+  }
+
   const levels = [];
-
   for (const level of LEVELS) {
-    const levelPrefix = `${year}/${week}/${level}/`;
+    const levelPrefix = `${found.weekPrefix}${level}/`;
     const objects = await listObjects(env.PHOTOS, levelPrefix);
     if (objects.length === 0) continue;
 
@@ -21,14 +35,11 @@ export async function handleWeek(env, year, week) {
     levels.push({ level, label: levelLabel(level), photos });
   }
 
-  if (levels.length === 0) {
-    return Response.json({ error: "Week not found" }, { status: 404 });
-  }
-
   return Response.json({
     year,
-    week,
-    label: formatWeekLabel(weekNum, date),
+    week: weekNum,
+    label: formatWeekLabel(weekNum, found.date),
+    status: levels.length > 0 ? "live" : "coming-soon",
     levels,
   });
 }

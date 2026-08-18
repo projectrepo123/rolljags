@@ -2,20 +2,30 @@
   --navy: #1b3a6b;
   --navy-dark: #142c52;
   --gold: #ffc72c;
+  --gold-hover: #f0b800;
   --bg: #f7f8fa;
   --card-bg: #ffffff;
   --text: #1c1e21;
   --text-muted: #5b6470;
   --border: #e1e4e9;
   --radius: 8px;
+  --container-width: 1100px;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -26,19 +36,38 @@ a {
   color: var(--navy);
 }
 
+/* Shared page container — used by the header, main content, and footer so
+   everything lines up on the same left/right edges. */
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
 header.site-header {
   background: var(--navy);
   color: #fff;
-  padding: 1.25rem 1.5rem;
+  padding: 1.1rem 0;
+  border-bottom: 3px solid var(--gold);
 }
 
 header.site-header .header-inner {
-  max-width: 1100px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+header.site-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+header.site-header .site-logo {
+  height: 42px;
+  width: auto;
+  display: block;
 }
 
 header.site-header h1 {
@@ -57,9 +86,8 @@ header.site-header .back-link {
 }
 
 main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1.5rem;
+  flex: 1 0 auto;
+  padding: 1.5rem 0;
 }
 
 .year-section {
@@ -67,10 +95,13 @@ main {
 }
 
 .year-section h2 {
+  display: inline-block;
   font-size: 1.1rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  margin: 0 0 0.75rem;
+  color: var(--text);
+  font-weight: 700;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--gold);
 }
 
 .week-grid {
@@ -91,7 +122,7 @@ main {
 }
 
 .week-card:hover {
-  border-color: var(--navy);
+  border-color: var(--gold);
 }
 
 .week-card .cover {
@@ -108,7 +139,7 @@ main {
 
 .week-card .card-title {
   font-weight: 600;
-  margin: 0 0 0.15rem;
+  margin: 0 0 0.3rem;
 }
 
 .week-card .card-count {
@@ -117,9 +148,30 @@ main {
   margin: 0;
 }
 
+.badge-coming-soon {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
 .empty-state {
   color: var(--text-muted);
   padding: 2rem 0;
+}
+
+.coming-soon-banner {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  color: var(--text-muted);
 }
 
 /* Week gallery page */
@@ -193,7 +245,7 @@ main {
 }
 
 .btn.btn-gold:hover {
-  background: #f0b800;
+  background: var(--gold-hover);
 }
 
 .photo-grid {
@@ -281,19 +333,20 @@ main {
 }
 
 footer.site-footer {
-  text-align: center;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 0.85rem;
-  padding: 2rem 1rem;
+  padding: 1.5rem 0;
 }
 
 @media (max-width: 480px) {
-  header.site-header {
-    padding: 1rem;
+  main {
+    padding: 1rem 0;
   }
 
-  main {
-    padding: 1rem;
+  .container {
+    padding: 0 1rem;
   }
 
   .photo-grid {

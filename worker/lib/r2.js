@@ -58,6 +58,21 @@ export function formatWeekLabel(weekNum, date) {
   return `${label} — ${dateLabel}`;
 }
 
+// Finds the real R2 week folder for a given year + week number (e.g. "01"),
+// regardless of the date baked into the folder name. Returns
+// { folderName, weekPrefix, date } or null if no such folder exists yet.
+export async function findWeekFolder(bucket, year, weekNum) {
+  const weekPrefixes = await listPrefixes(bucket, `${year}/`);
+  for (const weekPrefix of weekPrefixes) {
+    const folderName = lastSegment(weekPrefix);
+    const parsed = parseWeekFolder(folderName);
+    if (parsed.weekNum === weekNum) {
+      return { folderName, weekPrefix, date: parsed.date };
+    }
+  }
+  return null;
+}
+
 export function publicUrl(key) {
   return `https://photos.rolljags.com/${key.split("/").map(encodeURIComponent).join("/")}`;
 }
