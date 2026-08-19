@@ -261,22 +261,22 @@
     { "year": 2020, "coach": "Baer", "coachTenureRecord": null, "record": "5-3 (6)", "winPct": "63% (4)", "pf": 214, "pa": "173 (4)", "oppg": "26.75 (7)", "dppg": "21.63 (5)", "rushYds": "2652 (5)", "rushYpg": "331.5 (2)", "passYds": 123, "passYpg": "15.3", "totalYds": 2775, "totalYpg": "346.8 (6)", "defInt": 3, "defFumbles": 6, "turnovers": 9, "sacks": 24 },
     { "year": 2021, "coach": "Baer", "coachTenureRecord": null, "record": "9-3 (3)", "winPct": "75% (3)", "pf": "423 (3)", "pa": "264 (7)", "oppg": "35.25 (4)", "dppg": "22 (6)", "rushYds": "3653 (2)", "rushYpg": "304 (3)", "passYds": "880 (5)", "passYpg": "73.33", "totalYds": "4533 (2)", "totalYpg": "377.8 (3)", "defInt": 5, "defFumbles": "13 (3)", "turnovers": "18 (6)", "sacks": 15 },
     { "year": 2022, "coach": "Baer", "coachTenureRecord": null, "record": "9-2 (2)", "winPct": "82% (2)", "pf": "523 (1)", "pa": "251 (6)", "oppg": "47.55 (1)", "dppg": "22.82 (7)", "rushYds": "3951 (1)", "rushYpg": "359.3 (1)", "passYds": 831, "passYpg": "75.5", "totalYds": "4782 (1)", "totalYpg": "434.7 (1)", "defInt": "11 (2)", "defFumbles": 8, "turnovers": "19 (5)", "sacks": "42 (1)" },
-    { "year": 2023, "coach": "Baer", "coachTenureRecord": null, "record": "10-1 (1)", "winPct": "91% (1)", "pf": "429 (2)", "pa": "121 (2)", "oppg": "39 (2)", "dppg": "11 (2)", "rushYds": "2960 (4)", "rushYpg": "269 (5)", "passYds": "880 (5)", "passYpg": "80 (6)", "totalYds": "3840 (4)", "totalYpg": "349 (5)", "defInt": "14 (1)", "defFumbles": "15 (2)", "turnovers": "29 (1)", "sacks": "35 (2)" },
+    { "year": 2023, "coach": "Baer", "coachTenureRecord": null, "record": "10-1 (1)", "winPct": "91% (1)", "pf": "429 (2)", "pa": "120 (2)", "oppg": "39 (2)", "dppg": "11 (2)", "rushYds": "2960 (4)", "rushYpg": "269 (5)", "passYds": "880 (5)", "passYpg": "80 (6)", "totalYds": "3840 (4)", "totalYpg": "349 (5)", "defInt": "14 (1)", "defFumbles": "15 (2)", "turnovers": "29 (1)", "sacks": "35 (2)" },
     { "year": 2024, "coach": "Baer", "coachTenureRecord": null, "record": "10-1 (1)", "winPct": "91% (1)", "pf": "374 (4)", "pa": "119 (1)", "oppg": "34 (4)", "dppg": "10.8 (1)", "rushYds": "3127 (3)", "rushYpg": "284 (4)", "passYds": "861 (6)", "passYpg": "78.2", "totalYds": "3988 (3)", "totalYpg": "362.5 (4)", "defInt": "8 (5)", "defFumbles": 5, "turnovers": 13, "sacks": "26 (4)" },
-    { "year": 2025, "coach": "Baer", "coachTenureRecord": "52-21 (71%)", "record": "7-3 (5)", "winPct": "70% (4)", "pf": "357 (5)", "pa": "155 (3)", "oppg": "35.7 (3)", "dppg": "15.5 (3)", "rushYds": 1875, "rushYpg": "187.5", "passYds": "1365 (4)", "passYpg": "136.5 (4)", "totalYds": "3240 (5)", "totalYpg": "324 (6)", "defInt": "7 (6)", "defFumbles": "13 (3)", "turnovers": "20 (4)", "sacks": "27 (3)" }
+    { "year": 2025, "coach": "Baer", "coachTenureRecord": "52-21 (71%)", "record": "7-3 (5)", "winPct": "70% (4)", "pf": "358 (5)", "pa": "155 (3)", "oppg": "35.8 (3)", "dppg": "15.5 (3)", "rushYds": 1875, "rushYpg": "187.5", "passYds": "1365 (4)", "passYpg": "136.5 (4)", "totalYds": "3240 (5)", "totalYpg": "324 (6)", "defInt": "7 (6)", "defFumbles": "13 (3)", "turnovers": "20 (4)", "sacks": "27 (3)" }
   ],
   "programTotals": {
-    "record": "93-170",
-    "winPct": "35%",
-    "pf": 4448,
-    "pa": 7340,
-    "oppg": "16.9",
-    "dppg": "27.9",
-    "rushYds": 43134,
-    "rushYpg": "164",
-    "passYds": 14362,
-    "passYpg": "54",
-    "totalYds": 53298,
-    "totalYpg": "202"
+    "record": "93-180",
+    "winPct": "34%",
+    "pf": 5315,
+    "pa": 8134,
+    "oppg": "19.5",
+    "dppg": "29.8",
+    "rushYds": 51001,
+    "rushYpg": "187",
+    "passYds": 20749,
+    "passYpg": "76",
+    "totalYds": 71750,
+    "totalYpg": "263"
   }
 }

@@ -162,7 +162,7 @@ function renderSeason(games) {
     tr.appendChild(resultCell);
 
     const typeCell = document.createElement("td");
-    typeCell.textContent = game.gameType;
+    typeCell.textContent = game.gameType || "";
     tr.appendChild(typeCell);
 
     tbodyEl.appendChild(tr);
