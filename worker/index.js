@@ -1,7 +1,8 @@
 import { handleWeeks } from "./routes/weeks.js";
 import { handleWeek, getWeekData } from "./routes/week.js";
+import { getSeasonSummary } from "./routes/season.js";
 import { handleZip } from "./routes/zip.js";
-import { injectWeekMeta } from "./lib/meta.js";
+import { injectWeekMeta, injectSeasonMeta } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum } from "./lib/validate.js";
 import { LEVELS } from "./lib/r2.js";
 import { nextGame } from "./lib/schedule.js";
@@ -115,6 +116,25 @@ async function handle(request, env, ctx) {
       // the one canonical path instead of duplicating every week's entry.
       return validParams
         ? withCache(request, ctx, buildResponse, ["year", "week"], "/week")
+        : buildResponse();
+    }
+
+    if (url.pathname === "/season.html" || url.pathname === "/season") {
+      // Same rationale as the /week.html case above: fetch the canonical
+      // extensionless path directly rather than following the redirect.
+      const year = url.searchParams.get("year");
+      const validParams = year && isValidYear(year);
+
+      const buildResponse = async () => {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = "/season";
+        const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+        const summary = validParams ? await getSeasonSummary(env, url.origin, year) : null;
+        return injectSeasonMeta(asset, summary, url);
+      };
+
+      return validParams
+        ? withCache(request, ctx, buildResponse, ["year"], "/season")
         : buildResponse();
     }
 

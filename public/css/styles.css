@@ -699,6 +699,17 @@ footer.site-footer p + p {
   background: var(--surface-hover);
 }
 
+.season-card-static {
+  cursor: default;
+}
+
+.season-card-static:hover {
+  background: none;
+  border-color: var(--border);
+  transform: none;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+}
+
 .season-card .card-body {
   width: 100%;
   text-align: center;

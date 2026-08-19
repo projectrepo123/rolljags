@@ -22,6 +22,54 @@ function seasonUrl(year) {
   return `/season?year=${encodeURIComponent(year)}`;
 }
 
+// Parses a "W-L" or "W-L-T" record string (as stored in records.json's
+// teamSeasonStats, e.g. for years with no game-by-game log) into the same
+// { wins, losses, ties } shape computeRecord() produces from real games.
+function parseRecordString(str) {
+  const [wins, losses, ties] = str.split("-").map((n) => parseInt(n, 10) || 0);
+  return { wins, losses, ties: ties || 0 };
+}
+
+// Builds one season card. Years with a real game log link to the boxscore
+// page; years with only an aggregate record (pre-2004, no game-by-game
+// data available) render as a static, non-clickable card instead.
+function buildSeasonCard(year, record, href = null) {
+  const card = document.createElement(href ? "a" : "div");
+  card.className = "week-card season-card";
+  if (!href) card.classList.add("season-card-static");
+
+  if (record.wins > record.losses) {
+    card.classList.add("season-win");
+  } else if (record.wins < record.losses) {
+    card.classList.add("season-loss");
+  } else {
+    card.classList.add("season-even");
+  }
+
+  if (href) card.href = href;
+
+  const body = document.createElement("div");
+  body.className = "card-body season-card-body";
+
+  const title = document.createElement("p");
+  title.className = "card-title season-year";
+  title.textContent = year;
+  body.appendChild(title);
+
+  const recordEl = document.createElement("p");
+  recordEl.className = "season-record-display";
+  recordEl.textContent = recordString(record);
+  body.appendChild(recordEl);
+
+  card.appendChild(body);
+  return card;
+}
+
+let seasonsGridEl = null;
+
+// Renders the season cards backed by real game-by-game data (history.json).
+// Returns the set of years rendered, so renderLegacySeasons() knows which
+// years from records.json still need a (static) card of their own.
 function renderSeasons(data) {
   seasonsEl.innerHTML = "";
   const years = Object.keys(data).sort((a, b) => b.localeCompare(a));
@@ -41,41 +89,33 @@ function renderSeasons(data) {
   grid.className = "week-grid";
 
   for (const year of years) {
-    const games = data[year];
-    const record = computeRecord(games);
-
-    const card = document.createElement("a");
-    card.className = "week-card season-card";
-
-    if (record.wins > record.losses) {
-      card.classList.add("season-win");
-    } else if (record.wins < record.losses) {
-      card.classList.add("season-loss");
-    } else {
-      card.classList.add("season-even");
-    }
-
-    card.href = seasonUrl(year);
-
-    const body = document.createElement("div");
-    body.className = "card-body season-card-body";
-
-    const title = document.createElement("p");
-    title.className = "card-title season-year";
-    title.textContent = year;
-    body.appendChild(title);
-
-    const recordEl = document.createElement("p");
-    recordEl.className = "season-record-display";
-    recordEl.textContent = recordString(record);
-    body.appendChild(recordEl);
-
-    card.appendChild(body);
-    grid.appendChild(card);
+    const record = computeRecord(data[year]);
+    grid.appendChild(buildSeasonCard(year, record, seasonUrl(year)));
   }
 
   section.appendChild(grid);
   seasonsEl.appendChild(section);
+
+  seasonsGridEl = grid;
+  return new Set(years);
+}
+
+// Appends static (non-linked) cards for seasons that only have an aggregate
+// record in records.json's teamSeasonStats, no game-by-game log — e.g.
+// 1999-2003. Since `years` from renderSeasons() is already sorted newest
+// first and these are all older than every history.json year, appending
+// them in descending order keeps the whole grid in order.
+function renderLegacySeasons(teamSeasonStats, knownYears) {
+  if (!seasonsGridEl || !teamSeasonStats) return;
+
+  const extra = teamSeasonStats
+    .filter((row) => !knownYears.has(String(row.year)))
+    .sort((a, b) => b.year - a.year);
+
+  for (const row of extra) {
+    const record = parseRecordString(row.record);
+    seasonsGridEl.appendChild(buildSeasonCard(row.year, record));
+  }
 }
 
 function renderCareerScoring(list) {
@@ -674,10 +714,12 @@ function renderHeadToHead(data) {
 }
 
 async function init() {
+  let knownYears = new Set();
+
   try {
     const res = await fetch("/data/history.json");
     const data = await res.json();
-    renderSeasons(data);
+    knownYears = renderSeasons(data);
     renderHeadToHead(data);
   } catch (err) {
     seasonsEl.innerHTML = '<p class="empty-state">Couldn\'t load history. Try refreshing.</p>';
@@ -687,6 +729,7 @@ async function init() {
     const res = await fetch("/data/records.json");
     const records = await res.json();
     renderLeaderboards(records);
+    renderLegacySeasons(records.teamSeasonStats, knownYears);
   } catch (err) {
     leaderboardsEl.innerHTML = '<p class="empty-state">Couldn\'t load leaders. Try refreshing.</p>';
   }

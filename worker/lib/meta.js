@@ -74,7 +74,14 @@ export function injectWeekMeta(assetResponse, data, url) {
 // or not present in history.json.
 export function injectSeasonMeta(assetResponse, summary, url) {
   const fallbackImage = `${url.origin}/logo.webp`;
-  const pageUrl = url.toString();
+
+  // Same normalization as injectWeekMeta: strip tracking params so shared
+  // links with different query junk all canonicalize to one URL per year.
+  const canonical = new URL(url.origin);
+  canonical.pathname = "/season";
+  const year = url.searchParams.get("year");
+  if (year !== null) canonical.searchParams.set("year", year);
+  const pageUrl = canonical.toString();
 
   let title = `Team History | ${SITE_NAME}`;
   let description = "Jaguar Football season records and game results from 2004 to present.";
