@@ -15,6 +15,17 @@
   --focus-ring: #1b3a6b;
   --radius: 8px;
   --container-width: 1100px;
+
+  /* Surface treatment. Panels get a soft top-to-bottom gradient plus a
+     1px light catch along their top edge, so they read as lit from above
+     rather than as flat rectangles. */
+  --surface: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  --surface-hover: linear-gradient(180deg, #ffffff 0%, #f1f5fb 100%);
+  --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.05);
+  --shadow-2: 0 2px 4px rgba(16, 24, 40, 0.06), 0 8px 20px rgba(16, 24, 40, 0.08);
+  --shadow-3: 0 12px 40px rgba(16, 24, 40, 0.18);
+  --sheen: rgba(255, 255, 255, 0.55);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,9 +37,16 @@
     --border: #3d3d3d;
     --navy-text: #7fb2ff;
     --win: #4ade80;
-    --loss: #f87171;
+    --loss: #fa8a8a;
     --row-accent: rgba(255, 255, 255, 0.06);
     --focus-ring: #ffc72c;
+    --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
+    --surface-hover: linear-gradient(180deg, #3d3d3d 0%, #303030 100%);
+    --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
+    --shadow-3: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --sheen: rgba(255, 255, 255, 0.14);
   }
 }
 
@@ -40,9 +58,16 @@
   --border: #3d3d3d;
   --navy-text: #7fb2ff;
   --win: #4ade80;
-  --loss: #f87171;
+  --loss: #fa8a8a;
   --row-accent: rgba(255, 255, 255, 0.06);
   --focus-ring: #ffc72c;
+  --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
+  --surface-hover: linear-gradient(180deg, #3d3d3d 0%, #303030 100%);
+  --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --sheen: rgba(255, 255, 255, 0.14);
 }
 
 /* The UA default focus ring is nearly invisible on the navy header and inside
@@ -93,13 +118,30 @@ a {
   padding: 0 1.5rem;
 }
 
+/* Frosted bar that stays with you as you scroll. The translucent navy plus
+   backdrop blur lets page content tint it slightly as it passes underneath,
+   and the ::after line is a specular highlight along the bottom edge. */
 header.site-header {
-  background: var(--navy);
+  background: linear-gradient(180deg, rgba(35, 72, 130, 0.88) 0%, rgba(20, 44, 82, 0.92) 100%);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
   color: #fff;
   padding: 1.1rem 0;
   border-bottom: 3px solid var(--gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 4px 20px rgba(0, 0, 0, 0.18);
   /* Anchors the mobile nav dropdown, which hangs below the bar. */
-  position: relative;
+  position: sticky;
+  top: 0;
+  /* Below the lightbox (50) and records modal (51) so they still cover it. */
+  z-index: 30;
+}
+
+/* Browsers without backdrop-filter get the solid navy instead of a
+   washed-out translucent bar. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  header.site-header {
+    background: linear-gradient(180deg, #234882 0%, #142c52 100%);
+  }
 }
 
 header.site-header .header-inner {
@@ -197,8 +239,13 @@ header.site-header .site-nav {
 .kickoff-countdown {
   display: inline-flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.25);
+  /* Recessed well: dark inset with a light catch on the bottom lip, so the
+     digits read like a readout set into the bar rather than printed on it. */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.22) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.14);
   color: var(--gold);
+  text-shadow: 0 0 12px rgba(255, 199, 44, 0.45);
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.9rem;
   font-weight: 600;
@@ -206,7 +253,7 @@ header.site-header .site-nav {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   padding: 0.35rem 0.65rem;
-  border-radius: 6px;
+  border-radius: 7px;
   white-space: nowrap;
 }
 
@@ -289,17 +336,21 @@ main {
 
 .week-card {
   display: block;
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   overflow: hidden;
   text-decoration: none;
   color: var(--text);
-  transition: border-color 0.15s ease;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
+/* Lifts toward the pointer, the way a physical card would catch the light. */
 .week-card:hover {
   border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2), var(--surface-highlight);
 }
 
 .week-card .cover {
@@ -333,7 +384,8 @@ main {
 
 .badge-coming-soon {
   display: inline-block;
-  background: var(--gold);
+  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   color: var(--navy-dark);
   font-size: 0.75rem;
   font-weight: 700;
@@ -349,12 +401,13 @@ main {
 }
 
 .coming-soon-banner {
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--gold);
-  border-radius: var(--radius);
+  border-radius: 12px;
   padding: 1.25rem 1.5rem;
   color: var(--text-muted);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
 }
 
 /* Week gallery page */
@@ -414,11 +467,13 @@ main {
 }
 
 .btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  background: var(--navy);
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
   color: #fff;
   border: none;
   border-radius: var(--radius);
@@ -428,19 +483,45 @@ main {
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+/* A soft light band that sweeps across on hover. Purely decorative, and
+   the reduced-motion rule below collapses it to nothing. */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, var(--sheen) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
 }
 
 .btn:hover {
-  background: var(--navy-dark);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.btn:hover::after {
+  transform: translateX(120%);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-1), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn.btn-gold {
-  background: var(--gold);
+  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
   color: var(--navy-dark);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .btn.btn-gold:hover {
-  background: var(--gold-hover);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .photo-grid {
@@ -453,10 +534,23 @@ main {
   padding: 0;
   border: none;
   background: var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
   aspect-ratio: 1 / 1;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Thumbnails rise slightly under the pointer so the grid feels tactile
+   rather than like a contact sheet. */
+.photo-grid button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-2);
+}
+
+.photo-grid button:active {
+  transform: scale(0.99);
 }
 
 .photo-grid img {
@@ -471,7 +565,11 @@ main {
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(10, 12, 16, 0.92);
+  /* Frosted scrim: the page stays faintly visible and blurred behind the
+     panel instead of being blacked out. */
+  background: rgba(10, 12, 16, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
   display: none;
   align-items: center;
   justify-content: center;
@@ -541,6 +639,8 @@ main {
 footer.site-footer {
   flex-shrink: 0;
   border-top: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 100%);
   color: var(--text-muted);
   font-size: 0.85rem;
   padding: 1.5rem 0;
@@ -567,6 +667,10 @@ footer.site-footer p + p {
   justify-content: center;
   aspect-ratio: auto;
   min-height: 120px;
+}
+
+.season-card:hover {
+  background: var(--surface-hover);
 }
 
 .season-card .card-body {
@@ -610,10 +714,11 @@ footer.site-footer p + p {
 }
 
 .stat-tile {
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 10px;
   padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
 }
 
 .stat-tile-label {
@@ -642,7 +747,8 @@ footer.site-footer p + p {
 }
 
 .season-table thead {
-  background: var(--navy);
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   color: #fff;
 }
 
@@ -696,7 +802,8 @@ footer.site-footer p + p {
 }
 
 .records-table thead {
-  background: var(--navy);
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   color: #fff;
 }
 
@@ -819,16 +926,18 @@ footer.site-footer p + p {
 .leaderboard-card {
   display: flex;
   flex-direction: column;
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   padding: 1.25rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .leaderboard-card:hover {
   border-color: var(--gold);
-  box-shadow: 0 2px 8px rgba(27, 58, 107, 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2), var(--surface-highlight);
 }
 
 .leaderboard-card h3 {
@@ -909,79 +1018,13 @@ footer.site-footer p + p {
   margin: 0 0 1.5rem;
 }
 
-.podcast-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.podcast-link-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem;
-  text-decoration: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.podcast-link-card:hover {
-  border-color: var(--gold);
-  box-shadow: 0 2px 8px rgba(27, 58, 107, 0.1);
-}
-
-.podcast-link-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.podcast-link-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.podcast-link-icon--youtube {
-  background: #ff0000;
-}
-
-.podcast-link-icon--spotify {
-  background: #1db954;
-}
-
-.podcast-link-icon--facebook {
-  background: #1877f2;
-}
-
-.podcast-link-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-
-.podcast-link-text strong {
-  color: var(--text);
-  font-size: 0.95rem;
-}
-
-.podcast-link-text span {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
 .podcast-card {
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   padding: 1.25rem;
   margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
 }
 
 .embed-container {
@@ -1012,7 +1055,11 @@ footer.site-footer p + p {
 .records-modal {
   position: fixed;
   inset: 0;
-  background: rgba(10, 12, 16, 0.92);
+  /* Frosted scrim: the page stays faintly visible and blurred behind the
+     panel instead of being blacked out. */
+  background: rgba(10, 12, 16, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
   display: none;
   align-items: center;
   justify-content: center;
@@ -1029,10 +1076,11 @@ footer.site-footer p + p {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  background: var(--card-bg);
-  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-3), var(--surface-highlight);
 }
 
 .records-modal-close {
@@ -1165,7 +1213,10 @@ footer.site-footer p + p {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    background: var(--navy-dark);
+    background: linear-gradient(180deg, rgba(27, 58, 107, 0.96) 0%, rgba(16, 34, 64, 0.97) 100%);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    backdrop-filter: saturate(180%) blur(16px);
+    box-shadow: var(--shadow-3);
     border-bottom: 3px solid var(--gold);
     padding: 0.5rem 1rem;
   }
@@ -1218,5 +1269,21 @@ footer.site-footer p + p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Hold the hover lifts flat and keep the shine off-screen, so nothing
+     jumps. Color and shadow feedback still comes through. */
+  .week-card:hover,
+  .leaderboard-card:hover,
+  .photo-grid button:hover,
+  .photo-grid button:active,
+  .btn:hover,
+  .btn:active {
+    transform: none;
+  }
+
+  .btn::after,
+  .btn:hover::after {
+    display: none;
   }
 }
