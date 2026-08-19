@@ -62,20 +62,38 @@ function isAfterDarkNow() {
   return now < sunrise || now >= sunset;
 }
 
+// Storage can throw in private-browsing modes; a failure to remember the
+// preference shouldn't stop the theme from switching for this page view.
+function readStored() {
+  try {
+    return localStorage.getItem("theme");
+  } catch (err) {
+    return null;
+  }
+}
+
+function writeStored(theme) {
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (err) {
+    /* preference just won't persist */
+  }
+}
+
 function initTheme() {
   const html = document.documentElement;
-  const toggle = document.getElementById("theme-toggle");
   let autoTimer = null;
+  let current = "light";
 
-  function applyTheme(theme) {
-    const isDark = theme === "dark";
-    if (isDark) {
-      html.setAttribute("data-theme", "dark");
-    } else {
-      html.removeAttribute("data-theme");
-    }
+  // The button lives in <body>, which doesn't exist yet when this file runs
+  // (it's loaded in <head> without defer so the theme is set before first
+  // paint and the page never flashes the wrong colours). So the button is
+  // looked up each time rather than captured once at startup.
+  function syncToggle() {
+    const toggle = document.getElementById("theme-toggle");
     if (!toggle) return;
 
+    const isDark = current === "dark";
     // The button says what it will switch you to, not what you're on now.
     const icon = toggle.querySelector(".theme-toggle-icon");
     const label = toggle.querySelector(".theme-toggle-label");
@@ -86,22 +104,31 @@ function initTheme() {
     toggle.setAttribute("aria-pressed", String(isDark));
   }
 
+  function applyTheme(theme) {
+    current = theme;
+    if (theme === "dark") {
+      html.setAttribute("data-theme", "dark");
+    } else {
+      html.removeAttribute("data-theme");
+    }
+    syncToggle();
+  }
+
   // Explicit choice: persists and overrides the sunrise/sunset auto-switch.
   function setTheme(theme) {
     applyTheme(theme);
-    localStorage.setItem("theme", theme);
+    writeStored(theme);
     if (autoTimer) {
       clearInterval(autoTimer);
       autoTimer = null;
     }
   }
 
-  function updateTheme() {
-    const current = html.getAttribute("data-theme");
+  function toggleTheme() {
     setTheme(current === "dark" ? "light" : "dark");
   }
 
-  const saved = localStorage.getItem("theme");
+  const saved = readStored();
   if (saved === "dark" || saved === "light") {
     applyTheme(saved);
   } else {
@@ -112,8 +139,18 @@ function initTheme() {
     }, 15 * 60 * 1000);
   }
 
-  if (toggle) {
-    toggle.addEventListener("click", updateTheme);
+  function wireToggle() {
+    const toggle = document.getElementById("theme-toggle");
+    if (!toggle) return;
+    toggle.addEventListener("click", toggleTheme);
+    // Label/icon still show the head-time defaults until this first sync.
+    syncToggle();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", wireToggle);
+  } else {
+    wireToggle();
   }
 }
 
