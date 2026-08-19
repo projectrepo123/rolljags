@@ -9,6 +9,8 @@
   <meta name="description" content="The Jaguar Football Booster Club podcast. Watch on YouTube, listen on Spotify, and follow the team on Facebook." />
   <link rel="canonical" href="https://rolljags.com/podcast" />
   <script src="/js/theme.js"></script>
+  <script src="/js/countdown.js" defer></script>
+  <script src="/js/nav.js" defer></script>
   <meta property="og:title" content="Podcast | Jaguar Football" />
   <meta property="og:description" content="Listen to the Jaguar Football Booster Club podcast on YouTube and Spotify, and follow along on Facebook." />
   <meta property="og:image" content="https://rolljags.com/logo.webp" />
@@ -24,10 +26,18 @@
         <h1>Jaguar Football</h1>
       </a>
       <nav class="site-nav">
-        <a href="/">Photos</a>
-        <a href="/history">History</a>
-        <a href="/podcast" class="active">Podcast</a>
+        <div class="nav-links" id="nav-links">
+          <a href="/">Photos</a>
+          <a href="/history">History</a>
+          <a href="/podcast" class="active">Podcast</a>
+        </div>
+        <span class="kickoff-countdown" id="kickoff-countdown" hidden></span>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
       </nav>
     </div>
   </header>

@@ -9,6 +9,8 @@
   <meta name="description" content="Jaguar Football team history: season records, all-time scoring leaders, and game results from 1999 to today." />
   <link rel="canonical" href="https://rolljags.com/history" />
   <script src="/js/theme.js"></script>
+  <script src="/js/countdown.js" defer></script>
+  <script src="/js/nav.js" defer></script>
   <meta property="og:title" content="Team History | Jaguar Football" />
   <meta property="og:description" content="Jaguar Football season records and game results from 2004 to present." />
   <meta property="og:image" content="https://rolljags.com/logo.webp" />
@@ -24,10 +26,18 @@
         <h1>Jaguar Football</h1>
       </a>
       <nav class="site-nav">
-        <a href="/">Photos</a>
-        <a href="/history" class="active">History</a>
-        <a href="/podcast">Podcast</a>
+        <div class="nav-links" id="nav-links">
+          <a href="/">Photos</a>
+          <a href="/history" class="active">History</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+        <span class="kickoff-countdown" id="kickoff-countdown" hidden></span>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
       </nav>
     </div>
   </header>

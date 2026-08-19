@@ -4,6 +4,7 @@ import { handleZip } from "./routes/zip.js";
 import { injectWeekMeta } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum } from "./lib/validate.js";
 import { LEVELS } from "./lib/r2.js";
+import { nextGame } from "./lib/schedule.js";
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -27,9 +28,32 @@ const SECURITY_HEADERS = {
 export default {
   async fetch(request, env, ctx) {
     const response = await handle(request, env, ctx);
-    return withSecurityHeaders(response);
+    return withSecurityHeaders(injectKickoff(response));
   },
 };
+
+// Stamps the next kickoff into every HTML page so the nav countdown can run
+// without each page fetching the schedule separately. The schedule lives in
+// one place (lib/schedule.js) and the client just reads the result.
+function injectKickoff(response) {
+  if (!response.headers.get("content-type")?.includes("text/html")) return response;
+
+  const upcoming = nextGame();
+  if (!upcoming) return response;
+
+  const { game, at } = upcoming;
+  const meta =
+    `<meta name="next-kickoff" content="${at.toISOString()}">` +
+    `<meta name="next-opponent" content="${escapeAttr(game.homeAway)} vs. ${escapeAttr(game.opponent)}">`;
+
+  return new HTMLRewriter()
+    .on("head", { element: (el) => el.append(meta, { html: true }) })
+    .transform(response);
+}
+
+function escapeAttr(str) {
+  return String(str ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
 
 async function handle(request, env, ctx) {
   const url = new URL(request.url);

@@ -98,6 +98,8 @@ header.site-header {
   color: #fff;
   padding: 1.1rem 0;
   border-bottom: 3px solid var(--gold);
+  /* Anchors the mobile nav dropdown, which hangs below the bar. */
+  position: relative;
 }
 
 header.site-header .header-inner {
@@ -146,6 +148,68 @@ header.site-header .site-nav {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Hamburger. Hidden on desktop, where the links show inline. */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Collapse the three bars into an X while the menu is open. */
+.nav-toggle.open .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Countdown to the next kickoff, populated by countdown.js. Stays hidden
+   until it has a real value so it never flashes as an empty pill. */
+.kickoff-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.kickoff-countdown[hidden] {
+  display: none;
 }
 
 .theme-toggle {
@@ -1049,6 +1113,45 @@ footer.site-footer p + p {
     flex-wrap: wrap;
     justify-content: center;
     row-gap: 0.6rem;
+  }
+
+  /* Links move behind the hamburger; the countdown and theme toggle stay
+     visible in the bar so kickoff is glanceable without opening anything. */
+  header.site-header .site-nav {
+    gap: 0.75rem;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--navy-dark);
+    border-bottom: 3px solid var(--gold);
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  header.site-header .site-nav .nav-links a {
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+
+  header.site-header .site-nav .nav-links a.active {
+    border-bottom: none;
+    padding-bottom: 0.5rem;
   }
 
   header.site-header .site-logo {
