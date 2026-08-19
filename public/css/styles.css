@@ -1,6 +1,7 @@
 :root {
   --navy: #1b3a6b;
   --navy-dark: #142c52;
+  --navy-text: var(--navy);
   --gold: #ffc72c;
   --gold-hover: #f0b800;
   --bg: #f7f8fa;
@@ -19,6 +20,7 @@
     --text: #e0e0e0;
     --text-muted: #a0a0a0;
     --border: #3d3d3d;
+    --navy-text: #7fb2ff;
   }
 }
 
@@ -28,6 +30,7 @@
   --text: #e0e0e0;
   --text-muted: #a0a0a0;
   --border: #3d3d3d;
+  --navy-text: #7fb2ff;
 }
 
 * {
@@ -51,7 +54,7 @@ body {
 }
 
 a {
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 /* Shared page container. Used by the header, main content, and footer so
@@ -107,7 +110,7 @@ header.site-header a {
 .back-link {
   display: inline-block;
   font-size: 0.95rem;
-  color: var(--navy);
+  color: var(--navy-text);
   margin-bottom: 1rem;
 }
 
@@ -277,7 +280,7 @@ main {
 }
 
 .level-tab.active {
-  color: var(--navy);
+  color: var(--navy-text);
   border-bottom-color: var(--gold);
 }
 
@@ -458,7 +461,7 @@ footer.site-footer p + p {
   font-size: 1.5rem;
   margin: 0;
   font-weight: 600;
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 .season-title {
@@ -499,7 +502,7 @@ footer.site-footer p + p {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 .season-table {
@@ -636,7 +639,7 @@ footer.site-footer p + p {
   cursor: pointer;
   list-style: none;
   font-size: 1rem;
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 .records-section summary::-webkit-details-marker {
@@ -704,7 +707,7 @@ footer.site-footer p + p {
   margin: 0 0 1rem;
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--navy-text);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
@@ -735,7 +738,7 @@ footer.site-footer p + p {
 }
 
 .leaderboard-item .value {
-  color: var(--navy);
+  color: var(--navy-text);
   font-weight: 600;
   margin-left: 0.5rem;
 }
@@ -743,7 +746,7 @@ footer.site-footer p + p {
 .leaderboard-link {
   display: inline-block;
   font-size: 0.85rem;
-  color: var(--navy);
+  color: var(--navy-text);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.15s ease;
@@ -777,8 +780,8 @@ footer.site-footer p + p {
   align-items: center;
   gap: 0.4rem;
   background: transparent;
-  color: var(--navy);
-  border: 2px solid var(--navy);
+  color: var(--navy-text);
+  border: 2px solid var(--navy-text);
   border-radius: var(--radius);
   padding: 0.55rem 1rem;
   font-size: 0.95rem;
@@ -877,7 +880,7 @@ footer.site-footer p + p {
   margin: 0 0 1.25rem;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 .records-modal .table-scroll {
@@ -902,14 +905,14 @@ footer.site-footer p + p {
 .season-card.season-win .season-record-display::before {
   content: "●";
   margin-right: 0.5rem;
-  color: var(--navy);
+  color: var(--navy-text);
   font-size: 0.8rem;
 }
 
 .season-card.season-loss .season-record-display::before {
   content: "○";
   margin-right: 0.5rem;
-  color: var(--navy);
+  color: var(--navy-text);
   font-size: 0.8rem;
 }
 
@@ -920,7 +923,7 @@ footer.site-footer p + p {
 .season-card.season-even .season-record-display::before {
   content: "◐";
   margin-right: 0.5rem;
-  color: var(--navy);
+  color: var(--navy-text);
   font-size: 0.8rem;
 }
 
