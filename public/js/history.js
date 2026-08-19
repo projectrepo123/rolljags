@@ -1,5 +1,6 @@
 const seasonsEl = document.getElementById("seasons");
 const leaderboardsEl = document.getElementById("leaderboards");
+const headToHeadEl = document.getElementById("headToHead");
 
 function computeRecord(games) {
   let wins = 0, losses = 0, ties = 0;
@@ -468,11 +469,81 @@ function renderLeaderboards(records) {
   leaderboardsEl.appendChild(container);
 }
 
+function computeHeadToHead(data) {
+  const byOpponent = {};
+
+  for (const games of Object.values(data)) {
+    for (const game of games) {
+      if (!byOpponent[game.opponent]) {
+        byOpponent[game.opponent] = { opponent: game.opponent, wins: 0, losses: 0, ties: 0, pf: 0, pa: 0 };
+      }
+      const row = byOpponent[game.opponent];
+      if (game.result === "W") row.wins++;
+      else if (game.result === "L") row.losses++;
+      else row.ties++;
+      row.pf += game.pointsFor;
+      row.pa += game.pointsAgainst;
+    }
+  }
+
+  return Object.values(byOpponent).sort((a, b) => {
+    const gamesA = a.wins + a.losses + a.ties;
+    const gamesB = b.wins + b.losses + b.ties;
+    if (gamesB !== gamesA) return gamesB - gamesA;
+    return a.opponent.localeCompare(b.opponent);
+  });
+}
+
+function renderHeadToHead(data) {
+  if (!headToHeadEl) return;
+
+  const rows = computeHeadToHead(data);
+  if (rows.length === 0) return;
+
+  headToHeadEl.innerHTML = "";
+
+  const heading = document.createElement("h2");
+  heading.className = "section-heading";
+  heading.textContent = "Head-to-Head Records";
+  headToHeadEl.appendChild(heading);
+
+  const scrollContainer = document.createElement("div");
+  scrollContainer.className = "table-scroll";
+
+  const table = document.createElement("table");
+  table.className = "records-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const col of ["Opponent", "Record", "PF", "PA"]) {
+    const th = document.createElement("th");
+    th.textContent = col;
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of rows) {
+    const tr = document.createElement("tr");
+    tr.appendChild(createCell(row.opponent));
+    tr.appendChild(createCell(recordString(row)));
+    tr.appendChild(createCell(row.pf));
+    tr.appendChild(createCell(row.pa));
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  scrollContainer.appendChild(table);
+  headToHeadEl.appendChild(scrollContainer);
+}
+
 async function init() {
   try {
     const res = await fetch("/data/history.json");
     const data = await res.json();
     renderSeasons(data);
+    renderHeadToHead(data);
   } catch (err) {
     seasonsEl.innerHTML = '<p class="empty-state">Couldn\'t load history. Try refreshing.</p>';
   }

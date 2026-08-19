@@ -437,6 +437,36 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
+.season-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+}
+
+.stat-tile {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+}
+
+.stat-tile-label {
+  margin: 0 0 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-tile-value {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
 .season-table {
   width: 100%;
   border-collapse: collapse;
@@ -554,6 +584,10 @@ footer.site-footer p + p {
   font-size: 0.65em;
   color: var(--text-muted);
   margin-left: 1px;
+}
+
+#headToHead {
+  margin-bottom: 2.5rem;
 }
 
 .leaderboards-container {

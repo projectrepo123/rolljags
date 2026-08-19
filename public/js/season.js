@@ -3,6 +3,7 @@ const year = params.get("year");
 
 const titleEl = document.getElementById("season-title");
 const recordEl = document.getElementById("season-record");
+const statsEl = document.getElementById("season-stats");
 const tbodyEl = document.getElementById("season-tbody");
 const statusEl = document.getElementById("season-status");
 const leadersEl = document.getElementById("season-leaders");
@@ -130,6 +131,81 @@ function renderSeasonLeaders(records) {
   }
 }
 
+function computeSeasonStats(games) {
+  let biggestWin = null;
+  let toughestLoss = null;
+  const home = { wins: 0, losses: 0, ties: 0 };
+  const away = { wins: 0, losses: 0, ties: 0 };
+  let streakResult = null;
+  let streakLen = 0;
+  let bestWinStreak = 0;
+  let bestLossStreak = 0;
+
+  for (const game of games) {
+    const margin = game.pointsFor - game.pointsAgainst;
+
+    if (game.result === "W" && (!biggestWin || margin > biggestWin.pointsFor - biggestWin.pointsAgainst)) {
+      biggestWin = game;
+    }
+    if (game.result === "L" && (!toughestLoss || -margin > toughestLoss.pointsAgainst - toughestLoss.pointsFor)) {
+      toughestLoss = game;
+    }
+
+    const loc = game.homeAway === "Home" ? home : away;
+    if (game.result === "W") loc.wins++;
+    else if (game.result === "L") loc.losses++;
+    else loc.ties++;
+
+    if (game.result === streakResult) {
+      streakLen++;
+    } else {
+      streakResult = game.result;
+      streakLen = 1;
+    }
+    if (streakResult === "W") bestWinStreak = Math.max(bestWinStreak, streakLen);
+    if (streakResult === "L") bestLossStreak = Math.max(bestLossStreak, streakLen);
+  }
+
+  return { biggestWin, toughestLoss, home, away, bestWinStreak, bestLossStreak };
+}
+
+function renderStatTile(container, label, value) {
+  if (!value) return;
+  const tile = document.createElement("div");
+  tile.className = "stat-tile";
+  const labelEl = document.createElement("p");
+  labelEl.className = "stat-tile-label";
+  labelEl.textContent = label;
+  const valueEl = document.createElement("p");
+  valueEl.className = "stat-tile-value";
+  valueEl.textContent = value;
+  tile.appendChild(labelEl);
+  tile.appendChild(valueEl);
+  container.appendChild(tile);
+}
+
+function renderSeasonStats(games) {
+  if (!statsEl || games.length === 0) return;
+
+  const stats = computeSeasonStats(games);
+  statsEl.innerHTML = "";
+
+  renderStatTile(statsEl, "Biggest Win", stats.biggestWin
+    ? `${resultDisplay(stats.biggestWin)} vs. ${stats.biggestWin.opponent}`
+    : null);
+  renderStatTile(statsEl, "Toughest Loss", stats.toughestLoss
+    ? `${resultDisplay(stats.toughestLoss)} vs. ${stats.toughestLoss.opponent}`
+    : null);
+  renderStatTile(statsEl, "Longest Win Streak", stats.bestWinStreak > 1 ? `${stats.bestWinStreak} games` : null);
+  renderStatTile(statsEl, "Longest Losing Streak", stats.bestLossStreak > 1 ? `${stats.bestLossStreak} games` : null);
+  renderStatTile(statsEl, "Home Record", stats.home.wins + stats.home.losses + stats.home.ties > 0
+    ? recordString({ wins: stats.home.wins, losses: stats.home.losses, ties: stats.home.ties })
+    : null);
+  renderStatTile(statsEl, "Away Record", stats.away.wins + stats.away.losses + stats.away.ties > 0
+    ? recordString({ wins: stats.away.wins, losses: stats.away.losses, ties: stats.away.ties })
+    : null);
+}
+
 function renderSeason(games) {
   const record = computeRecord(games);
 
@@ -137,6 +213,8 @@ function renderSeason(games) {
   document.title = `${year} Season | Jaguar Football`;
 
   recordEl.innerHTML = `<strong>${recordString(record)}</strong>`;
+
+  renderSeasonStats(games);
 
   tbodyEl.innerHTML = "";
   for (const game of games) {
