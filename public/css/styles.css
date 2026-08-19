@@ -126,8 +126,8 @@ header.site-header {
   -webkit-backdrop-filter: saturate(180%) blur(16px);
   backdrop-filter: saturate(180%) blur(16px);
   color: #fff;
-  padding: 1.1rem 0;
-  border-bottom: 3px solid var(--gold);
+  padding: 0.5rem 0;
+  border-bottom: 2px solid var(--gold);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 4px 20px rgba(0, 0, 0, 0.18);
   /* Anchors the mobile nav dropdown, which hangs below the bar. */
   position: sticky;
@@ -164,14 +164,17 @@ header.site-header .brand:hover {
 }
 
 header.site-header .site-logo {
-  height: 42px;
+  height: 36px;
   width: auto;
   display: block;
+  /* Lifts the logo off the translucent navy behind it. */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
 }
 
 header.site-header h1 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
 }
 
 header.site-header a {
@@ -188,14 +191,23 @@ header.site-header a {
 
 header.site-header .site-nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 0.85rem;
   align-items: center;
 }
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 0.15rem;
   align-items: center;
+}
+
+/* Hairline between the page links and the status controls. */
+.nav-links::after {
+  content: "";
+  width: 1px;
+  height: 22px;
+  margin-left: 0.7rem;
+  background: rgba(255, 255, 255, 0.22);
 }
 
 /* Hamburger. Hidden on desktop, where the links show inline. */
@@ -237,24 +249,56 @@ header.site-header .site-nav {
 /* Countdown to the next kickoff, populated by countdown.js. Stays hidden
    until it has a real value so it never flashes as an empty pill. */
 .kickoff-countdown {
+  /* Label stacked over the digits so the numbers are self-explanatory
+     instead of reading as an anonymous ticker. */
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  /* Recessed well: dark inset with a light catch on the bottom lip, so the
-     digits read like a readout set into the bar rather than printed on it. */
+  line-height: 1.15;
+  /* Recessed well: dark inset with a light catch on the bottom lip, so it
+     reads like a readout set into the bar rather than printed on it. */
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.22) 100%);
   border: 1px solid rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.14);
+  padding: 0.25rem 0.6rem;
+  border-radius: 7px;
+  white-space: nowrap;
+}
+
+.kickoff-label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.kickoff-clock {
   color: var(--gold);
   text-shadow: 0 0 12px rgba(255, 199, 44, 0.45);
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   /* Fixed-width digits so the clock doesn't jitter as the seconds tick. */
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
-  padding: 0.35rem 0.65rem;
-  border-radius: 7px;
-  white-space: nowrap;
+}
+
+/* While a game is in progress the readout turns green and pulses. */
+.kickoff-countdown.is-live .kickoff-clock {
+  color: #4ade80;
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.5);
+}
+
+.kickoff-countdown.is-live .kickoff-label {
+  color: #4ade80;
+  animation: kickoff-pulse 2s ease-in-out infinite;
+}
+
+@keyframes kickoff-pulse {
+  50% {
+    opacity: 0.45;
+  }
 }
 
 .kickoff-countdown[hidden] {
@@ -265,20 +309,21 @@ header.site-header .site-nav {
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   cursor: pointer;
-  padding: 0.25rem;
-  min-width: 44px;
-  min-height: 44px;
+  padding: 0 0.5rem;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 .theme-toggle:hover {
-  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* On desktop the toggle sits inline in the nav, where the icon alone is
@@ -289,24 +334,29 @@ header.site-header .site-nav {
   font-weight: 400;
 }
 
+/* Links are pills rather than underlined text: an underline would sit at the
+   bottom of the 44px tap target, detached from the centred label. */
 header.site-header .site-nav a {
-  font-size: 1rem;
-  color: #fff;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
-  transition: color 0.15s ease;
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 38px;
+  padding: 0 0.8rem;
+  border-radius: 8px;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 header.site-header .site-nav a:hover {
-  color: var(--gold);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 header.site-header .site-nav a.active {
   color: var(--gold);
-  border-bottom: 2px solid var(--gold);
-  padding-bottom: 0.2rem;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 main {
@@ -359,6 +409,11 @@ main {
   display: block;
   width: 100%;
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.week-card:hover .cover {
+  transform: scale(1.04);
 }
 
 .week-card .card-body {
@@ -846,6 +901,17 @@ footer.site-footer p + p {
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  border-radius: 10px;
+  /* Shadows pinned to the scroll edges fade away once you reach either end,
+     so it's obvious when a wide table continues off-screen. */
+  background:
+    linear-gradient(to right, var(--card-bg) 30%, transparent) left center,
+    linear-gradient(to left, var(--card-bg) 30%, transparent) right center,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.16), transparent) left center,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.16), transparent) right center;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 
 .table-scroll .records-table {
@@ -1199,8 +1265,15 @@ footer.site-footer p + p {
 
   .kickoff-countdown {
     order: 1;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .kickoff-label {
+    font-size: 0.55rem;
+  }
+
+  .kickoff-clock {
     font-size: 0.8rem;
-    padding: 0.3rem 0.5rem;
   }
 
   .nav-links {
@@ -1225,14 +1298,20 @@ footer.site-footer p + p {
     display: flex;
   }
 
+  /* The hairline separates a horizontal row; in the stacked menu it would
+     just be a stray tick mark. */
+  .nav-links::after {
+    display: none;
+  }
+
   header.site-header .site-nav .nav-links a {
     width: 100%;
-    padding: 0.5rem 0;
+    min-height: 44px;
+    padding: 0.5rem 0.6rem;
   }
 
   header.site-header .site-nav .nav-links a.active {
-    border-bottom: none;
-    padding-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.12);
   }
 
   /* Theme switch sits at the bottom of the menu as a labelled row, set off
@@ -1257,6 +1336,39 @@ footer.site-footer p + p {
   header.site-header h1 {
     font-size: 1.2rem;
   }
+}
+
+/* Brand-tinted text selection. */
+::selection {
+  background: rgba(255, 199, 44, 0.35);
+  color: var(--text);
+}
+
+/* Slim, self-effacing scrollbars that pick up the theme. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.45) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.65);
+  background-clip: content-box;
 }
 
 /* Respect the OS "reduce motion" setting: keep color/border feedback but

@@ -3,7 +3,9 @@
 // so this runs on every page without fetching the schedule.
 (function initCountdown() {
   const el = document.getElementById("kickoff-countdown");
-  if (!el) return;
+  const labelEl = document.getElementById("kickoff-label");
+  const clockEl = document.getElementById("kickoff-clock");
+  if (!el || !labelEl || !clockEl) return;
 
   const kickoffMeta = document.querySelector('meta[name="next-kickoff"]');
   if (!kickoffMeta) return; // No games left on the schedule.
@@ -38,7 +40,9 @@
 
     if (remaining <= 0) {
       if (Date.now() - kickoff.getTime() < GAME_LENGTH_MS) {
-        el.textContent = "Game time";
+        el.classList.add("is-live");
+        labelEl.textContent = "Live";
+        clockEl.textContent = "Game on";
         el.title = opponent;
         return;
       }
@@ -48,7 +52,8 @@
       return;
     }
 
-    el.textContent = clockFace(remaining);
+    labelEl.textContent = "Kickoff in";
+    clockEl.textContent = clockFace(remaining);
     el.title = opponent ? `Kickoff ${opponent}` : "Next kickoff";
   }
 
