@@ -97,6 +97,8 @@ function computeSeasonStats(games) {
   let streakLen = 0;
   let bestWinStreak = 0;
   let bestLossStreak = 0;
+  let totalPointsFor = 0;
+  let totalPointsAgainst = 0;
 
   for (const game of games) {
     const margin = game.pointsFor - game.pointsAgainst;
@@ -121,9 +123,12 @@ function computeSeasonStats(games) {
     }
     if (streakResult === "W") bestWinStreak = Math.max(bestWinStreak, streakLen);
     if (streakResult === "L") bestLossStreak = Math.max(bestLossStreak, streakLen);
+
+    totalPointsFor += game.pointsFor;
+    totalPointsAgainst += game.pointsAgainst;
   }
 
-  return { biggestWin, toughestLoss, home, away, bestWinStreak, bestLossStreak };
+  return { biggestWin, toughestLoss, home, away, bestWinStreak, bestLossStreak, totalPointsFor, totalPointsAgainst, gameCount: games.length };
 }
 
 function renderStatTile(container, label, value) {
@@ -175,6 +180,8 @@ function renderSeasonHighlights(games) {
   renderStatTile(grid, "Away Record", stats.away.wins + stats.away.losses + stats.away.ties > 0
     ? recordString({ wins: stats.away.wins, losses: stats.away.losses, ties: stats.away.ties })
     : null);
+  renderStatTile(grid, "Total Points For", stats.gameCount > 0 ? `${stats.totalPointsFor} (${(stats.totalPointsFor / stats.gameCount).toFixed(1)}/game)` : null);
+  renderStatTile(grid, "Total Points Against", stats.gameCount > 0 ? `${stats.totalPointsAgainst} (${(stats.totalPointsAgainst / stats.gameCount).toFixed(1)}/game)` : null);
 
   return grid.children.length > 0 ? section : null;
 }
