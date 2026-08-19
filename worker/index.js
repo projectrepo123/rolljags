@@ -16,6 +16,7 @@ const SECURITY_HEADERS = {
     "style-src 'self'",
     "script-src 'self' https://static.cloudflareinsights.com",
     "connect-src 'self'",
+    "frame-src https://www.youtube.com https://open.spotify.com",
     "base-uri 'none'",
     "form-action 'none'",
     "frame-ancestors 'none'",

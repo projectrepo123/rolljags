@@ -772,6 +772,27 @@ footer.site-footer p + p {
   margin-bottom: 1.5rem;
 }
 
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: var(--radius);
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-outline:hover {
+  background: var(--navy);
+  color: #fff;
+}
+
 .podcast-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
