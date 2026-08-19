@@ -1093,12 +1093,21 @@ footer.site-footer p + p {
   box-shadow: var(--shadow-1), var(--surface-highlight);
 }
 
+/* The podcast page runs in a narrower centered column than the rest of the
+   site. At full container width the video alone rendered ~1010x569, which
+   dwarfed the episode list under it; capping the column keeps the two embeds
+   a matched pair and keeps every left edge aligned. */
+.podcast-page {
+  max-width: 840px;
+}
+
 .embed-container {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius);
   overflow: hidden;
+  box-shadow: var(--shadow-2);
 }
 
 .embed-container iframe {
@@ -1110,10 +1119,13 @@ footer.site-footer p + p {
 }
 
 .spotify-embed {
+  display: block;
   width: 100%;
+  /* Spotify's own recommended height for a show embed with its episode list. */
   height: 352px;
   border: 0;
   border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
 }
 
 /* Records Modal */
