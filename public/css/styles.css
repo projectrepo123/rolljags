@@ -769,31 +769,70 @@ footer.site-footer p + p {
 }
 
 .podcast-links {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
-.btn-outline {
-  display: inline-flex;
+.podcast-link-card {
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  background: transparent;
-  color: var(--navy-text);
-  border: 2px solid var(--navy-text);
+  gap: 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 0.55rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 600;
+  padding: 1rem;
   text-decoration: none;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.btn-outline:hover {
-  background: var(--navy);
-  color: #fff;
+.podcast-link-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 2px 8px rgba(27, 58, 107, 0.1);
+}
+
+.podcast-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.podcast-link-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.podcast-link-icon--youtube {
+  background: #ff0000;
+}
+
+.podcast-link-icon--spotify {
+  background: #1db954;
+}
+
+.podcast-link-icon--facebook {
+  background: #1877f2;
+}
+
+.podcast-link-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.podcast-link-text strong {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.podcast-link-text span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
 }
 
 .podcast-card {
