@@ -15,6 +15,11 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const VALID_LEVELS = ["varsity", "jv", "freshman"];
 const THUMB_WIDTH = 640;
+// What the lightbox actually displays. The originals are full-resolution
+// camera files (several MB each); serving those just to fill a phone screen
+// burns cellular data for no visible gain, so we ship this instead and keep
+// the original behind the Download button.
+const VIEW_WIDTH = 1600;
 const IMAGE_EXT = /\.(jpe?g)$/i;
 
 const { values } = parseArgs({
@@ -101,6 +106,12 @@ async function main() {
       .jpeg({ quality: 95, chromaSubsampling: "4:4:4" })
       .toBuffer();
 
+    const viewBuffer = await sharp(buffer)
+      .rotate()
+      .resize({ width: VIEW_WIDTH, withoutEnlargement: true })
+      .jpeg({ quality: 82 })
+      .toBuffer();
+
     const thumbBuffer = await sharp(buffer)
       .rotate()
       .resize({ width: THUMB_WIDTH, withoutEnlargement: true })
@@ -114,6 +125,16 @@ async function main() {
         Body: originalBuffer,
         ContentType: "image/jpeg",
         ContentDisposition: `attachment; filename="${fileName}"`,
+        CacheControl: "public, max-age=31536000, immutable",
+      })
+    );
+
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: `${prefix}view/${fileName}`,
+        Body: viewBuffer,
+        ContentType: "image/jpeg",
         CacheControl: "public, max-age=31536000, immutable",
       })
     );

@@ -48,12 +48,14 @@ function renderLevel() {
   gridEl.innerHTML = "";
   lvl.photos.forEach((photo, i) => {
     const btn = document.createElement("button");
-    btn.setAttribute("aria-label", `Open ${photo.name}`);
+    btn.setAttribute("aria-label", `Open photo ${i + 1} of ${lvl.photos.length}`);
 
     const img = document.createElement("img");
     img.src = photo.thumbUrl;
     img.loading = "lazy";
-    img.alt = photo.name;
+    // The button already carries the label; an identical alt would make a
+    // screen reader announce the same thing twice.
+    img.alt = "";
 
     btn.appendChild(img);
     btn.addEventListener("click", () => openLightbox(lvl.photos, i));

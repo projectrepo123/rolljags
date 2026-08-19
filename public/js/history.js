@@ -113,7 +113,13 @@ function renderCareerScoring(list) {
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
-  details.appendChild(table);
+
+  // Wide tables must scroll inside their own box, otherwise they push the
+  // whole page sideways on a phone.
+  const scroll = document.createElement("div");
+  scroll.className = "table-scroll";
+  scroll.appendChild(table);
+  details.appendChild(scroll);
 
   return wrapTableWithSearch(details, table);
 }
@@ -149,7 +155,13 @@ function renderSeasonScoring(list) {
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
-  details.appendChild(table);
+
+  // Wide tables must scroll inside their own box, otherwise they push the
+  // whole page sideways on a phone.
+  const scroll = document.createElement("div");
+  scroll.className = "table-scroll";
+  scroll.appendChild(table);
+  details.appendChild(scroll);
 
   return wrapTableWithSearch(details, table);
 }
@@ -186,7 +198,13 @@ function renderGameTouchdowns(list) {
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
-  details.appendChild(table);
+
+  // Wide tables must scroll inside their own box, otherwise they push the
+  // whole page sideways on a phone.
+  const scroll = document.createElement("div");
+  scroll.className = "table-scroll";
+  scroll.appendChild(table);
+  details.appendChild(scroll);
 
   return wrapTableWithSearch(details, table);
 }
@@ -307,11 +325,14 @@ function wrapTableWithSearch(details, tableEl) {
   input.type = "text";
   input.className = "table-search-input";
   input.placeholder = "Search…";
+  input.setAttribute("aria-label", "Search this table");
   input.style.width = "100%";
-  input.style.padding = "0.5rem 0.75rem";
+  input.style.padding = "0.7rem 0.75rem";
+  input.style.minHeight = "44px";
   input.style.border = "1px solid var(--border)";
   input.style.borderRadius = "4px";
-  input.style.fontSize = "0.95rem";
+  // 16px minimum, otherwise iOS zooms the page in when the field is focused.
+  input.style.fontSize = "1rem";
 
   const resultCount = document.createElement("span");
   resultCount.className = "search-result-count";
@@ -381,6 +402,7 @@ function parseNumericValue(str) {
 
 let recordsModalOverlay = null;
 let recordsModalContent = null;
+let recordsModalTrigger = null;
 let cachedRecords = null;
 
 function ensureRecordsModalBuilt() {
@@ -388,6 +410,9 @@ function ensureRecordsModalBuilt() {
 
   recordsModalOverlay = document.createElement("div");
   recordsModalOverlay.className = "records-modal";
+  recordsModalOverlay.setAttribute("role", "dialog");
+  recordsModalOverlay.setAttribute("aria-modal", "true");
+  recordsModalOverlay.setAttribute("aria-label", "Records");
 
   recordsModalContent = document.createElement("div");
   recordsModalContent.className = "records-modal-content";
@@ -395,6 +420,7 @@ function ensureRecordsModalBuilt() {
   const closeBtn = document.createElement("button");
   closeBtn.className = "records-modal-close";
   closeBtn.textContent = "×";
+  closeBtn.setAttribute("aria-label", "Close");
   closeBtn.onclick = closeRecordsModal;
   recordsModalContent.appendChild(closeBtn);
 
@@ -412,11 +438,32 @@ function ensureRecordsModalBuilt() {
   document.addEventListener("keydown", (e) => {
     if (!recordsModalOverlay.classList.contains("open")) return;
     if (e.key === "Escape") closeRecordsModal();
+    if (e.key === "Tab") trapRecordsModalFocus(e);
   });
+}
+
+// Keeps Tab inside the modal so keyboard users don't end up on the page
+// behind it while it's covering the screen.
+function trapRecordsModalFocus(e) {
+  const focusable = recordsModalContent.querySelectorAll(
+    'button, a[href], input, summary, [tabindex]:not([tabindex="-1"])'
+  );
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
 }
 
 function openRecordsModal(title, contentElement) {
   ensureRecordsModalBuilt();
+  recordsModalTrigger = document.activeElement;
   const inner = recordsModalContent.querySelector(".records-modal-inner");
   inner.innerHTML = "";
 
@@ -426,14 +473,21 @@ function openRecordsModal(title, contentElement) {
   inner.appendChild(heading);
 
   inner.appendChild(contentElement);
+  recordsModalOverlay.setAttribute("aria-label", title);
   recordsModalOverlay.classList.add("open");
   document.body.style.overflow = "hidden";
+  recordsModalContent.querySelector(".records-modal-close").focus();
 }
 
 function closeRecordsModal() {
   if (recordsModalOverlay) {
     recordsModalOverlay.classList.remove("open");
     document.body.style.overflow = "";
+    // Return focus to the "View all" link that opened the modal.
+    if (recordsModalTrigger && document.contains(recordsModalTrigger)) {
+      recordsModalTrigger.focus();
+    }
+    recordsModalTrigger = null;
   }
 }
 
@@ -451,7 +505,15 @@ function renderLeaderboardCard(title, items, renderFn) {
     const item = items[i];
     const li = document.createElement("li");
     li.className = "leaderboard-item";
-    li.innerHTML = `<span class="player">${item.name}</span> <span class="value">${item.value}</span>`;
+    const nameEl = document.createElement("span");
+    nameEl.className = "player";
+    nameEl.textContent = item.name;
+
+    const valueEl = document.createElement("span");
+    valueEl.className = "value";
+    valueEl.textContent = item.value;
+
+    li.append(nameEl, " ", valueEl);
     listEl.appendChild(li);
   }
   card.appendChild(listEl);

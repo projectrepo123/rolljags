@@ -32,6 +32,8 @@ export async function getWeekData(env, year, weekNum) {
       return {
         name: fileName,
         thumbUrl: publicUrl(`${levelPrefix}thumbs/${fileName}`),
+        // Resized for on-screen display; the original stays behind Download.
+        viewUrl: publicUrl(`${levelPrefix}view/${fileName}`),
         fullUrl: publicUrl(obj.key),
       };
     });

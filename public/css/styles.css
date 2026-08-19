@@ -9,6 +9,10 @@
   --text: #1c1e21;
   --text-muted: #5b6470;
   --border: #e1e4e9;
+  --win: #1a7f3d;
+  --loss: #c41e3a;
+  --row-accent: rgba(27, 58, 107, 0.05);
+  --focus-ring: #1b3a6b;
   --radius: 8px;
   --container-width: 1100px;
 }
@@ -21,6 +25,10 @@
     --text-muted: #a0a0a0;
     --border: #3d3d3d;
     --navy-text: #7fb2ff;
+    --win: #4ade80;
+    --loss: #f87171;
+    --row-accent: rgba(255, 255, 255, 0.06);
+    --focus-ring: #ffc72c;
   }
 }
 
@@ -31,6 +39,26 @@
   --text-muted: #a0a0a0;
   --border: #3d3d3d;
   --navy-text: #7fb2ff;
+  --win: #4ade80;
+  --loss: #f87171;
+  --row-accent: rgba(255, 255, 255, 0.06);
+  --focus-ring: #ffc72c;
+}
+
+/* The UA default focus ring is nearly invisible on the navy header and inside
+   the dark lightbox, so define our own. Gold is only ~1.6:1 on white, so the
+   ring follows the theme: navy on light surfaces, gold on dark ones. */
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The header stays navy in both themes, and the lightbox is always dark, so
+   anything inside them needs the gold ring regardless of theme. */
+header.site-header :focus-visible,
+.lightbox :focus-visible {
+  outline-color: var(--gold);
 }
 
 * {
@@ -127,6 +155,8 @@ header.site-header .site-nav {
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0.25rem;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,10 +168,13 @@ header.site-header .site-nav {
 }
 
 header.site-header .site-nav a {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #fff;
   text-decoration: none;
   transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 header.site-header .site-nav a:hover {
@@ -217,6 +250,12 @@ main {
   margin: 0;
 }
 
+.week-card .card-opponent {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
 .badge-coming-soon {
   display: inline-block;
   background: var(--gold);
@@ -270,7 +309,8 @@ main {
 .level-tab {
   background: none;
   border: none;
-  padding: 0.6rem 1rem;
+  padding: 0.7rem 1rem;
+  min-height: 44px;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -301,13 +341,15 @@ main {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   background: var(--navy);
   color: #fff;
   border: none;
   border-radius: var(--radius);
-  padding: 0.55rem 1rem;
-  font-size: 0.95rem;
+  padding: 0.7rem 1.1rem;
+  min-height: 44px;
+  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -375,6 +417,16 @@ main {
   gap: 0.75rem;
 }
 
+/* Reserves the display area so swapping photos doesn't shift the controls
+   below it while the next image decodes. */
+.lightbox-figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 75vh;
+}
+
 .lightbox img {
   max-width: 100%;
   max-height: 75vh;
@@ -392,8 +444,8 @@ main {
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 44px;
+  height: 44px;
   font-size: 1.2rem;
   cursor: pointer;
 }
@@ -428,7 +480,7 @@ footer.site-footer p + p {
 }
 
 .footer-credit {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
@@ -491,7 +543,7 @@ footer.site-footer p + p {
 
 .stat-tile-label {
   margin: 0 0 0.3rem;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -549,11 +601,11 @@ footer.site-footer p + p {
 }
 
 .season-table .game-win .result-cell {
-  color: #1a7f3d;
+  color: var(--win);
 }
 
 .season-table .game-loss .result-cell {
-  color: #c41e3a;
+  color: var(--loss);
 }
 
 .season-table .game-tie .result-cell {
@@ -599,7 +651,7 @@ footer.site-footer p + p {
 }
 
 .records-table tfoot tr {
-  background-color: rgba(27, 58, 107, 0.05);
+  background-color: var(--row-accent);
   border-top: 2px solid var(--border);
   font-weight: 600;
 }
@@ -619,7 +671,7 @@ footer.site-footer p + p {
 }
 
 .stat-rank {
-  font-size: 0.65em;
+  font-size: 0.7em;
   color: var(--text-muted);
   margin-left: 1px;
 }
@@ -664,7 +716,7 @@ footer.site-footer p + p {
 .record-count {
   margin-left: 0.5rem;
   font-weight: 400;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
 }
 
@@ -687,6 +739,8 @@ footer.site-footer p + p {
   }
 }
 
+/* Not clickable as a whole — only the "View all" link inside it is, so it
+   must not present a pointer cursor. */
 .leaderboard-card {
   display: flex;
   flex-direction: column;
@@ -694,7 +748,6 @@ footer.site-footer p + p {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem;
-  cursor: pointer;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -744,8 +797,10 @@ footer.site-footer p + p {
 }
 
 .leaderboard-link {
-  display: inline-block;
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.9rem;
   color: var(--navy-text);
   text-decoration: none;
   font-weight: 600;
@@ -754,8 +809,13 @@ footer.site-footer p + p {
   padding-top: 0.5rem;
 }
 
+/* Gold on white is only ~1.6:1, so keep the hover cue on the underline
+   rather than swapping the text to an unreadable color. */
 .leaderboard-link:hover {
-  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 .section-heading {
@@ -766,6 +826,12 @@ footer.site-footer p + p {
   margin: 0 0 0.9rem;
   padding-bottom: 0.35rem;
   border-bottom: 2px solid var(--gold);
+}
+
+.podcast-intro {
+  color: var(--text-muted);
+  max-width: 60ch;
+  margin: 0 0 1.5rem;
 }
 
 .podcast-links {
@@ -832,7 +898,7 @@ footer.site-footer p + p {
 
 .podcast-link-text span {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .podcast-card {
@@ -927,12 +993,12 @@ footer.site-footer p + p {
 }
 
 .records-modal .records-table {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .records-modal .records-table th {
   padding: 0.7rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .records-modal .records-table td {
@@ -991,5 +1057,18 @@ footer.site-footer p + p {
 
   header.site-header h1 {
     font-size: 1.2rem;
+  }
+}
+
+/* Respect the OS "reduce motion" setting: keep color/border feedback but
+   drop the movement, notably the rotating disclosure arrow. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

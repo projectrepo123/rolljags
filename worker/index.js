@@ -87,14 +87,38 @@ async function handle(request, env, ctx) {
         return injectWeekMeta(asset, data, url);
       };
 
-      return validParams ? withCache(request, ctx, buildResponse) : buildResponse();
+      // "/week.html" and "/week" serve identical content, so cache them under
+      // the one canonical path instead of duplicating every week's entry.
+      return validParams
+        ? withCache(request, ctx, buildResponse, ["year", "week"], "/week")
+        : buildResponse();
     }
 
-    return env.ASSETS.fetch(request);
+    return withAssetCache(url, await env.ASSETS.fetch(request));
   } catch (err) {
     console.error(err);
     return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
+}
+
+// Static assets otherwise come back as "max-age=0, must-revalidate", which
+// costs a round-trip per file on every page load. Filenames here are not
+// content-hashed, so the CSS/JS window is deliberately short: long enough to
+// cover a browsing session, short enough that a deploy still lands promptly.
+const ASSET_CACHE_RULES = [
+  [/\.(webp|avif|png|jpe?g|gif|svg|ico|woff2?)$/i, "public, max-age=604800"],
+  [/\.(css|js)$/i, "public, max-age=600, stale-while-revalidate=86400"],
+];
+
+function withAssetCache(url, response) {
+  if (!response.ok) return response;
+
+  const rule = ASSET_CACHE_RULES.find(([pattern]) => pattern.test(url.pathname));
+  if (!rule) return response;
+
+  const cached = new Response(response.body, response);
+  cached.headers.set("Cache-Control", rule[1]);
+  return cached;
 }
 
 function withSecurityHeaders(response) {
@@ -109,14 +133,37 @@ function withSecurityHeaders(response) {
   });
 }
 
-async function withCache(request, ctx, handler) {
+// Builds the edge cache key. Only the params a route actually varies on are
+// kept, so "/api/weeks?utm_source=x" and "/api/weeks?cachebust=<random>" all
+// collapse onto the same entry instead of each triggering a fresh (and
+// expensive) fan-out of R2 list calls.
+function cacheKeyFor(request, varyParams, canonicalPath) {
+  const url = new URL(request.url);
+  if (canonicalPath) url.pathname = canonicalPath;
+  const kept = new URLSearchParams();
+  for (const name of varyParams) {
+    const value = url.searchParams.get(name);
+    if (value !== null) kept.set(name, value);
+  }
+  url.search = kept.toString();
+  return new Request(url.toString(), { method: "GET" });
+}
+
+async function withCache(request, ctx, handler, varyParams = [], canonicalPath = null) {
   const cache = caches.default;
-  const cached = await cache.match(request);
+  const key = cacheKeyFor(request, varyParams, canonicalPath);
+
+  const cached = await cache.match(key);
   if (cached) return cached;
 
   const response = await handler();
+
+  // Only cache successes. Caching a 404/500 for 5 minutes turns a transient
+  // R2 blip into a sustained outage for everyone hitting the same URL.
+  if (!response.ok) return response;
+
   const cacheable = new Response(response.body, response);
   cacheable.headers.set("Cache-Control", "public, max-age=300");
-  ctx.waitUntil(cache.put(request, cacheable.clone()));
+  ctx.waitUntil(cache.put(key, cacheable.clone()));
   return cacheable;
 }

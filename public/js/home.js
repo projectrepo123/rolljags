@@ -15,9 +15,13 @@ function renderYear(yearGroup) {
   const grid = document.createElement("div");
   grid.className = "week-grid";
 
-  // Only show the first week
-  for (let i = 0; i < Math.min(1, yearGroup.weeks.length); i++) {
-    const week = yearGroup.weeks[i];
+  // Weeks that actually have photos, plus the next game as a teaser. Future
+  // weeks beyond that stay hidden so the grid doesn't fill with empty cards.
+  const played = yearGroup.weeks.filter((w) => w.status !== "coming-soon");
+  const nextUp = yearGroup.weeks.find((w) => w.status === "coming-soon");
+  const visibleWeeks = nextUp ? [...played, nextUp] : played;
+
+  visibleWeeks.forEach((week, i) => {
     const card = document.createElement("a");
     card.className = "week-card";
     card.href = weekUrl(week.year, week.week);
@@ -25,7 +29,13 @@ function renderYear(yearGroup) {
     if (week.cover) {
       const img = document.createElement("img");
       img.className = "cover";
-      img.loading = "lazy";
+      // The first cover is the largest thing above the fold, so let it load
+      // right away instead of waiting on the lazy-loading pass.
+      if (i === 0) {
+        img.fetchPriority = "high";
+      } else {
+        img.loading = "lazy";
+      }
       img.alt = week.label;
       img.src = week.cover;
       card.appendChild(img);
@@ -46,9 +56,6 @@ function renderYear(yearGroup) {
     if (week.opponent) {
       const opponent = document.createElement("p");
       opponent.className = "card-opponent";
-      opponent.style.fontSize = "0.9rem";
-      opponent.style.color = "var(--text-muted)";
-      opponent.style.margin = "0.25rem 0 0.5rem 0";
       opponent.textContent = `${week.homeAway === "Home" ? "Home" : "Away"} vs. ${week.opponent}`;
       body.appendChild(opponent);
     }
@@ -67,14 +74,7 @@ function renderYear(yearGroup) {
 
     card.appendChild(body);
     grid.appendChild(card);
-  }
-
-  /* TODO: Show other weeks
-  for (let i = 1; i < yearGroup.weeks.length; i++) {
-    const week = yearGroup.weeks[i];
-    // Week card for: ${week.label}
-  }
-  */
+  });
 
   section.appendChild(grid);
   return section;

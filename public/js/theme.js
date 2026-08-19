@@ -68,12 +68,17 @@ function initTheme() {
   let autoTimer = null;
 
   function applyTheme(theme) {
-    if (theme === "dark") {
+    const isDark = theme === "dark";
+    if (isDark) {
       html.setAttribute("data-theme", "dark");
-      if (toggle) toggle.textContent = "☀️";
     } else {
       html.removeAttribute("data-theme");
-      if (toggle) toggle.textContent = "🌙";
+    }
+    if (toggle) {
+      toggle.textContent = isDark ? "☀️" : "🌙";
+      // Describe what the button will do, not what the theme currently is.
+      toggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+      toggle.setAttribute("aria-pressed", String(isDark));
     }
   }
 

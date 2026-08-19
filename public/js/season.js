@@ -46,11 +46,14 @@ function wrapTableWithSearch(tableEl) {
   input.type = "text";
   input.className = "table-search-input";
   input.placeholder = "Search…";
+  input.setAttribute("aria-label", "Search games");
   input.style.width = "100%";
-  input.style.padding = "0.5rem 0.75rem";
+  input.style.padding = "0.7rem 0.75rem";
+  input.style.minHeight = "44px";
   input.style.border = "1px solid var(--border)";
   input.style.borderRadius = "4px";
-  input.style.fontSize = "0.95rem";
+  // 16px minimum, otherwise iOS zooms the page in when the field is focused.
+  input.style.fontSize = "1rem";
 
   const resultCount = document.createElement("span");
   resultCount.className = "search-result-count";
@@ -294,6 +297,16 @@ function renderSeason(games) {
 
   titleEl.textContent = `${year} Season`;
   document.title = `${year} Season | Jaguar Football`;
+
+  // This page is one HTML file serving every season, so point the canonical
+  // at the specific year rather than letting them all collapse together.
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    document.head.appendChild(canonical);
+  }
+  canonical.href = `https://rolljags.com/season?year=${encodeURIComponent(year)}`;
 
   recordEl.innerHTML = `<strong>${recordString(record)}</strong>`;
 
