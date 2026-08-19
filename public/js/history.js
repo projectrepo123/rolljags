@@ -1,61 +1,27 @@
-import { computeRecord, recordString, formatStatCell, renderTable, renderRecordsSection, topByValue } from "./utils.js";
-
 const seasonsEl = document.getElementById("seasons");
 const leaderboardsEl = document.getElementById("leaderboards");
 const headToHeadEl = document.getElementById("headToHead");
+
+function computeRecord(games) {
+  let wins = 0, losses = 0, ties = 0;
+  for (const game of games) {
+    if (game.result === "W") wins++;
+    else if (game.result === "L") losses++;
+    else if (game.result === "T") ties++;
+  }
+  return { wins, losses, ties };
+}
+
+function recordString(record) {
+  let str = `${record.wins}-${record.losses}`;
+  if (record.ties > 0) str += `-${record.ties}`;
+  return str;
+}
 
 function seasonUrl(year) {
   return `/season?year=${encodeURIComponent(year)}`;
 }
 
-// Parses a "W-L" or "W-L-T" record string (as stored in records.json's
-// teamSeasonStats, e.g. for years with no game-by-game log) into the same
-// { wins, losses, ties } shape computeRecord() produces from real games.
-function parseRecordString(str) {
-  const [wins, losses, ties] = str.split("-").map((n) => parseInt(n, 10) || 0);
-  return { wins, losses, ties: ties || 0 };
-}
-
-// Builds one season card. Years with a real game log link to the boxscore
-// page; years with only an aggregate record (pre-2004, no game-by-game
-// data available) render as a static, non-clickable card instead.
-function buildSeasonCard(year, record, href = null) {
-  const card = document.createElement(href ? "a" : "div");
-  card.className = "week-card season-card";
-  if (!href) card.classList.add("season-card-static");
-
-  if (record.wins > record.losses) {
-    card.classList.add("season-win");
-  } else if (record.wins < record.losses) {
-    card.classList.add("season-loss");
-  } else {
-    card.classList.add("season-even");
-  }
-
-  if (href) card.href = href;
-
-  const body = document.createElement("div");
-  body.className = "card-body season-card-body";
-
-  const title = document.createElement("p");
-  title.className = "card-title season-year";
-  title.textContent = year;
-  body.appendChild(title);
-
-  const recordEl = document.createElement("p");
-  recordEl.className = "season-record-display";
-  recordEl.textContent = recordString(record);
-  body.appendChild(recordEl);
-
-  card.appendChild(body);
-  return card;
-}
-
-let seasonsGridEl = null;
-
-// Renders the season cards backed by real game-by-game data (history.json).
-// Returns the set of years rendered, so renderLegacySeasons() knows which
-// years from records.json still need a (static) card of their own.
 function renderSeasons(data) {
   seasonsEl.innerHTML = "";
   const years = Object.keys(data).sort((a, b) => b.localeCompare(a));
@@ -75,124 +41,368 @@ function renderSeasons(data) {
   grid.className = "week-grid";
 
   for (const year of years) {
-    const record = computeRecord(data[year]);
-    grid.appendChild(buildSeasonCard(year, record, seasonUrl(year)));
+    const games = data[year];
+    const record = computeRecord(games);
+
+    const card = document.createElement("a");
+    card.className = "week-card season-card";
+
+    if (record.wins > record.losses) {
+      card.classList.add("season-win");
+    } else if (record.wins < record.losses) {
+      card.classList.add("season-loss");
+    } else {
+      card.classList.add("season-even");
+    }
+
+    card.href = seasonUrl(year);
+
+    const body = document.createElement("div");
+    body.className = "card-body season-card-body";
+
+    const title = document.createElement("p");
+    title.className = "card-title season-year";
+    title.textContent = year;
+    body.appendChild(title);
+
+    const recordEl = document.createElement("p");
+    recordEl.className = "season-record-display";
+    recordEl.textContent = recordString(record);
+    body.appendChild(recordEl);
+
+    card.appendChild(body);
+    grid.appendChild(card);
   }
 
   section.appendChild(grid);
   seasonsEl.appendChild(section);
-
-  seasonsGridEl = grid;
-  return new Set(years);
-}
-
-// Appends static (non-linked) cards for seasons that only have an aggregate
-// record in records.json's teamSeasonStats, no game-by-game log — e.g.
-// 1999-2003. Since `years` from renderSeasons() is already sorted newest
-// first and these are all older than every history.json year, appending
-// them in descending order keeps the whole grid in order.
-function renderLegacySeasons(teamSeasonStats, knownYears) {
-  if (!seasonsGridEl || !teamSeasonStats) return;
-
-  const extra = teamSeasonStats
-    .filter((row) => !knownYears.has(String(row.year)))
-    .sort((a, b) => b.year - a.year);
-
-  for (const row of extra) {
-    const record = parseRecordString(row.record);
-    seasonsGridEl.appendChild(buildSeasonCard(row.year, record));
-  }
 }
 
 function renderCareerScoring(list) {
-  const table = renderTable(
-    [
-      { label: "Name", cell: (r) => r.name },
-      { label: "TD", cell: (r) => r.tds },
-      { label: "FG", cell: (r) => r.fgs },
-      { label: "2Pt", cell: (r) => r.twoPt },
-      { label: "1Pt", cell: (r) => r.onePt },
-      { label: "Sft", cell: (r) => r.safety },
-      { label: "Pts", cell: (r) => r.totalPoints },
-    ],
-    list
-  );
-  return renderRecordsSection("section-career-scoring", "Career Scoring Leaders", `${list.length} players`, table, { scroll: false });
+  const details = document.createElement("details");
+  details.id = "section-career-scoring";
+  details.className = "records-section";
+
+  const summary = document.createElement("summary");
+  summary.innerHTML = `<strong>Career Scoring Leaders</strong> <span class="record-count">${list.length} players</span>`;
+  details.appendChild(summary);
+
+  const table = document.createElement("table");
+  table.className = "records-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const col of ["Name", "TD", "FG", "2Pt", "1Pt", "Sft", "Pts"]) {
+    const th = document.createElement("th");
+    th.textContent = col;
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of list) {
+    const tr = document.createElement("tr");
+    tr.appendChild(createCell(row.name));
+    tr.appendChild(createCell(row.tds));
+    tr.appendChild(createCell(row.fgs));
+    tr.appendChild(createCell(row.twoPt));
+    tr.appendChild(createCell(row.onePt));
+    tr.appendChild(createCell(row.safety));
+    tr.appendChild(createCell(row.totalPoints));
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  // Wide tables must scroll inside their own box, otherwise they push the
+  // whole page sideways on a phone.
+  const scroll = document.createElement("div");
+  scroll.className = "table-scroll";
+  scroll.appendChild(table);
+  details.appendChild(scroll);
+
+  return wrapTableWithSearch(details, table);
 }
 
 function renderSeasonScoring(list) {
-  const table = renderTable(
-    [
-      { label: "Player", cell: (r) => r.player },
-      { label: "Year", cell: (r) => (r.year === null ? "—" : r.year) },
-      { label: "TDs", cell: (r) => r.tds },
-    ],
-    list
-  );
-  return renderRecordsSection("section-season-scoring", "Single-Season TD Leaders", `${list.length} records`, table, { scroll: false });
+  const details = document.createElement("details");
+  details.id = "section-season-scoring";
+  details.className = "records-section";
+
+  const summary = document.createElement("summary");
+  summary.innerHTML = `<strong>Single-Season TD Leaders</strong> <span class="record-count">${list.length} records</span>`;
+  details.appendChild(summary);
+
+  const table = document.createElement("table");
+  table.className = "records-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const col of ["Player", "Year", "TDs"]) {
+    const th = document.createElement("th");
+    th.textContent = col;
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of list) {
+    const tr = document.createElement("tr");
+    tr.appendChild(createCell(row.player));
+    tr.appendChild(createCell(row.year === null ? "—" : row.year));
+    tr.appendChild(createCell(row.tds));
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  // Wide tables must scroll inside their own box, otherwise they push the
+  // whole page sideways on a phone.
+  const scroll = document.createElement("div");
+  scroll.className = "table-scroll";
+  scroll.appendChild(table);
+  details.appendChild(scroll);
+
+  return wrapTableWithSearch(details, table);
 }
 
 function renderGameTouchdowns(list) {
-  const table = renderTable(
-    [
-      { label: "Year", cell: (r) => r.year },
-      { label: "Opponent", cell: (r) => r.opponent },
-      { label: "Player", cell: (r) => r.player },
-      { label: "TDs", cell: (r) => r.tds },
-    ],
-    list
-  );
-  return renderRecordsSection("section-game-touchdowns", "Single-Game TD Records", `${list.length} records`, table, { scroll: false });
+  const details = document.createElement("details");
+  details.id = "section-game-touchdowns";
+  details.className = "records-section";
+
+  const summary = document.createElement("summary");
+  summary.innerHTML = `<strong>Single-Game TD Records</strong> <span class="record-count">${list.length} records</span>`;
+  details.appendChild(summary);
+
+  const table = document.createElement("table");
+  table.className = "records-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const col of ["Year", "Opponent", "Player", "TDs"]) {
+    const th = document.createElement("th");
+    th.textContent = col;
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of list) {
+    const tr = document.createElement("tr");
+    tr.appendChild(createCell(row.year));
+    tr.appendChild(createCell(row.opponent));
+    tr.appendChild(createCell(row.player));
+    tr.appendChild(createCell(row.tds));
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  // Wide tables must scroll inside their own box, otherwise they push the
+  // whole page sideways on a phone.
+  const scroll = document.createElement("div");
+  scroll.className = "table-scroll";
+  scroll.appendChild(table);
+  details.appendChild(scroll);
+
+  return wrapTableWithSearch(details, table);
 }
 
-const TEAM_SEASON_COLUMNS = [
-  { key: "year", label: "Year", cell: (r) => r.year },
-  { key: "coach", label: "Coach", cell: (r) => (r.coachTenureRecord ? `${r.coach} ${r.coachTenureRecord}` : r.coach) },
-  { key: "record", label: "Record", cell: (r) => formatStatCell(r.record) },
-  { key: "winPct", label: "Win%", cell: (r) => formatStatCell(r.winPct) },
-  { key: "pf", label: "PF", cell: (r) => formatStatCell(r.pf) },
-  { key: "pa", label: "PA", cell: (r) => formatStatCell(r.pa) },
-  { key: "oppg", label: "Opp/G", cell: (r) => formatStatCell(r.oppg) },
-  { key: "dppg", label: "Def/G", cell: (r) => formatStatCell(r.dppg) },
-  { key: "rushYds", label: "Rush Yds", cell: (r) => formatStatCell(r.rushYds) },
-  { key: "rushYpg", label: "Rush/G", cell: (r) => formatStatCell(r.rushYpg) },
-  { key: "passYds", label: "Pass Yds", cell: (r) => formatStatCell(r.passYds) },
-  { key: "passYpg", label: "Pass/G", cell: (r) => formatStatCell(r.passYpg) },
-  { key: "totalYds", label: "Total Yds", cell: (r) => formatStatCell(r.totalYds) },
-  { key: "totalYpg", label: "Total/G", cell: (r) => formatStatCell(r.totalYpg) },
-  { key: "defInt", label: "INT", cell: (r) => formatStatCell(r.defInt) },
-  { key: "defFumbles", label: "Fum Rec", cell: (r) => formatStatCell(r.defFumbles) },
-  { key: "turnovers", label: "TO", cell: (r) => formatStatCell(r.turnovers) },
-  { key: "sacks", label: "Sacks", cell: (r) => formatStatCell(r.sacks) },
-];
-
-const TEAM_SEASON_CATEGORY_KEYS = {
-  "Passing Yards": ["year", "coach", "record", "winPct", "passYds", "passYpg", "totalYds", "totalYpg"],
-  "Rushing Yards": ["year", "coach", "record", "winPct", "rushYds", "rushYpg", "totalYds", "totalYpg"],
-  Sacks: ["year", "coach", "record", "winPct", "sacks", "defInt", "defFumbles", "turnovers"],
-};
-
-const TEAM_SEASON_NO_TOTAL_KEYS = ["defInt", "defFumbles", "turnovers", "sacks", "pf", "pa", "oppg", "dppg"];
-
 function renderTeamSeasonStats(list, programTotals, category = null) {
-  const keys = TEAM_SEASON_CATEGORY_KEYS[category];
-  const columns = keys ? TEAM_SEASON_COLUMNS.filter((c) => keys.includes(c.key)) : TEAM_SEASON_COLUMNS;
+  const details = document.createElement("details");
+  details.id = "section-team-season";
+  details.className = "records-section";
 
-  const footCells = programTotals
-    ? (col) => {
-        if (col.key === "year") return "Program Total";
-        if (col.key === "coach") return "";
-        if (TEAM_SEASON_NO_TOTAL_KEYS.includes(col.key)) return "";
-        return formatStatCell(programTotals[col.key]);
+  const summary = document.createElement("summary");
+  summary.innerHTML = `<strong>Team Season Records</strong> <span class="record-count">${list.length} seasons</span>`;
+  details.appendChild(summary);
+
+  const allColumns = [
+    { key: "year", label: "Year" },
+    { key: "coach", label: "Coach" },
+    { key: "record", label: "Record" },
+    { key: "winPct", label: "Win%" },
+    { key: "pf", label: "PF" },
+    { key: "pa", label: "PA" },
+    { key: "oppg", label: "Opp/G" },
+    { key: "dppg", label: "Def/G" },
+    { key: "rushYds", label: "Rush Yds" },
+    { key: "rushYpg", label: "Rush/G" },
+    { key: "passYds", label: "Pass Yds" },
+    { key: "passYpg", label: "Pass/G" },
+    { key: "totalYds", label: "Total Yds" },
+    { key: "totalYpg", label: "Total/G" },
+    { key: "defInt", label: "INT" },
+    { key: "defFumbles", label: "Fum Rec" },
+    { key: "turnovers", label: "TO" },
+    { key: "sacks", label: "Sacks" },
+  ];
+
+  let columns = allColumns;
+  if (category === "Passing Yards") {
+    columns = allColumns.filter(c => ["year", "coach", "record", "winPct", "passYds", "passYpg", "totalYds", "totalYpg"].includes(c.key));
+  } else if (category === "Rushing Yards") {
+    columns = allColumns.filter(c => ["year", "coach", "record", "winPct", "rushYds", "rushYpg", "totalYds", "totalYpg"].includes(c.key));
+  } else if (category === "Sacks") {
+    columns = allColumns.filter(c => ["year", "coach", "record", "winPct", "sacks", "defInt", "defFumbles", "turnovers"].includes(c.key));
+  }
+
+  const scrollContainer = document.createElement("div");
+  scrollContainer.className = "table-scroll";
+
+  const table = document.createElement("table");
+  table.className = "records-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const col of columns) {
+    const th = document.createElement("th");
+    th.textContent = col.label;
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of list) {
+    const tr = document.createElement("tr");
+    for (const col of columns) {
+      if (col.key === "coach") {
+        tr.appendChild(createCell(row.coachTenureRecord ? `${row.coach} ${row.coachTenureRecord}` : row.coach));
+      } else if (col.key === "year") {
+        tr.appendChild(createCell(row.year));
+      } else {
+        tr.appendChild(formatStatCell(row[col.key]));
       }
-    : null;
+    }
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
 
-  const table = renderTable(columns, list, { footCells });
-  return renderRecordsSection("section-team-season", "Team Season Records", `${list.length} seasons`, table);
+  if (programTotals) {
+    const tfoot = document.createElement("tfoot");
+    const footRow = document.createElement("tr");
+    for (const col of columns) {
+      if (col.key === "year") {
+        footRow.appendChild(createCell("Program Total"));
+      } else if (col.key === "coach") {
+        footRow.appendChild(createCell(""));
+      } else if (["defInt", "defFumbles", "turnovers", "sacks", "pf", "pa", "oppg", "dppg"].includes(col.key)) {
+        footRow.appendChild(createCell(""));
+      } else {
+        footRow.appendChild(formatStatCell(programTotals[col.key]));
+      }
+    }
+    tfoot.appendChild(footRow);
+    table.appendChild(tfoot);
+  }
+
+  scrollContainer.appendChild(table);
+  details.appendChild(scrollContainer);
+
+  return wrapTableWithSearch(details, table);
+}
+
+function createCell(text) {
+  const td = document.createElement("td");
+  td.textContent = text;
+  return td;
+}
+
+function wrapTableWithSearch(details, tableEl) {
+  const table = tableEl || details.querySelector("table");
+  if (!table) return details;
+
+  const scrollContainer = details.querySelector(".table-scroll");
+  const wrapper = scrollContainer || details;
+
+  const searchContainer = document.createElement("div");
+  searchContainer.className = "table-search-container";
+  searchContainer.style.marginBottom = "0.75rem";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "table-search-input";
+  input.placeholder = "Search…";
+  input.setAttribute("aria-label", "Search this table");
+  input.style.width = "100%";
+  input.style.padding = "0.7rem 0.75rem";
+  input.style.minHeight = "44px";
+  input.style.border = "1px solid var(--border)";
+  input.style.borderRadius = "4px";
+  // 16px minimum, otherwise iOS zooms the page in when the field is focused.
+  input.style.fontSize = "1rem";
+
+  const resultCount = document.createElement("span");
+  resultCount.className = "search-result-count";
+  resultCount.style.display = "block";
+  resultCount.style.marginTop = "0.5rem";
+  resultCount.style.fontSize = "0.85rem";
+  resultCount.style.color = "var(--text-muted)";
+
+  searchContainer.appendChild(input);
+  searchContainer.appendChild(resultCount);
+
+  if (scrollContainer) {
+    scrollContainer.parentNode.insertBefore(searchContainer, scrollContainer);
+  } else {
+    details.insertBefore(searchContainer, table);
+  }
+
+  function updateSearch() {
+    const query = input.value.toLowerCase();
+    const tbody = table.querySelector("tbody");
+    let visibleCount = 0;
+
+    if (tbody) {
+      tbody.querySelectorAll("tr").forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const isMatch = query === "" || text.includes(query);
+        row.style.display = isMatch ? "" : "none";
+        if (isMatch) visibleCount++;
+      });
+    }
+
+    const total = tbody ? tbody.querySelectorAll("tr").length : 0;
+    if (query) {
+      resultCount.textContent = `${visibleCount} of ${total} results`;
+    } else {
+      resultCount.textContent = "";
+    }
+  }
+
+  input.addEventListener("input", updateSearch);
+
+  return details;
+}
+
+function formatStatCell(raw) {
+  const td = document.createElement("td");
+  if (raw === null || raw === undefined || raw === "") return td;
+  const str = String(raw);
+  const match = str.match(/^(.+?)\s*\((\d+)\)$/);
+  if (!match) {
+    td.textContent = str;
+    return td;
+  }
+  td.appendChild(document.createTextNode(match[1]));
+  const rank = document.createElement("sup");
+  rank.className = "stat-rank";
+  rank.textContent = match[2];
+  td.appendChild(rank);
+  return td;
+}
+
+function parseNumericValue(str) {
+  if (!str) return 0;
+  const match = str.toString().match(/^(\d+(?:\.\d+)?)/);
+  return match ? parseFloat(match[1]) : 0;
 }
 
 let recordsModalOverlay = null;
 let recordsModalContent = null;
+let recordsModalTrigger = null;
 let cachedRecords = null;
 
 function ensureRecordsModalBuilt() {
@@ -202,6 +412,7 @@ function ensureRecordsModalBuilt() {
   recordsModalOverlay.className = "records-modal";
   recordsModalOverlay.setAttribute("role", "dialog");
   recordsModalOverlay.setAttribute("aria-modal", "true");
+  recordsModalOverlay.setAttribute("aria-label", "Records");
 
   recordsModalContent = document.createElement("div");
   recordsModalContent.className = "records-modal-content";
@@ -227,11 +438,32 @@ function ensureRecordsModalBuilt() {
   document.addEventListener("keydown", (e) => {
     if (!recordsModalOverlay.classList.contains("open")) return;
     if (e.key === "Escape") closeRecordsModal();
+    if (e.key === "Tab") trapRecordsModalFocus(e);
   });
+}
+
+// Keeps Tab inside the modal so keyboard users don't end up on the page
+// behind it while it's covering the screen.
+function trapRecordsModalFocus(e) {
+  const focusable = recordsModalContent.querySelectorAll(
+    'button, a[href], input, summary, [tabindex]:not([tabindex="-1"])'
+  );
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
 }
 
 function openRecordsModal(title, contentElement) {
   ensureRecordsModalBuilt();
+  recordsModalTrigger = document.activeElement;
   const inner = recordsModalContent.querySelector(".records-modal-inner");
   inner.innerHTML = "";
 
@@ -241,20 +473,26 @@ function openRecordsModal(title, contentElement) {
   inner.appendChild(heading);
 
   inner.appendChild(contentElement);
+  recordsModalOverlay.setAttribute("aria-label", title);
   recordsModalOverlay.classList.add("open");
   document.body.style.overflow = "hidden";
+  recordsModalContent.querySelector(".records-modal-close").focus();
 }
 
 function closeRecordsModal() {
   if (recordsModalOverlay) {
     recordsModalOverlay.classList.remove("open");
     document.body.style.overflow = "";
+    // Return focus to the "View all" link that opened the modal.
+    if (recordsModalTrigger && document.contains(recordsModalTrigger)) {
+      recordsModalTrigger.focus();
+    }
+    recordsModalTrigger = null;
   }
 }
 
 function renderLeaderboardCard(title, items, renderFn) {
-  const card = document.createElement("button");
-  card.type = "button";
+  const card = document.createElement("div");
   card.className = "leaderboard-card";
 
   const titleEl = document.createElement("h3");
@@ -267,19 +505,28 @@ function renderLeaderboardCard(title, items, renderFn) {
     const item = items[i];
     const li = document.createElement("li");
     li.className = "leaderboard-item";
-    li.innerHTML = `<span class="player">${item.name}</span> <span class="value">${item.value}</span>`;
+    const nameEl = document.createElement("span");
+    nameEl.className = "player";
+    nameEl.textContent = item.name;
+
+    const valueEl = document.createElement("span");
+    valueEl.className = "value";
+    valueEl.textContent = item.value;
+
+    li.append(nameEl, " ", valueEl);
     listEl.appendChild(li);
   }
   card.appendChild(listEl);
 
-  const link = document.createElement("span");
+  const link = document.createElement("a");
   link.className = "leaderboard-link";
+  link.href = "#";
   link.textContent = "View all";
-  card.appendChild(link);
-
-  card.addEventListener("click", () => {
+  link.onclick = (e) => {
+    e.preventDefault();
     openRecordsModal(title, renderFn(cachedRecords));
-  });
+  };
+  card.appendChild(link);
 
   return card;
 }
@@ -290,8 +537,10 @@ function renderLeaderboards(records) {
   cachedRecords = records;
   leaderboardsEl.innerHTML = "";
 
-  const heading = document.createElement("div");
-  heading.className = "year-section leaders-heading";
+  const heading = document.createElement("h3");
+  heading.className = "year-section";
+  heading.style.fontSize = "1rem";
+  heading.style.marginBottom = "1.5rem";
   const headingText = document.createElement("h2");
   headingText.className = "section-heading";
   headingText.textContent = "Program Leaders";
@@ -301,21 +550,40 @@ function renderLeaderboards(records) {
   const container = document.createElement("div");
   container.className = "leaderboards-container";
 
-  const careerPoints = topByValue(records.careerScoring, (r) => ({ name: r.name, value: r.totalPoints }));
+  const careerPoints = records.careerScoring
+    .map(r => ({ name: r.name, value: r.totalPoints }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10);
 
-  const seasonTds = topByValue(records.seasonScoring, (r) => ({ name: r.player, value: r.tds, year: r.year })).map((r) => ({
-    name: `${r.name} (${r.year || "—"})`,
-    value: r.value,
-  }));
+  const seasonTds = records.seasonScoring
+    .map(r => ({ name: r.player, value: r.tds, year: r.year }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: `${r.name} (${r.year || "—"})`, value: r.value }));
 
-  const gameTds = topByValue(records.gameTouchdowns, (r) => ({ name: r.player, value: r.tds, opp: r.opponent })).map((r) => ({
-    name: `${r.name} vs ${r.opp}`,
-    value: r.value,
-  }));
+  const gameTds = records.gameTouchdowns
+    .map(r => ({ name: r.player, value: r.tds, year: r.year, opp: r.opponent }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: `${r.name} vs ${r.opp}`, value: r.value }));
 
-  const passYards = topByValue(records.teamSeasonStats, (r) => ({ name: `${r.year}`, value: r.passYds }));
-  const rushYards = topByValue(records.teamSeasonStats, (r) => ({ name: `${r.year}`, value: r.rushYds }));
-  const sacks = topByValue(records.teamSeasonStats, (r) => ({ name: `${r.year}`, value: r.sacks }));
+  const passYards = records.teamSeasonStats
+    .map(r => ({ name: `${r.year}`, value: r.passYds }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: r.name, value: r.value }));
+
+  const rushYards = records.teamSeasonStats
+    .map(r => ({ name: `${r.year}`, value: r.rushYds }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: r.name, value: r.value }));
+
+  const sacks = records.teamSeasonStats
+    .map(r => ({ name: `${r.year}`, value: r.sacks }))
+    .sort((a, b) => parseNumericValue(b.value) - parseNumericValue(a.value))
+    .slice(0, 10)
+    .map(r => ({ name: r.name, value: r.value }));
 
   container.appendChild(renderLeaderboardCard("Career Points", careerPoints, () => renderCareerScoring(records.careerScoring)));
   container.appendChild(renderLeaderboardCard("Season TD Leaders", seasonTds, () => renderSeasonScoring(records.seasonScoring)));
@@ -365,27 +633,51 @@ function renderHeadToHead(data) {
   heading.textContent = "Head-to-Head Records";
   headToHeadEl.appendChild(heading);
 
-  const table = renderTable(
-    [
-      { label: "Opponent", cell: (r) => r.opponent },
-      { label: "Record", cell: (r) => recordString(r) },
-      { label: "PF", cell: (r) => r.pf },
-      { label: "PA", cell: (r) => r.pa },
-    ],
-    rows
-  );
+  const details = document.createElement("details");
+  details.id = "section-head-to-head";
+  details.className = "records-section";
 
-  headToHeadEl.appendChild(renderRecordsSection("section-head-to-head", "All-Time Record by Opponent", `${rows.length} opponents`, table));
+  const summary = document.createElement("summary");
+  summary.innerHTML = `<strong>All-Time Record by Opponent</strong> <span class="record-count">${rows.length} opponents</span>`;
+  details.appendChild(summary);
+
+  const scrollContainer = document.createElement("div");
+  scrollContainer.className = "table-scroll";
+
+  const table = document.createElement("table");
+  table.className = "records-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  for (const col of ["Opponent", "Record", "PF", "PA"]) {
+    const th = document.createElement("th");
+    th.textContent = col;
+    headerRow.appendChild(th);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of rows) {
+    const tr = document.createElement("tr");
+    tr.appendChild(createCell(row.opponent));
+    tr.appendChild(createCell(recordString(row)));
+    tr.appendChild(createCell(row.pf));
+    tr.appendChild(createCell(row.pa));
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  scrollContainer.appendChild(table);
+  details.appendChild(scrollContainer);
+  headToHeadEl.appendChild(details);
 }
 
 async function init() {
-  let knownYears = new Set();
-
   try {
     const res = await fetch("/data/history.json");
-    if (!res.ok) throw new Error(`Request failed: ${res.status}`);
     const data = await res.json();
-    knownYears = renderSeasons(data);
+    renderSeasons(data);
     renderHeadToHead(data);
   } catch (err) {
     seasonsEl.innerHTML = '<p class="empty-state">Couldn\'t load history. Try refreshing.</p>';
@@ -393,10 +685,8 @@ async function init() {
 
   try {
     const res = await fetch("/data/records.json");
-    if (!res.ok) throw new Error(`Request failed: ${res.status}`);
     const records = await res.json();
     renderLeaderboards(records);
-    renderLegacySeasons(records.teamSeasonStats, knownYears);
   } catch (err) {
     leaderboardsEl.innerHTML = '<p class="empty-state">Couldn\'t load leaders. Try refreshing.</p>';
   }

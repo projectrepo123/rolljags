@@ -1,6 +1,7 @@
 :root {
   --navy: #1b3a6b;
   --navy-dark: #142c52;
+  --navy-text: var(--navy);
   --gold: #ffc72c;
   --gold-hover: #f0b800;
   --bg: #f7f8fa;
@@ -8,39 +9,81 @@
   --text: #1c1e21;
   --text-muted: #5b6470;
   --border: #e1e4e9;
+  --win: #1a7f3d;
+  --loss: #c41e3a;
+  --row-accent: rgba(27, 58, 107, 0.05);
+  --focus-ring: #1b3a6b;
   --radius: 8px;
-  --radius-sm: 4px;
-  --radius-full: 999px;
   --container-width: 1100px;
 
-  --color-win: #1a7f3d;
-  --color-loss: #c41e3a;
-  --overlay-bg: rgba(10, 12, 16, 0.92);
-  --overlay-control-bg: rgba(255, 255, 255, 0.12);
-  --navy-tint-05: rgba(27, 58, 107, 0.05);
-  --navy-tint-10: rgba(27, 58, 107, 0.1);
+  /* Surface treatment. Panels get a soft top-to-bottom gradient plus a
+     1px light catch along their top edge, so they read as lit from above
+     rather than as flat rectangles. */
+  --surface: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  --surface-hover: linear-gradient(180deg, #ffffff 0%, #f1f5fb 100%);
+  --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.05);
+  --shadow-2: 0 2px 4px rgba(16, 24, 40, 0.06), 0 8px 20px rgba(16, 24, 40, 0.08);
+  --shadow-3: 0 12px 40px rgba(16, 24, 40, 0.18);
+  --sheen: rgba(255, 255, 255, 0.55);
+}
 
-  /* Type scale. Named by role rather than raw size so new components pick
-     a step instead of inventing another one-off rem value. */
-  --text-xs: 0.75rem;
-  --text-sm: 0.85rem;
-  --text-base: 0.9rem;
-  --text-md: 0.95rem;
-  --text-lg: 1rem;
-  --text-xl: 1.1rem;
-  --text-2xl: 1.25rem;
-  --text-3xl: 1.4rem;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --border: #3d3d3d;
+    --navy-text: #7fb2ff;
+    --win: #4ade80;
+    --loss: #fa8a8a;
+    --row-accent: rgba(255, 255, 255, 0.06);
+    --focus-ring: #ffc72c;
+    --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
+    --surface-hover: linear-gradient(180deg, #3d3d3d 0%, #303030 100%);
+    --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
+    --shadow-3: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --sheen: rgba(255, 255, 255, 0.14);
+  }
+}
 
-  /* Spacing scale, for new components; existing rules keep their original
-     freehand values to avoid an unreviewed layout-wide shift. */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-7: 2rem;
-  --space-8: 2.5rem;
+:root[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --border: #3d3d3d;
+  --navy-text: #7fb2ff;
+  --win: #4ade80;
+  --loss: #fa8a8a;
+  --row-accent: rgba(255, 255, 255, 0.06);
+  --focus-ring: #ffc72c;
+  --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
+  --surface-hover: linear-gradient(180deg, #3d3d3d 0%, #303030 100%);
+  --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --sheen: rgba(255, 255, 255, 0.14);
+}
+
+/* The UA default focus ring is nearly invisible on the navy header and inside
+   the dark lightbox, so define our own. Gold is only ~1.6:1 on white, so the
+   ring follows the theme: navy on light surfaces, gold on dark ones. */
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The header stays navy in both themes, and the lightbox is always dark, so
+   anything inside them needs the gold ring regardless of theme. */
+header.site-header :focus-visible,
+.lightbox :focus-visible {
+  outline-color: var(--gold);
 }
 
 * {
@@ -64,7 +107,7 @@ body {
 }
 
 a {
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 /* Shared page container. Used by the header, main content, and footer so
@@ -75,11 +118,30 @@ a {
   padding: 0 1.5rem;
 }
 
+/* Frosted bar that stays with you as you scroll. The translucent navy plus
+   backdrop blur lets page content tint it slightly as it passes underneath,
+   and the ::after line is a specular highlight along the bottom edge. */
 header.site-header {
-  background: var(--navy);
+  background: linear-gradient(180deg, rgba(35, 72, 130, 0.88) 0%, rgba(20, 44, 82, 0.92) 100%);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
   color: #fff;
-  padding: 1.1rem 0;
-  border-bottom: 3px solid var(--gold);
+  padding: 0.5rem 0;
+  border-bottom: 2px solid var(--gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 4px 20px rgba(0, 0, 0, 0.18);
+  /* Anchors the mobile nav dropdown, which hangs below the bar. */
+  position: sticky;
+  top: 0;
+  /* Below the lightbox (50) and records modal (51) so they still cover it. */
+  z-index: 30;
+}
+
+/* Browsers without backdrop-filter get the solid navy instead of a
+   washed-out translucent bar. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  header.site-header {
+    background: linear-gradient(180deg, #234882 0%, #142c52 100%);
+  }
 }
 
 header.site-header .header-inner {
@@ -102,14 +164,17 @@ header.site-header .brand:hover {
 }
 
 header.site-header .site-logo {
-  height: 42px;
+  height: 36px;
   width: auto;
   display: block;
+  /* Lifts the logo off the translucent navy behind it. */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
 }
 
 header.site-header h1 {
   margin: 0;
-  font-size: var(--text-3xl);
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
 }
 
 header.site-header a {
@@ -119,32 +184,150 @@ header.site-header a {
 
 .back-link {
   display: inline-block;
-  font-size: var(--text-md);
-  color: var(--navy);
+  font-size: 0.95rem;
+  color: var(--navy-text);
   margin-bottom: 1rem;
 }
 
 header.site-header .site-nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 0.85rem;
   align-items: center;
 }
 
+.nav-links {
+  display: flex;
+  gap: 0.15rem;
+  align-items: center;
+}
+
+/* Hairline between the page links and the status controls. */
+.nav-links::after {
+  content: "";
+  width: 1px;
+  height: 22px;
+  margin-left: 0.7rem;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Hamburger. Hidden on desktop, where the links show inline. */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Collapse the three bars into an X while the menu is open. */
+.nav-toggle.open .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Countdown to the next kickoff, populated by countdown.js. Stays hidden
+   until it has a real value so it never flashes as an empty pill. */
+.kickoff-countdown {
+  /* Label stacked over the digits so the numbers are self-explanatory
+     instead of reading as an anonymous ticker. */
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+  /* Recessed well: dark inset with a light catch on the bottom lip, so it
+     reads like a readout set into the bar rather than printed on it. */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.22) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.14);
+  padding: 0.25rem 0.6rem;
+  border-radius: 7px;
+  white-space: nowrap;
+}
+
+.kickoff-label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.kickoff-clock {
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(255, 199, 44, 0.45);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  font-weight: 600;
+  /* Fixed-width digits so the clock doesn't jitter as the seconds tick. */
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* While a game is in progress the readout turns green and pulses. */
+.kickoff-countdown.is-live .kickoff-clock {
+  color: #4ade80;
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.5);
+}
+
+.kickoff-countdown.is-live .kickoff-label {
+  color: #4ade80;
+  animation: kickoff-pulse 2s ease-in-out infinite;
+}
+
+@keyframes kickoff-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.kickoff-countdown[hidden] {
+  display: none;
+}
+
+/* Links are pills rather than underlined text: an underline would sit at the
+   bottom of the 44px tap target, detached from the centred label. */
 header.site-header .site-nav a {
-  font-size: var(--text-md);
-  color: #fff;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
-  transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 0.8rem;
+  border-radius: 8px;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 header.site-header .site-nav a:hover {
-  color: var(--gold);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 header.site-header .site-nav a.active {
   color: var(--gold);
-  border-bottom: 2px solid var(--gold);
-  padding-bottom: 0.2rem;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 main {
@@ -158,7 +341,7 @@ main {
 
 .year-section h2 {
   display: inline-block;
-  font-size: var(--text-xl);
+  font-size: 1.1rem;
   color: var(--text);
   font-weight: 700;
   margin: 0 0 0.9rem;
@@ -174,19 +357,21 @@ main {
 
 .week-card {
   display: block;
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   overflow: hidden;
   text-decoration: none;
   color: var(--text);
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
+/* Lifts toward the pointer, the way a physical card would catch the light. */
 .week-card:hover {
   border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px var(--navy-tint-10);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2), var(--surface-highlight);
 }
 
 .week-card .cover {
@@ -195,6 +380,11 @@ main {
   display: block;
   width: 100%;
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.week-card:hover .cover {
+  transform: scale(1.04);
 }
 
 .week-card .card-body {
@@ -208,20 +398,27 @@ main {
 
 .week-card .card-count {
   color: var(--text-muted);
-  font-size: var(--text-base);
+  font-size: 0.9rem;
   margin: 0;
+}
+
+.week-card .card-opponent {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0.5rem;
 }
 
 .badge-coming-soon {
   display: inline-block;
-  background: var(--gold);
+  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   color: var(--navy-dark);
-  font-size: var(--text-xs);
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-full);
+  border-radius: 999px;
 }
 
 .empty-state {
@@ -230,12 +427,13 @@ main {
 }
 
 .coming-soon-banner {
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--gold);
-  border-radius: var(--radius);
+  border-radius: 12px;
   padding: 1.25rem 1.5rem;
   color: var(--text-muted);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
 }
 
 /* Week gallery page */
@@ -265,8 +463,9 @@ main {
 .level-tab {
   background: none;
   border: none;
-  padding: 0.6rem 1rem;
-  font-size: var(--text-lg);
+  padding: 0.7rem 1rem;
+  min-height: 44px;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -275,7 +474,7 @@ main {
 }
 
 .level-tab.active {
-  color: var(--navy);
+  color: var(--navy-text);
   border-bottom-color: var(--gold);
 }
 
@@ -290,35 +489,65 @@ main {
 
 .level-toolbar .photo-count {
   color: var(--text-muted);
-  font-size: var(--text-md);
+  font-size: 0.95rem;
 }
 
 .btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
-  background: var(--navy);
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
   color: #fff;
   border: none;
   border-radius: var(--radius);
-  padding: 0.55rem 1rem;
-  font-size: var(--text-md);
+  padding: 0.7rem 1.1rem;
+  min-height: 44px;
+  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+/* A soft light band that sweeps across on hover. Purely decorative, and
+   the reduced-motion rule below collapses it to nothing. */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, var(--sheen) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
 }
 
 .btn:hover {
-  background: var(--navy-dark);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.btn:hover::after {
+  transform: translateX(120%);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-1), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn.btn-gold {
-  background: var(--gold);
+  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
   color: var(--navy-dark);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .btn.btn-gold:hover {
-  background: var(--gold-hover);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .photo-grid {
@@ -331,10 +560,23 @@ main {
   padding: 0;
   border: none;
   background: var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
   aspect-ratio: 1 / 1;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Thumbnails rise slightly under the pointer so the grid feels tactile
+   rather than like a contact sheet. */
+.photo-grid button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-2);
+}
+
+.photo-grid button:active {
+  transform: scale(0.99);
 }
 
 .photo-grid img {
@@ -346,30 +588,23 @@ main {
 
 /* Lightbox */
 
-.lightbox,
-.records-modal {
+.lightbox {
   position: fixed;
   inset: 0;
-  display: flex;
+  /* Frosted scrim: the page stays faintly visible and blurred behind the
+     panel instead of being blacked out. */
+  background: rgba(10, 12, 16, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 50;
   padding: 1rem;
-  background: var(--overlay-bg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
 }
 
-.lightbox.open,
-.records-modal.open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition: opacity 0.2s ease;
+.lightbox.open {
+  display: flex;
 }
 
 .lightbox-content {
@@ -379,18 +614,22 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  transform: scale(0.96);
-  transition: transform 0.2s ease;
 }
 
-.lightbox.open .lightbox-content {
-  transform: scale(1);
+/* Reserves the display area so swapping photos doesn't shift the controls
+   below it while the next image decodes. */
+.lightbox-figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 75vh;
 }
 
 .lightbox img {
   max-width: 100%;
   max-height: 75vh;
-  border-radius: var(--radius-sm);
+  border-radius: 4px;
 }
 
 .lightbox-controls {
@@ -400,21 +639,36 @@ main {
 }
 
 .lightbox-nav {
-  background: var(--overlay-control-bg);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 44px;
+  height: 44px;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  line-height: 1;
 }
 
 footer.site-footer {
   flex-shrink: 0;
   border-top: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 100%);
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-size: 0.85rem;
   padding: 1.5rem 0;
 }
 
@@ -427,7 +681,7 @@ footer.site-footer p + p {
 }
 
 .footer-credit {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
@@ -441,14 +695,8 @@ footer.site-footer p + p {
   min-height: 120px;
 }
 
-.season-card-static {
-  cursor: default;
-}
-
-.season-card-static:hover {
-  border-color: var(--border);
-  transform: none;
-  box-shadow: none;
+.season-card:hover {
+  background: var(--surface-hover);
 }
 
 .season-card .card-body {
@@ -461,7 +709,7 @@ footer.site-footer p + p {
 }
 
 .season-year {
-  font-size: var(--text-2xl);
+  font-size: 1.25rem;
   margin: 0 0 0.5rem;
   font-weight: 700;
 }
@@ -470,7 +718,7 @@ footer.site-footer p + p {
   font-size: 1.5rem;
   margin: 0;
   font-weight: 600;
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 .season-title {
@@ -480,27 +728,8 @@ footer.site-footer p + p {
 
 .season-record {
   margin: 0 0 1.5rem;
-  font-size: var(--text-xl);
+  font-size: 1.1rem;
   color: var(--text-muted);
-}
-
-.season-leaders-heading {
-  margin: 2rem 0 1rem;
-  font-size: var(--text-xl);
-  font-weight: 700;
-  border-bottom: 2px solid var(--gold);
-  padding-bottom: 0.5rem;
-}
-
-.subsection {
-  margin-bottom: 2rem;
-}
-
-.subsection-title {
-  margin-bottom: 0.75rem;
-  font-size: var(--text-md);
-  font-weight: 600;
-  color: var(--navy);
 }
 
 .season-stats {
@@ -511,21 +740,16 @@ footer.site-footer p + p {
 }
 
 .stat-tile {
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 10px;
   padding: 0.85rem 1rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.stat-tile:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px var(--navy-tint-10);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
 }
 
 .stat-tile-label {
   margin: 0 0 0.3rem;
-  font-size: var(--text-xs);
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -534,36 +758,31 @@ footer.site-footer p + p {
 
 .stat-tile-value {
   margin: 0;
-  font-size: var(--text-lg);
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--navy);
-}
-
-.season-table,
-.records-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--card-bg);
+  color: var(--navy-text);
 }
 
 .season-table {
+  width: 100%;
+  border-collapse: collapse;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  background: var(--card-bg);
 }
 
-.season-table thead,
-.records-table thead {
-  background: var(--navy);
+.season-table thead {
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   color: #fff;
 }
 
-.season-table th,
-.records-table th {
+.season-table th {
   padding: 0.85rem;
   text-align: left;
   font-weight: 600;
-  font-size: var(--text-base);
+  font-size: 0.9rem;
   border-bottom: 2px solid var(--gold);
 }
 
@@ -572,23 +791,15 @@ footer.site-footer p + p {
   border-bottom: 1px solid var(--border);
 }
 
-.records-table td {
-  padding: 0.75rem 0.85rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.season-table tbody tr:last-child td,
-.records-table tbody tr:last-child td {
+.season-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.season-table tbody tr,
-.records-table tbody tr {
+.season-table tbody tr {
   transition: background-color 0.15s ease;
 }
 
-.season-table tbody tr:hover,
-.records-table tbody tr:hover {
+.season-table tbody tr:hover {
   background-color: var(--bg);
 }
 
@@ -597,21 +808,58 @@ footer.site-footer p + p {
 }
 
 .season-table .game-win .result-cell {
-  color: var(--color-win);
+  color: var(--win);
 }
 
 .season-table .game-loss .result-cell {
-  color: var(--color-loss);
+  color: var(--loss);
 }
 
 .season-table .game-tie .result-cell {
   color: var(--text-muted);
 }
 
-/* Records Tables (used in modals, and Season TD tables) */
+/* Records Tables (used in modals) */
+
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg);
+}
+
+.records-table thead {
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.records-table th {
+  padding: 0.85rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+.records-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.records-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.records-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.records-table tbody tr:hover {
+  background-color: var(--bg);
+}
 
 .records-table tfoot tr {
-  background-color: var(--navy-tint-05);
+  background-color: var(--row-accent);
   border-top: 2px solid var(--border);
   font-weight: 600;
 }
@@ -624,6 +872,17 @@ footer.site-footer p + p {
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  border-radius: 10px;
+  /* Shadows pinned to the scroll edges fade away once you reach either end,
+     so it's obvious when a wide table continues off-screen. */
+  background:
+    linear-gradient(to right, var(--card-bg) 30%, transparent) left center,
+    linear-gradient(to left, var(--card-bg) 30%, transparent) right center,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.16), transparent) left center,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.16), transparent) right center;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 
 .table-scroll .records-table {
@@ -631,7 +890,7 @@ footer.site-footer p + p {
 }
 
 .stat-rank {
-  font-size: 0.65em;
+  font-size: 0.7em;
   color: var(--text-muted);
   margin-left: 1px;
 }
@@ -650,8 +909,8 @@ footer.site-footer p + p {
 .records-section summary {
   cursor: pointer;
   list-style: none;
-  font-size: var(--text-lg);
-  color: var(--navy);
+  font-size: 1rem;
+  color: var(--navy-text);
 }
 
 .records-section summary::-webkit-details-marker {
@@ -676,12 +935,8 @@ footer.site-footer p + p {
 .record-count {
   margin-left: 0.5rem;
   font-weight: 400;
-  font-size: var(--text-sm);
+  font-size: 0.9rem;
   color: var(--text-muted);
-}
-
-.leaders-heading {
-  margin-bottom: 1.5rem;
 }
 
 .leaderboards-container {
@@ -697,32 +952,36 @@ footer.site-footer p + p {
   }
 }
 
+@media (max-width: 480px) {
+  .leaderboards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Not clickable as a whole — only the "View all" link inside it is, so it
+   must not present a pointer cursor. */
 .leaderboard-card {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin: 0;
-  font: inherit;
-  text-align: left;
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   padding: 1.25rem;
-  cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .leaderboard-card:hover {
   border-color: var(--gold);
-  box-shadow: 0 4px 14px var(--navy-tint-10);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-2), var(--surface-highlight);
 }
 
 .leaderboard-card h3 {
   margin: 0 0 1rem;
-  font-size: var(--text-md);
+  font-size: 0.95rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--navy-text);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
@@ -738,7 +997,7 @@ footer.site-footer p + p {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  font-size: var(--text-base);
+  font-size: 0.9rem;
   border-bottom: 1px solid var(--border);
   color: var(--text);
 }
@@ -753,15 +1012,17 @@ footer.site-footer p + p {
 }
 
 .leaderboard-item .value {
-  color: var(--navy);
+  color: var(--navy-text);
   font-weight: 600;
   margin-left: 0.5rem;
 }
 
 .leaderboard-link {
-  display: inline-block;
-  font-size: var(--text-sm);
-  color: var(--navy);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.9rem;
+  color: var(--navy-text);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.15s ease;
@@ -769,13 +1030,18 @@ footer.site-footer p + p {
   padding-top: 0.5rem;
 }
 
+/* Gold on white is only ~1.6:1, so keep the hover cue on the underline
+   rather than swapping the text to an unreadable color. */
 .leaderboard-link:hover {
-  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 .section-heading {
   display: inline-block;
-  font-size: var(--text-lg);
+  font-size: 1rem;
   color: var(--text);
   font-weight: 700;
   margin: 0 0 0.9rem;
@@ -783,44 +1049,100 @@ footer.site-footer p + p {
   border-bottom: 2px solid var(--gold);
 }
 
+.podcast-intro {
+  color: var(--text-muted);
+  max-width: 60ch;
+  margin: 0 0 1.5rem;
+}
+
+.podcast-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+}
+
+/* The podcast page runs in a narrower centered column than the rest of the
+   site. At full container width the video alone rendered ~1010x569, which
+   dwarfed the episode list under it; capping the column keeps the two embeds
+   a matched pair and keeps every left edge aligned. */
+.podcast-page {
+  max-width: 840px;
+}
+
+.embed-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+}
+
+.embed-container iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.spotify-embed {
+  display: block;
+  width: 100%;
+  /* Spotify's own recommended height for a show embed with its episode list. */
+  height: 352px;
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+}
+
 /* Records Modal */
+
+.records-modal {
+  position: fixed;
+  inset: 0;
+  /* Frosted scrim: the page stays faintly visible and blurred behind the
+     panel instead of being blacked out. */
+  background: rgba(10, 12, 16, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.records-modal.open {
+  display: flex;
+}
 
 .records-modal-content {
   max-width: 95vw;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  background: var(--card-bg);
-  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  transform: scale(0.96);
-  transition: transform 0.2s ease;
+  box-shadow: var(--shadow-3), var(--surface-highlight);
 }
 
-.records-modal.open .records-modal-content {
-  transform: scale(1);
-}
-
-.lightbox-close,
 .records-modal-close {
   position: absolute;
   top: 0.5rem;
   right: 0.75rem;
   background: none;
   border: none;
+  color: var(--text);
   font-size: 1.8rem;
   padding: 0.75rem;
   cursor: pointer;
   line-height: 1;
-}
-
-.lightbox-close {
-  color: #fff;
-}
-
-.records-modal-close {
-  color: var(--text);
   z-index: 51;
 }
 
@@ -833,9 +1155,9 @@ footer.site-footer p + p {
 
 .records-modal-title {
   margin: 0 0 1.25rem;
-  font-size: var(--text-2xl);
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--navy-text);
 }
 
 .records-modal .table-scroll {
@@ -843,12 +1165,12 @@ footer.site-footer p + p {
 }
 
 .records-modal .records-table {
-  font-size: var(--text-sm);
+  font-size: 0.9rem;
 }
 
 .records-modal .records-table th {
   padding: 0.7rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .records-modal .records-table td {
@@ -860,14 +1182,14 @@ footer.site-footer p + p {
 .season-card.season-win .season-record-display::before {
   content: "●";
   margin-right: 0.5rem;
-  color: var(--navy);
+  color: var(--navy-text);
   font-size: 0.8rem;
 }
 
 .season-card.season-loss .season-record-display::before {
   content: "○";
   margin-right: 0.5rem;
-  color: var(--navy);
+  color: var(--navy-text);
   font-size: 0.8rem;
 }
 
@@ -878,31 +1200,8 @@ footer.site-footer p + p {
 .season-card.season-even .season-record-display::before {
   content: "◐";
   margin-right: 0.5rem;
-  color: var(--navy);
+  color: var(--navy-text);
   font-size: 0.8rem;
-}
-
-/* Keyboard focus */
-
-a:focus-visible,
-button:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
-
-/* Loading placeholders */
-
-.loading {
-  animation: pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
 }
 
 @media (max-width: 480px) {
@@ -914,10 +1213,88 @@ button:focus-visible {
     padding: 0 1rem;
   }
 
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  /* Brand left, countdown and hamburger right, all on one row. */
   header.site-header .header-inner {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 0.6rem;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  header.site-header .brand {
+    min-width: 0;
+  }
+
+  header.site-header h1 {
+    white-space: nowrap;
+  }
+
+  /* Links and the theme toggle move behind the hamburger; the countdown
+     stays in the bar so kickoff is glanceable without opening anything. */
+  header.site-header .site-nav {
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    display: flex;
+    /* Sits last in the nav, hard against the right edge. */
+    order: 2;
+    flex-shrink: 0;
+  }
+
+  .kickoff-countdown {
+    order: 1;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .kickoff-label {
+    font-size: 0.55rem;
+  }
+
+  .kickoff-clock {
+    font-size: 0.8rem;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: linear-gradient(180deg, rgba(27, 58, 107, 0.96) 0%, rgba(16, 34, 64, 0.97) 100%);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    backdrop-filter: saturate(180%) blur(16px);
+    box-shadow: var(--shadow-3);
+    border-bottom: 3px solid var(--gold);
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  /* The hairline separates a horizontal row; in the stacked menu it would
+     just be a stray tick mark. */
+  .nav-links::after {
+    display: none;
+  }
+
+  header.site-header .site-nav .nav-links a {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.6rem;
+  }
+
+  header.site-header .site-nav .nav-links a.active {
+    background: rgba(255, 255, 255, 0.12);
   }
 
   header.site-header .site-logo {
@@ -927,12 +1304,177 @@ button:focus-visible {
   header.site-header h1 {
     font-size: 1.2rem;
   }
+}
 
-  .leaderboards-container {
-    grid-template-columns: 1fr;
+/* Screen-reader-only text: conveys loading/status to assistive tech without
+   taking up any visual space. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Loading placeholders. These sit in the HTML so something paints before the
+   API responds, and each page's script replaces them with real content. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--border);
+  border-radius: 6px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--sheen), transparent);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+}
+
+.skeleton-cover {
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+
+.skeleton-body {
+  padding: 0.75rem 0.9rem;
+}
+
+.skeleton-line {
+  height: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-line.short {
+  width: 55%;
+  margin-bottom: 0;
+}
+
+.skeleton-season {
+  min-height: 120px;
+  border-radius: 12px;
+}
+
+.skeleton-thumb {
+  aspect-ratio: 1 / 1;
+}
+
+/* Cards ease up into place as they render, staggered by --enter-delay. */
+.week-card {
+  animation: card-enter 0.4s ease both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Marks the newest set of photos in the grid. */
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.badge-latest {
+  display: inline-block;
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+/* Brand-tinted text selection. */
+::selection {
+  background: rgba(255, 199, 44, 0.35);
+  color: var(--text);
+}
+
+/* Slim, self-effacing scrollbars that pick up the theme. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.45) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.65);
+  background-clip: content-box;
+}
+
+/* Respect the OS "reduce motion" setting: keep color/border feedback but
+   drop the movement, notably the rotating disclosure arrow. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    /* Negative delay so staggered entrances land immediately rather than
+       leaving cards invisible for their delay window. */
+    animation-delay: -1ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 
-  .photo-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  /* Hold the hover lifts flat and keep the shine off-screen, so nothing
+     jumps. Color and shadow feedback still comes through. */
+  .week-card:hover,
+  .leaderboard-card:hover,
+  .photo-grid button:hover,
+  .photo-grid button:active,
+  .btn:hover,
+  .btn:active {
+    transform: none;
+  }
+
+  .btn::after,
+  .btn:hover::after {
+    display: none;
   }
 }

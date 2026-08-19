@@ -6,7 +6,11 @@
   <title>Team History | Jaguar Football</title>
   <link rel="icon" href="/logo.webp" type="image/webp" />
   <link rel="stylesheet" href="/css/styles.css" />
+  <meta name="description" content="Jaguar Football team history: season records, all-time scoring leaders, and game results from 1999 to today." />
   <link rel="canonical" href="https://rolljags.com/history" />
+  <script src="/js/theme.js"></script>
+  <script src="/js/countdown.js" defer></script>
+  <script src="/js/nav.js" defer></script>
   <meta property="og:title" content="Team History | Jaguar Football" />
   <meta property="og:description" content="Jaguar Football season records and game results from 2004 to present." />
   <meta property="og:image" content="https://rolljags.com/logo.webp" />
@@ -22,8 +26,20 @@
         <h1>Jaguar Football</h1>
       </a>
       <nav class="site-nav">
-        <a href="/">Photos</a>
-        <a href="/history" class="active">History</a>
+        <div class="nav-links" id="nav-links">
+          <a href="/">Photos</a>
+          <a href="/history" class="active">History</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+        <span class="kickoff-countdown" id="kickoff-countdown" hidden>
+          <span class="kickoff-label" id="kickoff-label">Kickoff</span>
+          <span class="kickoff-clock" id="kickoff-clock"></span>
+        </span>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
       </nav>
     </div>
   </header>
@@ -34,7 +50,14 @@
       <section id="leaderboards"></section>
       <section id="headToHead"></section>
       <div id="seasons">
-        <p class="empty-state loading">Loading seasons…</p>
+        <p class="sr-only" role="status">Loading seasons</p>
+        <div class="week-grid" aria-hidden="true">
+          <div class="skeleton skeleton-season"></div>
+          <div class="skeleton skeleton-season"></div>
+          <div class="skeleton skeleton-season"></div>
+          <div class="skeleton skeleton-season"></div>
+        </div>
+        <noscript><p class="empty-state">Season history needs JavaScript enabled to load.</p></noscript>
       </div>
     </div>
   </main>
@@ -42,8 +65,7 @@
   <footer class="site-footer">
     <div class="container">
       <p>Jaguar Football</p>
-      <p class="footer-credit">Photos by <a href="https://jbwebco.com">Jon Baer</a></p>
-      <p class="footer-credit">Podcast: <a href="https://www.youtube.com/results?search_query=Jaguar+Football+Booster+Club+">YouTube</a> · <a href="https://open.spotify.com/show/01Jjwj9inswEPj5tM3xdkR?si=e4b15cc70feb4924">Spotify</a></p>
+      <p class="footer-credit">Photos and Website by <a href="https://jbwebco.com">Jon Baer</a></p>
     </div>
   </footer>
 

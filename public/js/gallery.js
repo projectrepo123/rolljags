@@ -48,12 +48,14 @@ function renderLevel() {
   gridEl.innerHTML = "";
   lvl.photos.forEach((photo, i) => {
     const btn = document.createElement("button");
-    btn.setAttribute("aria-label", `Open ${photo.name}`);
+    btn.setAttribute("aria-label", `Open photo ${i + 1} of ${lvl.photos.length}`);
 
     const img = document.createElement("img");
     img.src = photo.thumbUrl;
     img.loading = "lazy";
-    img.alt = photo.name;
+    // The button already carries the label; an identical alt would make a
+    // screen reader announce the same thing twice.
+    img.alt = "";
 
     btn.appendChild(img);
     btn.addEventListener("click", () => openLightbox(lvl.photos, i));
@@ -68,26 +70,25 @@ function showComingSoon() {
   statusEl.innerHTML = '<p class="coming-soon-banner">Photos haven\'t been posted yet. Check back after the game.</p>';
 }
 
-function setTitle(text) {
-  titleEl.classList.remove("loading");
-  titleEl.textContent = text;
-}
-
 async function init() {
+  // The grid ships with placeholder tiles so the page isn't blank while the
+  // photo list loads; every exit path below has to clear them.
   if (!year || !week) {
-    setTitle("Week not found");
+    titleEl.textContent = "Week not found";
+    gridEl.innerHTML = "";
     return;
   }
 
   try {
     const res = await fetch(`/api/week/${encodeURIComponent(year)}/${encodeURIComponent(week)}`);
     if (!res.ok) {
-      setTitle("Week not found");
+      titleEl.textContent = "Week not found";
+      gridEl.innerHTML = "";
       return;
     }
     const data = await res.json();
 
-    setTitle(data.label);
+    titleEl.textContent = data.label;
     document.title = `${data.label} | Jaguar Football`;
     captionEl.textContent = data.caption || "";
 
@@ -102,7 +103,8 @@ async function init() {
     renderTabs();
     renderLevel();
   } catch (err) {
-    setTitle("Couldn't load this week");
+    titleEl.textContent = "Couldn't load this week";
+    gridEl.innerHTML = "";
   }
 }
 

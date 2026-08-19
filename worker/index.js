@@ -1,10 +1,10 @@
 import { handleWeeks } from "./routes/weeks.js";
 import { handleWeek, getWeekData } from "./routes/week.js";
-import { getSeasonSummary } from "./routes/season.js";
 import { handleZip } from "./routes/zip.js";
-import { injectWeekMeta, injectSeasonMeta } from "./lib/meta.js";
+import { injectWeekMeta } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum } from "./lib/validate.js";
 import { LEVELS } from "./lib/r2.js";
+import { nextGame } from "./lib/schedule.js";
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -17,6 +17,7 @@ const SECURITY_HEADERS = {
     "style-src 'self'",
     "script-src 'self' https://static.cloudflareinsights.com",
     "connect-src 'self'",
+    "frame-src https://www.youtube.com https://open.spotify.com",
     "base-uri 'none'",
     "form-action 'none'",
     "frame-ancestors 'none'",
@@ -27,9 +28,32 @@ const SECURITY_HEADERS = {
 export default {
   async fetch(request, env, ctx) {
     const response = await handle(request, env, ctx);
-    return withSecurityHeaders(response);
+    return withSecurityHeaders(injectKickoff(response));
   },
 };
+
+// Stamps the next kickoff into every HTML page so the nav countdown can run
+// without each page fetching the schedule separately. The schedule lives in
+// one place (lib/schedule.js) and the client just reads the result.
+function injectKickoff(response) {
+  if (!response.headers.get("content-type")?.includes("text/html")) return response;
+
+  const upcoming = nextGame();
+  if (!upcoming) return response;
+
+  const { game, at } = upcoming;
+  const meta =
+    `<meta name="next-kickoff" content="${at.toISOString()}">` +
+    `<meta name="next-opponent" content="${escapeAttr(game.homeAway)} vs. ${escapeAttr(game.opponent)}">`;
+
+  return new HTMLRewriter()
+    .on("head", { element: (el) => el.append(meta, { html: true }) })
+    .transform(response);
+}
+
+function escapeAttr(str) {
+  return String(str ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
 
 async function handle(request, env, ctx) {
   const url = new URL(request.url);
@@ -87,31 +111,38 @@ async function handle(request, env, ctx) {
         return injectWeekMeta(asset, data, url);
       };
 
-      return validParams ? withCache(request, ctx, buildResponse) : buildResponse();
+      // "/week.html" and "/week" serve identical content, so cache them under
+      // the one canonical path instead of duplicating every week's entry.
+      return validParams
+        ? withCache(request, ctx, buildResponse, ["year", "week"], "/week")
+        : buildResponse();
     }
 
-    if (url.pathname === "/season.html" || url.pathname === "/season") {
-      // Same rationale as the /week.html case above: fetch the canonical
-      // extensionless path directly rather than following the redirect.
-      const year = url.searchParams.get("year");
-      const validParams = year && isValidYear(year);
-
-      const buildResponse = async () => {
-        const assetUrl = new URL(request.url);
-        assetUrl.pathname = "/season";
-        const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
-        const summary = validParams ? await getSeasonSummary(env, url.origin, year) : null;
-        return injectSeasonMeta(asset, summary, url);
-      };
-
-      return validParams ? withCache(request, ctx, buildResponse) : buildResponse();
-    }
-
-    return env.ASSETS.fetch(request);
+    return withAssetCache(url, await env.ASSETS.fetch(request));
   } catch (err) {
     console.error(err);
     return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
+}
+
+// Static assets otherwise come back as "max-age=0, must-revalidate", which
+// costs a round-trip per file on every page load. Filenames here are not
+// content-hashed, so the CSS/JS window is deliberately short: long enough to
+// cover a browsing session, short enough that a deploy still lands promptly.
+const ASSET_CACHE_RULES = [
+  [/\.(webp|avif|png|jpe?g|gif|svg|ico|woff2?)$/i, "public, max-age=604800"],
+  [/\.(css|js)$/i, "public, max-age=600, stale-while-revalidate=86400"],
+];
+
+function withAssetCache(url, response) {
+  if (!response.ok) return response;
+
+  const rule = ASSET_CACHE_RULES.find(([pattern]) => pattern.test(url.pathname));
+  if (!rule) return response;
+
+  const cached = new Response(response.body, response);
+  cached.headers.set("Cache-Control", rule[1]);
+  return cached;
 }
 
 function withSecurityHeaders(response) {
@@ -126,14 +157,37 @@ function withSecurityHeaders(response) {
   });
 }
 
-async function withCache(request, ctx, handler) {
+// Builds the edge cache key. Only the params a route actually varies on are
+// kept, so "/api/weeks?utm_source=x" and "/api/weeks?cachebust=<random>" all
+// collapse onto the same entry instead of each triggering a fresh (and
+// expensive) fan-out of R2 list calls.
+function cacheKeyFor(request, varyParams, canonicalPath) {
+  const url = new URL(request.url);
+  if (canonicalPath) url.pathname = canonicalPath;
+  const kept = new URLSearchParams();
+  for (const name of varyParams) {
+    const value = url.searchParams.get(name);
+    if (value !== null) kept.set(name, value);
+  }
+  url.search = kept.toString();
+  return new Request(url.toString(), { method: "GET" });
+}
+
+async function withCache(request, ctx, handler, varyParams = [], canonicalPath = null) {
   const cache = caches.default;
-  const cached = await cache.match(request);
+  const key = cacheKeyFor(request, varyParams, canonicalPath);
+
+  const cached = await cache.match(key);
   if (cached) return cached;
 
   const response = await handler();
+
+  // Only cache successes. Caching a 404/500 for 5 minutes turns a transient
+  // R2 blip into a sustained outage for everyone hitting the same URL.
+  if (!response.ok) return response;
+
   const cacheable = new Response(response.body, response);
   cacheable.headers.set("Cache-Control", "public, max-age=300");
-  ctx.waitUntil(cache.put(request, cacheable.clone()));
+  ctx.waitUntil(cache.put(key, cacheable.clone()));
   return cacheable;
 }

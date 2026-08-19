@@ -1,5 +1,3 @@
-import { computeRecord, recordString, resultDisplay, renderTable } from "./utils.js";
-
 const params = new URLSearchParams(location.search);
 const year = params.get("year");
 
@@ -8,6 +6,90 @@ const recordEl = document.getElementById("season-record");
 const tbodyEl = document.getElementById("season-tbody");
 const statusEl = document.getElementById("season-status");
 const leadersEl = document.getElementById("season-leaders");
+
+function computeRecord(games) {
+  let wins = 0, losses = 0, ties = 0;
+  for (const game of games) {
+    if (game.result === "W") wins++;
+    else if (game.result === "L") losses++;
+    else if (game.result === "T") ties++;
+  }
+  return { wins, losses, ties };
+}
+
+function recordString(record) {
+  let str = `${record.wins}-${record.losses}`;
+  if (record.ties > 0) str += `-${record.ties}`;
+  return str;
+}
+
+function resultDisplay(game) {
+  const symbol = game.result === "W" ? "W" : game.result === "L" ? "L" : "T";
+  return `${symbol} ${game.pointsFor}-${game.pointsAgainst}`;
+}
+
+function createCell(text) {
+  const td = document.createElement("td");
+  td.textContent = text;
+  return td;
+}
+
+function wrapTableWithSearch(tableEl) {
+  const container = tableEl.parentNode;
+  if (!container) return;
+
+  const searchContainer = document.createElement("div");
+  searchContainer.className = "table-search-container";
+  searchContainer.style.marginBottom = "0.75rem";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "table-search-input";
+  input.placeholder = "Search…";
+  input.setAttribute("aria-label", "Search games");
+  input.style.width = "100%";
+  input.style.padding = "0.7rem 0.75rem";
+  input.style.minHeight = "44px";
+  input.style.border = "1px solid var(--border)";
+  input.style.borderRadius = "4px";
+  // 16px minimum, otherwise iOS zooms the page in when the field is focused.
+  input.style.fontSize = "1rem";
+
+  const resultCount = document.createElement("span");
+  resultCount.className = "search-result-count";
+  resultCount.style.display = "block";
+  resultCount.style.marginTop = "0.5rem";
+  resultCount.style.fontSize = "0.85rem";
+  resultCount.style.color = "var(--text-muted)";
+
+  searchContainer.appendChild(input);
+  searchContainer.appendChild(resultCount);
+  container.insertBefore(searchContainer, tableEl);
+
+  function updateSearch() {
+    const query = input.value.toLowerCase();
+    const tbody = tableEl.querySelector("tbody");
+    let visibleCount = 0;
+
+    if (tbody) {
+      tbody.querySelectorAll("tr").forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const isMatch = query === "" || text.includes(query);
+        row.style.display = isMatch ? "" : "none";
+        if (isMatch) visibleCount++;
+      });
+    }
+
+    const total = tbody ? tbody.querySelectorAll("tr").length : 0;
+    if (query) {
+      resultCount.textContent = `${visibleCount} of ${total} results`;
+    } else {
+      resultCount.textContent = "";
+    }
+  }
+
+  input.addEventListener("input", updateSearch);
+}
 
 function computeSeasonStats(games) {
   let biggestWin = null;
@@ -18,6 +100,8 @@ function computeSeasonStats(games) {
   let streakLen = 0;
   let bestWinStreak = 0;
   let bestLossStreak = 0;
+  let totalPointsFor = 0;
+  let totalPointsAgainst = 0;
 
   for (const game of games) {
     const margin = game.pointsFor - game.pointsAgainst;
@@ -42,9 +126,12 @@ function computeSeasonStats(games) {
     }
     if (streakResult === "W") bestWinStreak = Math.max(bestWinStreak, streakLen);
     if (streakResult === "L") bestLossStreak = Math.max(bestLossStreak, streakLen);
+
+    totalPointsFor += game.pointsFor;
+    totalPointsAgainst += game.pointsAgainst;
   }
 
-  return { biggestWin, toughestLoss, home, away, bestWinStreak, bestLossStreak };
+  return { biggestWin, toughestLoss, home, away, bestWinStreak, bestLossStreak, totalPointsFor, totalPointsAgainst, gameCount: games.length };
 }
 
 function renderStatTile(container, label, value) {
@@ -68,11 +155,14 @@ function renderSeasonHighlights(games) {
   const stats = computeSeasonStats(games);
 
   const section = document.createElement("div");
-  section.className = "subsection";
+  section.style.marginBottom = "2rem";
 
   const title = document.createElement("h4");
-  title.className = "subsection-title";
   title.textContent = "Season Highlights";
+  title.style.marginBottom = "0.75rem";
+  title.style.fontSize = "0.95rem";
+  title.style.fontWeight = "600";
+  title.style.color = "var(--navy)";
   section.appendChild(title);
 
   const grid = document.createElement("div");
@@ -93,6 +183,8 @@ function renderSeasonHighlights(games) {
   renderStatTile(grid, "Away Record", stats.away.wins + stats.away.losses + stats.away.ties > 0
     ? recordString({ wins: stats.away.wins, losses: stats.away.losses, ties: stats.away.ties })
     : null);
+  renderStatTile(grid, "Total Points For", stats.gameCount > 0 ? `${stats.totalPointsFor} (${(stats.totalPointsFor / stats.gameCount).toFixed(1)}/game)` : null);
+  renderStatTile(grid, "Total Points Against", stats.gameCount > 0 ? `${stats.totalPointsAgainst} (${(stats.totalPointsAgainst / stats.gameCount).toFixed(1)}/game)` : null);
 
   return grid.children.length > 0 ? section : null;
 }
@@ -100,8 +192,8 @@ function renderSeasonHighlights(games) {
 function renderSeasonLeaders(records, games) {
   if (!leadersEl || !year) return;
 
-  const seasonTds = records.seasonScoring.filter((r) => String(r.year) === year);
-  const gameTds = records.gameTouchdowns.filter((r) => String(r.year) === year);
+  const seasonTds = records.seasonScoring.filter(r => r.year == year);
+  const gameTds = records.gameTouchdowns.filter(r => r.year == year);
   const highlights = renderSeasonHighlights(games || []);
 
   if (seasonTds.length === 0 && gameTds.length === 0 && !highlights) return;
@@ -109,8 +201,13 @@ function renderSeasonLeaders(records, games) {
   leadersEl.innerHTML = "";
 
   const heading = document.createElement("h3");
-  heading.className = "season-leaders-heading";
   heading.textContent = `${year} Season Leaders`;
+  heading.style.marginTop = "2rem";
+  heading.style.marginBottom = "1rem";
+  heading.style.fontSize = "1.1rem";
+  heading.style.fontWeight = "700";
+  heading.style.borderBottom = "2px solid var(--gold)";
+  heading.style.paddingBottom = "0.5rem";
   leadersEl.appendChild(heading);
 
   if (highlights) {
@@ -118,58 +215,98 @@ function renderSeasonLeaders(records, games) {
   }
 
   if (seasonTds.length > 0) {
-    const section = document.createElement("div");
-    section.className = "subsection";
+    const tdSection = document.createElement("div");
+    tdSection.style.marginBottom = "2rem";
 
-    const title = document.createElement("h4");
-    title.className = "subsection-title";
-    title.textContent = "Top TD Scorers";
-    section.appendChild(title);
+    const tdTitle = document.createElement("h4");
+    tdTitle.textContent = "Top TD Scorers";
+    tdTitle.style.marginBottom = "0.75rem";
+    tdTitle.style.fontSize = "0.95rem";
+    tdTitle.style.fontWeight = "600";
+    tdTitle.style.color = "var(--navy)";
+    tdSection.appendChild(tdTitle);
 
-    section.appendChild(
-      renderTable(
-        [
-          { label: "Player", cell: (r) => r.player },
-          { label: "TDs", cell: (r) => r.tds },
-        ],
-        seasonTds.sort((a, b) => parseInt(b.tds) - parseInt(a.tds)),
-        { className: "season-table" }
-      )
-    );
+    const tdTable = document.createElement("table");
+    tdTable.className = "season-table";
 
-    leadersEl.appendChild(section);
+    const tdHead = document.createElement("thead");
+    const tdHeadRow = document.createElement("tr");
+    for (const col of ["Player", "TDs"]) {
+      const th = document.createElement("th");
+      th.textContent = col;
+      tdHeadRow.appendChild(th);
+    }
+    tdHead.appendChild(tdHeadRow);
+    tdTable.appendChild(tdHead);
+
+    const tdBody = document.createElement("tbody");
+    seasonTds.sort((a, b) => parseInt(b.tds) - parseInt(a.tds)).forEach(r => {
+      const tr = document.createElement("tr");
+      tr.appendChild(createCell(r.player));
+      tr.appendChild(createCell(r.tds));
+      tdBody.appendChild(tr);
+    });
+    tdTable.appendChild(tdBody);
+    tdSection.appendChild(tdTable);
+    wrapTableWithSearch(tdTable);
+    leadersEl.appendChild(tdSection);
   }
 
   if (gameTds.length > 0) {
-    const section = document.createElement("div");
-    section.className = "subsection";
+    const gameSection = document.createElement("div");
+    gameSection.style.marginBottom = "2rem";
 
-    const title = document.createElement("h4");
-    title.className = "subsection-title";
-    title.textContent = "Single Game TD Records";
-    section.appendChild(title);
+    const gameTitle = document.createElement("h4");
+    gameTitle.textContent = "Single Game TD Records";
+    gameTitle.style.marginBottom = "0.75rem";
+    gameTitle.style.fontSize = "0.95rem";
+    gameTitle.style.fontWeight = "600";
+    gameTitle.style.color = "var(--navy)";
+    gameSection.appendChild(gameTitle);
 
-    section.appendChild(
-      renderTable(
-        [
-          { label: "Opponent", cell: (r) => r.opponent },
-          { label: "Player", cell: (r) => r.player },
-          { label: "TDs", cell: (r) => r.tds },
-        ],
-        gameTds.sort((a, b) => parseInt(b.tds) - parseInt(a.tds)),
-        { className: "season-table" }
-      )
-    );
+    const gameTable = document.createElement("table");
+    gameTable.className = "season-table";
 
-    leadersEl.appendChild(section);
+    const gameHead = document.createElement("thead");
+    const gameHeadRow = document.createElement("tr");
+    for (const col of ["Opponent", "Player", "TDs"]) {
+      const th = document.createElement("th");
+      th.textContent = col;
+      gameHeadRow.appendChild(th);
+    }
+    gameHead.appendChild(gameHeadRow);
+    gameTable.appendChild(gameHead);
+
+    const gameBody = document.createElement("tbody");
+    gameTds.sort((a, b) => parseInt(b.tds) - parseInt(a.tds)).forEach(r => {
+      const tr = document.createElement("tr");
+      tr.appendChild(createCell(r.opponent));
+      tr.appendChild(createCell(r.player));
+      tr.appendChild(createCell(r.tds));
+      gameBody.appendChild(tr);
+    });
+    gameTable.appendChild(gameBody);
+    gameSection.appendChild(gameTable);
+    wrapTableWithSearch(gameTable);
+    leadersEl.appendChild(gameSection);
   }
 }
 
 function renderSeason(games) {
   const record = computeRecord(games);
 
-  setTitle(`${year} Season`);
+  titleEl.textContent = `${year} Season`;
   document.title = `${year} Season | Jaguar Football`;
+
+  // This page is one HTML file serving every season, so point the canonical
+  // at the specific year rather than letting them all collapse together.
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    document.head.appendChild(canonical);
+  }
+  canonical.href = `https://rolljags.com/season?year=${encodeURIComponent(year)}`;
 
   recordEl.innerHTML = `<strong>${recordString(record)}</strong>`;
 
@@ -204,14 +341,9 @@ function renderSeason(games) {
   }
 }
 
-function setTitle(text) {
-  titleEl.classList.remove("loading");
-  titleEl.textContent = text;
-}
-
 async function init() {
   if (!year || !/^\d{4}$/.test(year)) {
-    setTitle("Season not found");
+    titleEl.textContent = "Season not found";
     return;
   }
 
@@ -219,27 +351,25 @@ async function init() {
 
   try {
     const res = await fetch("/data/history.json");
-    if (!res.ok) throw new Error(`Request failed: ${res.status}`);
     const data = await res.json();
 
     if (!data[year]) {
-      setTitle("Season not found");
+      titleEl.textContent = "Season not found";
       return;
     }
 
     games = data[year];
     renderSeason(games);
   } catch (err) {
-    setTitle("Couldn't load this season");
+    titleEl.textContent = "Couldn't load this season";
   }
 
   try {
     const res = await fetch("/data/records.json");
-    if (!res.ok) throw new Error(`Request failed: ${res.status}`);
     const records = await res.json();
     renderSeasonLeaders(records, games);
   } catch (err) {
-    if (leadersEl) leadersEl.innerHTML = '<p class="empty-state">Couldn\'t load season leaders. Try refreshing.</p>';
+    console.error("Couldn't load season leaders:", err);
   }
 }
 

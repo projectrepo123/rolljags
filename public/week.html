@@ -6,11 +6,9 @@
   <title>Jaguar Football</title>
   <link rel="icon" href="/logo.webp" type="image/webp" />
   <link rel="stylesheet" href="/css/styles.css" />
-  <meta property="og:title" content="Jaguar Football" />
-  <meta property="og:description" content="Season photos for Jaguar Football. Browse by week and download full-resolution photos." />
-  <meta property="og:image" content="https://rolljags.com/logo.webp" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <script src="/js/theme.js"></script>
+  <script src="/js/countdown.js" defer></script>
+  <script src="/js/nav.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -20,8 +18,20 @@
         <h1>Jaguar Football</h1>
       </a>
       <nav class="site-nav">
-        <a href="/">Photos</a>
-        <a href="/history">History</a>
+        <div class="nav-links" id="nav-links">
+          <a href="/">Photos</a>
+          <a href="/history">History</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+        <span class="kickoff-countdown" id="kickoff-countdown" hidden>
+          <span class="kickoff-label" id="kickoff-label">Kickoff</span>
+          <span class="kickoff-clock" id="kickoff-clock"></span>
+        </span>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
       </nav>
     </div>
   </header>
@@ -29,20 +39,28 @@
   <main>
     <div class="container">
       <a class="back-link" href="/">&larr; All weeks</a>
-      <h2 class="week-title loading" id="week-title">Loading…</h2>
+      <h2 class="week-title" id="week-title">Loading…</h2>
       <p class="week-caption" id="week-caption"></p>
       <div class="level-tabs" id="level-tabs"></div>
       <div class="level-toolbar" id="level-toolbar"></div>
-      <div class="photo-grid" id="photo-grid"></div>
+      <p class="sr-only" role="status">Loading photos</p>
+      <div class="photo-grid" id="photo-grid">
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+      </div>
       <div id="week-status"></div>
+      <noscript><p class="empty-state">Photos need JavaScript enabled to load.</p></noscript>
     </div>
   </main>
 
   <footer class="site-footer">
     <div class="container">
       <p>Jaguar Football</p>
-      <p class="footer-credit">Photos by <a href="https://jbwebco.com">Jon Baer</a></p>
-      <p class="footer-credit">Podcast: <a href="https://www.youtube.com/results?search_query=Jaguar+Football+Booster+Club+">YouTube</a> · <a href="https://open.spotify.com/show/01Jjwj9inswEPj5tM3xdkR?si=e4b15cc70feb4924">Spotify</a></p>
+      <p class="footer-credit">Photos and Website by <a href="https://jbwebco.com">Jon Baer</a></p>
     </div>
   </footer>
 
