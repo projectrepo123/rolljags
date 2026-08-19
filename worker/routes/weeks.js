@@ -24,6 +24,7 @@ async function loadRealWeeks(env, year, yearPrefix) {
 
     if (totalCount === 0) continue;
 
+    const scheduledGame = (SCHEDULE[year.toString()] || []).find(g => g.week === weekNum);
     weeks.set(weekNum, {
       year,
       week: weekNum,
@@ -33,6 +34,8 @@ async function loadRealWeeks(env, year, yearPrefix) {
       photoCount: totalCount,
       cover,
       status: "live",
+      opponent: scheduledGame?.opponent,
+      homeAway: scheduledGame?.homeAway,
     });
   }
 
@@ -64,6 +67,8 @@ export async function handleWeeks(env) {
         photoCount: 0,
         cover: game.cover || null,
         status: "coming-soon",
+        opponent: game.opponent,
+        homeAway: game.homeAway,
       });
     }
   }

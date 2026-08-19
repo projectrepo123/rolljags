@@ -43,6 +43,16 @@ function renderYear(yearGroup) {
     title.textContent = week.label;
     body.appendChild(title);
 
+    if (week.opponent) {
+      const opponent = document.createElement("p");
+      opponent.className = "card-opponent";
+      opponent.style.fontSize = "0.9rem";
+      opponent.style.color = "var(--text-muted)";
+      opponent.style.margin = "0.25rem 0 0.5rem 0";
+      opponent.textContent = `${week.homeAway === "Home" ? "H" : "A"} vs. ${week.opponent}`;
+      body.appendChild(opponent);
+    }
+
     if (week.status === "coming-soon") {
       const badge = document.createElement("span");
       badge.className = "badge-coming-soon";
