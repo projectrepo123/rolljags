@@ -54,7 +54,14 @@
       <section id="leaderboards"></section>
       <section id="headToHead"></section>
       <div id="seasons">
-        <p class="empty-state">Loading seasons…</p>
+        <p class="sr-only" role="status">Loading seasons</p>
+        <div class="week-grid" aria-hidden="true">
+          <div class="skeleton skeleton-season"></div>
+          <div class="skeleton skeleton-season"></div>
+          <div class="skeleton skeleton-season"></div>
+          <div class="skeleton skeleton-season"></div>
+        </div>
+        <noscript><p class="empty-state">Season history needs JavaScript enabled to load.</p></noscript>
       </div>
     </div>
   </main>

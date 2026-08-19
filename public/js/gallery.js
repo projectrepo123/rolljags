@@ -71,8 +71,11 @@ function showComingSoon() {
 }
 
 async function init() {
+  // The grid ships with placeholder tiles so the page isn't blank while the
+  // photo list loads; every exit path below has to clear them.
   if (!year || !week) {
     titleEl.textContent = "Week not found";
+    gridEl.innerHTML = "";
     return;
   }
 
@@ -80,6 +83,7 @@ async function init() {
     const res = await fetch(`/api/week/${encodeURIComponent(year)}/${encodeURIComponent(week)}`);
     if (!res.ok) {
       titleEl.textContent = "Week not found";
+      gridEl.innerHTML = "";
       return;
     }
     const data = await res.json();
@@ -100,6 +104,7 @@ async function init() {
     renderLevel();
   } catch (err) {
     titleEl.textContent = "Couldn't load this week";
+    gridEl.innerHTML = "";
   }
 }
 

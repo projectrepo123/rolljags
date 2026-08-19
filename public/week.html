@@ -47,8 +47,17 @@
       <p class="week-caption" id="week-caption"></p>
       <div class="level-tabs" id="level-tabs"></div>
       <div class="level-toolbar" id="level-toolbar"></div>
-      <div class="photo-grid" id="photo-grid"></div>
+      <p class="sr-only" role="status">Loading photos</p>
+      <div class="photo-grid" id="photo-grid">
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+        <div class="skeleton skeleton-thumb"></div>
+      </div>
       <div id="week-status"></div>
+      <noscript><p class="empty-state">Photos need JavaScript enabled to load.</p></noscript>
     </div>
   </main>
 
