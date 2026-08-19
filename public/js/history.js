@@ -115,7 +115,7 @@ function renderCareerScoring(list) {
   table.appendChild(tbody);
   details.appendChild(table);
 
-  return details;
+  return wrapTableWithSearch(details, table);
 }
 
 function renderSeasonScoring(list) {
@@ -151,7 +151,7 @@ function renderSeasonScoring(list) {
   table.appendChild(tbody);
   details.appendChild(table);
 
-  return details;
+  return wrapTableWithSearch(details, table);
 }
 
 function renderGameTouchdowns(list) {
@@ -188,7 +188,7 @@ function renderGameTouchdowns(list) {
   table.appendChild(tbody);
   details.appendChild(table);
 
-  return details;
+  return wrapTableWithSearch(details, table);
 }
 
 function renderTeamSeasonStats(list, programTotals, category = null) {
@@ -283,13 +283,77 @@ function renderTeamSeasonStats(list, programTotals, category = null) {
   scrollContainer.appendChild(table);
   details.appendChild(scrollContainer);
 
-  return details;
+  return wrapTableWithSearch(details, table);
 }
 
 function createCell(text) {
   const td = document.createElement("td");
   td.textContent = text;
   return td;
+}
+
+function wrapTableWithSearch(details, tableEl) {
+  const table = tableEl || details.querySelector("table");
+  if (!table) return details;
+
+  const scrollContainer = details.querySelector(".table-scroll");
+  const wrapper = scrollContainer || details;
+
+  const searchContainer = document.createElement("div");
+  searchContainer.className = "table-search-container";
+  searchContainer.style.marginBottom = "0.75rem";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "table-search-input";
+  input.placeholder = "Search…";
+  input.style.width = "100%";
+  input.style.padding = "0.5rem 0.75rem";
+  input.style.border = "1px solid var(--border)";
+  input.style.borderRadius = "4px";
+  input.style.fontSize = "0.95rem";
+
+  const resultCount = document.createElement("span");
+  resultCount.className = "search-result-count";
+  resultCount.style.display = "block";
+  resultCount.style.marginTop = "0.5rem";
+  resultCount.style.fontSize = "0.85rem";
+  resultCount.style.color = "var(--text-muted)";
+
+  searchContainer.appendChild(input);
+  searchContainer.appendChild(resultCount);
+
+  if (scrollContainer) {
+    scrollContainer.parentNode.insertBefore(searchContainer, scrollContainer);
+  } else {
+    details.insertBefore(searchContainer, table);
+  }
+
+  function updateSearch() {
+    const query = input.value.toLowerCase();
+    const tbody = table.querySelector("tbody");
+    let visibleCount = 0;
+
+    if (tbody) {
+      tbody.querySelectorAll("tr").forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const isMatch = query === "" || text.includes(query);
+        row.style.display = isMatch ? "" : "none";
+        if (isMatch) visibleCount++;
+      });
+    }
+
+    const total = tbody ? tbody.querySelectorAll("tr").length : 0;
+    if (query) {
+      resultCount.textContent = `${visibleCount} of ${total} results`;
+    } else {
+      resultCount.textContent = "";
+    }
+  }
+
+  input.addEventListener("input", updateSearch);
+
+  return details;
 }
 
 function formatStatCell(raw) {
