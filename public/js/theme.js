@@ -43,11 +43,20 @@ function getSunTimes(date, lat, lon) {
     H /= 15;
 
     const T = H + RA - (0.06571 * t) - 6.622;
-    const UT = T - lngHour;
+    // The algorithm yields a UTC time-of-day, not a full instant. It has to be
+    // wrapped into 0-24 and then pinned to the right calendar day: west of
+    // Greenwich, sunset falls after midnight UTC, so it belongs to the
+    // following UTC date. Anchoring to local solar noon picks the right day
+    // for either hemisphere and any longitude.
+    let UT = (((T - lngHour) % 24) + 24) % 24;
 
-    const hours = Math.floor(UT);
-    const minutes = Math.round((UT - hours) * 60);
-    return new Date(Date.UTC(year, month - 1, day, hours, minutes));
+    const HOUR = 3600000;
+    const solarNoon = Date.UTC(year, month - 1, day, 12) - lngHour * HOUR;
+    let ts = Date.UTC(year, month - 1, day) + UT * HOUR;
+    while (ts - solarNoon > 12 * HOUR) ts -= 24 * HOUR;
+    while (solarNoon - ts > 12 * HOUR) ts += 24 * HOUR;
+
+    return new Date(Math.round(ts / 60000) * 60000);
   }
 
   return { sunrise: calc(true), sunset: calc(false) };
@@ -55,103 +64,42 @@ function getSunTimes(date, lat, lon) {
 
 function isAfterDarkNow() {
   const now = new Date();
-  const { sunrise, sunset } = getSunTimes(now, HOME_LAT, HOME_LON);
-  if (!sunrise || !sunset) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const DAY = 86400000;
+
+  // Check the neighbouring solar days rather than just the current UTC date.
+  // West of Greenwich the UTC date rolls over during the local evening, so
+  // keying off it alone would compare an evening against the *next* day's
+  // sunrise and wrongly report darkness before sunset.
+  let anyValid = false;
+  for (const offset of [-1, 0, 1]) {
+    const probe = new Date(now.getTime() + offset * DAY);
+    const { sunrise, sunset } = getSunTimes(probe, HOME_LAT, HOME_LON);
+    if (!sunrise || !sunset) continue;
+    anyValid = true;
+    if (now >= sunrise && now < sunset) return false;
   }
-  return now < sunrise || now >= sunset;
+
+  // Somewhere the sun never rises or sets today: defer to the OS preference.
+  if (!anyValid) return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return true;
 }
 
-// Storage can throw in private-browsing modes; a failure to remember the
-// preference shouldn't stop the theme from switching for this page view.
-function readStored() {
-  try {
-    return localStorage.getItem("theme");
-  } catch (err) {
-    return null;
-  }
-}
-
-function writeStored(theme) {
-  try {
-    localStorage.setItem("theme", theme);
-  } catch (err) {
-    /* preference just won't persist */
-  }
-}
-
+// Applies light or dark purely from the local sunrise/sunset times above.
+// There is no manual override, so nothing is read from or written to storage.
 function initTheme() {
   const html = document.documentElement;
-  let autoTimer = null;
-  let current = "light";
 
-  // The button lives in <body>, which doesn't exist yet when this file runs
-  // (it's loaded in <head> without defer so the theme is set before first
-  // paint and the page never flashes the wrong colours). So the button is
-  // looked up each time rather than captured once at startup.
-  function syncToggle() {
-    const toggle = document.getElementById("theme-toggle");
-    if (!toggle) return;
-
-    const isDark = current === "dark";
-    // The button says what it will switch you to, not what you're on now.
-    const icon = toggle.querySelector(".theme-toggle-icon");
-    const label = toggle.querySelector(".theme-toggle-label");
-    if (icon) icon.textContent = isDark ? "☀️" : "🌙";
-    if (label) label.textContent = isDark ? "Light mode" : "Dark mode";
-
-    toggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
-    toggle.setAttribute("aria-pressed", String(isDark));
+  function applyTheme() {
+    // Always set an explicit value rather than clearing the attribute: the
+    // stylesheet's prefers-color-scheme block matches :root:not([data-theme="light"]),
+    // so an absent attribute would force dark in daylight for anyone whose
+    // OS is set to dark mode.
+    html.setAttribute("data-theme", isAfterDarkNow() ? "dark" : "light");
   }
 
-  function applyTheme(theme) {
-    current = theme;
-    if (theme === "dark") {
-      html.setAttribute("data-theme", "dark");
-    } else {
-      html.removeAttribute("data-theme");
-    }
-    syncToggle();
-  }
-
-  // Explicit choice: persists and overrides the sunrise/sunset auto-switch.
-  function setTheme(theme) {
-    applyTheme(theme);
-    writeStored(theme);
-    if (autoTimer) {
-      clearInterval(autoTimer);
-      autoTimer = null;
-    }
-  }
-
-  function toggleTheme() {
-    setTheme(current === "dark" ? "light" : "dark");
-  }
-
-  const saved = readStored();
-  if (saved === "dark" || saved === "light") {
-    applyTheme(saved);
-  } else {
-    applyTheme(isAfterDarkNow() ? "dark" : "light");
-    // Re-check periodically so a tab left open flips at the actual sunset/sunrise.
-    autoTimer = setInterval(() => {
-      applyTheme(isAfterDarkNow() ? "dark" : "light");
-    }, 15 * 60 * 1000);
-  }
-
-  function wireToggle() {
-    const toggle = document.getElementById("theme-toggle");
-    if (!toggle) return;
-    toggle.addEventListener("click", toggleTheme);
-    // Label/icon still show the head-time defaults until this first sync.
-    syncToggle();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", wireToggle);
-  } else {
-    wireToggle();
-  }
+  applyTheme();
+  // Re-check periodically so a tab left open flips at the real sunset/sunrise.
+  setInterval(applyTheme, 15 * 60 * 1000);
 }
 
 initTheme();

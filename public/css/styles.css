@@ -305,35 +305,6 @@ header.site-header .site-nav {
   display: none;
 }
 
-.theme-toggle {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.05rem;
-  cursor: pointer;
-  padding: 0 0.5rem;
-  min-width: 38px;
-  min-height: 38px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: background-color 0.15s ease;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* On desktop the toggle sits inline in the nav, where the icon alone is
-   enough; the wording only appears in the mobile menu. */
-.theme-toggle-label {
-  display: none;
-  font-size: 1rem;
-  font-weight: 400;
-}
-
 /* Links are pills rather than underlined text: an underline would sit at the
    bottom of the 44px tap target, detached from the centred label. */
 header.site-header .site-nav a {
@@ -1324,21 +1295,6 @@ footer.site-footer p + p {
 
   header.site-header .site-nav .nav-links a.active {
     background: rgba(255, 255, 255, 0.12);
-  }
-
-  /* Theme switch sits at the bottom of the menu as a labelled row, set off
-     from the page links above it. */
-  .nav-links .theme-toggle {
-    width: 100%;
-    justify-content: flex-start;
-    padding: 0.5rem 0;
-    margin-top: 0.35rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 1rem;
-  }
-
-  .nav-links .theme-toggle-label {
-    display: inline;
   }
 
   header.site-header .site-logo {
