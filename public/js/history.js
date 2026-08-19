@@ -507,6 +507,14 @@ function renderHeadToHead(data) {
   heading.textContent = "Head-to-Head Records";
   headToHeadEl.appendChild(heading);
 
+  const details = document.createElement("details");
+  details.id = "section-head-to-head";
+  details.className = "records-section";
+
+  const summary = document.createElement("summary");
+  summary.innerHTML = `<strong>All-Time Record by Opponent</strong> <span class="record-count">${rows.length} opponents</span>`;
+  details.appendChild(summary);
+
   const scrollContainer = document.createElement("div");
   scrollContainer.className = "table-scroll";
 
@@ -535,7 +543,8 @@ function renderHeadToHead(data) {
   table.appendChild(tbody);
 
   scrollContainer.appendChild(table);
-  headToHeadEl.appendChild(scrollContainer);
+  details.appendChild(scrollContainer);
+  headToHeadEl.appendChild(details);
 }
 
 async function init() {

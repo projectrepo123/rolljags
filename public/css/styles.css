@@ -590,6 +590,46 @@ footer.site-footer p + p {
   margin-bottom: 2.5rem;
 }
 
+.records-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+
+.records-section summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.records-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.records-section summary::before {
+  content: "\25b8";
+  display: inline-block;
+  margin-right: 0.5rem;
+  transition: transform 0.15s ease;
+}
+
+.records-section[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.records-section .table-scroll {
+  margin-top: 1rem;
+}
+
+.record-count {
+  margin-left: 0.5rem;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 .leaderboards-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
