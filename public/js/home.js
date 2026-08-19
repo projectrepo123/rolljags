@@ -49,7 +49,7 @@ function renderYear(yearGroup) {
       opponent.style.fontSize = "0.9rem";
       opponent.style.color = "var(--text-muted)";
       opponent.style.margin = "0.25rem 0 0.5rem 0";
-      opponent.textContent = `${week.homeAway === "Home" ? "H" : "A"} vs. ${week.opponent}`;
+      opponent.textContent = `${week.homeAway === "Home" ? "Home" : "Away"} vs. ${week.opponent}`;
       body.appendChild(opponent);
     }
 
