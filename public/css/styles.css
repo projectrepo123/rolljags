@@ -197,14 +197,16 @@ header.site-header .site-nav {
 .kickoff-countdown {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--gold);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.9rem;
   font-weight: 600;
+  /* Fixed-width digits so the clock doesn't jitter as the seconds tick. */
   font-variant-numeric: tabular-nums;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
   white-space: nowrap;
 }
 
@@ -224,11 +226,20 @@ header.site-header .site-nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   transition: opacity 0.2s ease;
 }
 
 .theme-toggle:hover {
   opacity: 0.8;
+}
+
+/* On desktop the toggle sits inline in the nav, where the icon alone is
+   enough; the wording only appears in the mobile menu. */
+.theme-toggle-label {
+  display: none;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 header.site-header .site-nav a {
@@ -1109,20 +1120,39 @@ footer.site-footer p + p {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
 
+  /* Brand left, countdown and hamburger right, all on one row. */
   header.site-header .header-inner {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 0.6rem;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
-  /* Links move behind the hamburger; the countdown and theme toggle stay
-     visible in the bar so kickoff is glanceable without opening anything. */
+  header.site-header .brand {
+    min-width: 0;
+  }
+
+  header.site-header h1 {
+    white-space: nowrap;
+  }
+
+  /* Links and the theme toggle move behind the hamburger; the countdown
+     stays in the bar so kickoff is glanceable without opening anything. */
   header.site-header .site-nav {
-    gap: 0.75rem;
+    gap: 0.5rem;
+    margin-left: auto;
   }
 
   .nav-toggle {
     display: flex;
+    /* Sits last in the nav, hard against the right edge. */
+    order: 2;
+    flex-shrink: 0;
+  }
+
+  .kickoff-countdown {
+    order: 1;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
   }
 
   .nav-links {
@@ -1152,6 +1182,21 @@ footer.site-footer p + p {
   header.site-header .site-nav .nav-links a.active {
     border-bottom: none;
     padding-bottom: 0.5rem;
+  }
+
+  /* Theme switch sits at the bottom of the menu as a labelled row, set off
+     from the page links above it. */
+  .nav-links .theme-toggle {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+    margin-top: 0.35rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1rem;
+  }
+
+  .nav-links .theme-toggle-label {
+    display: inline;
   }
 
   header.site-header .site-logo {

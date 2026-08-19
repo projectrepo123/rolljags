@@ -18,15 +18,19 @@
   const GAME_LENGTH_MS = 2.5 * 60 * 60 * 1000;
   let timer = null;
 
-  function label(msRemaining) {
-    const totalMinutes = Math.floor(msRemaining / 60000);
-    const days = Math.floor(totalMinutes / 1440);
-    const hours = Math.floor((totalMinutes % 1440) / 60);
-    const minutes = totalMinutes % 60;
+  const pad = (n) => String(n).padStart(2, "0");
 
-    if (days > 0) return `${days}d ${hours}h`;
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes}m`;
+  // Digital-clock style: "9d 20:14:33", dropping the day segment once
+  // there's less than a day to go.
+  function clockFace(msRemaining) {
+    const totalSeconds = Math.floor(msRemaining / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const clock = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    return days > 0 ? `${days}d ${clock}` : clock;
   }
 
   function update() {
@@ -34,7 +38,7 @@
 
     if (remaining <= 0) {
       if (Date.now() - kickoff.getTime() < GAME_LENGTH_MS) {
-        el.textContent = "🏈 Game time";
+        el.textContent = "Game time";
         el.title = opponent;
         return;
       }
@@ -44,12 +48,11 @@
       return;
     }
 
-    el.textContent = `🏈 ${label(remaining)}`;
+    el.textContent = clockFace(remaining);
     el.title = opponent ? `Kickoff ${opponent}` : "Next kickoff";
   }
 
   update();
   el.hidden = false;
-  // Only minute-level precision is shown, so a per-minute tick is plenty.
-  timer = setInterval(update, 60000);
+  timer = setInterval(update, 1000);
 })();

@@ -74,12 +74,16 @@ function initTheme() {
     } else {
       html.removeAttribute("data-theme");
     }
-    if (toggle) {
-      toggle.textContent = isDark ? "☀️" : "🌙";
-      // Describe what the button will do, not what the theme currently is.
-      toggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
-      toggle.setAttribute("aria-pressed", String(isDark));
-    }
+    if (!toggle) return;
+
+    // The button says what it will switch you to, not what you're on now.
+    const icon = toggle.querySelector(".theme-toggle-icon");
+    const label = toggle.querySelector(".theme-toggle-label");
+    if (icon) icon.textContent = isDark ? "☀️" : "🌙";
+    if (label) label.textContent = isDark ? "Light mode" : "Dark mode";
+
+    toggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+    toggle.setAttribute("aria-pressed", String(isDark));
   }
 
   // Explicit choice: persists and overrides the sunrise/sunset auto-switch.
