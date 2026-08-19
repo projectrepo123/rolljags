@@ -12,6 +12,24 @@
   --container-width: 1100px;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --border: #3d3d3d;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --border: #3d3d3d;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -97,6 +115,23 @@ header.site-header .site-nav {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle:hover {
+  opacity: 0.8;
 }
 
 header.site-header .site-nav a {
