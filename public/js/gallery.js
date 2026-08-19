@@ -68,21 +68,26 @@ function showComingSoon() {
   statusEl.innerHTML = '<p class="coming-soon-banner">Photos haven\'t been posted yet. Check back after the game.</p>';
 }
 
+function setTitle(text) {
+  titleEl.classList.remove("loading");
+  titleEl.textContent = text;
+}
+
 async function init() {
   if (!year || !week) {
-    titleEl.textContent = "Week not found";
+    setTitle("Week not found");
     return;
   }
 
   try {
     const res = await fetch(`/api/week/${encodeURIComponent(year)}/${encodeURIComponent(week)}`);
     if (!res.ok) {
-      titleEl.textContent = "Week not found";
+      setTitle("Week not found");
       return;
     }
     const data = await res.json();
 
-    titleEl.textContent = data.label;
+    setTitle(data.label);
     document.title = `${data.label} | Jaguar Football`;
     captionEl.textContent = data.caption || "";
 
@@ -97,7 +102,7 @@ async function init() {
     renderTabs();
     renderLevel();
   } catch (err) {
-    titleEl.textContent = "Couldn't load this week";
+    setTitle("Couldn't load this week");
   }
 }
 

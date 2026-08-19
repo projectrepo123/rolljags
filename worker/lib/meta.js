@@ -7,6 +7,7 @@ function escapeAttr(str) {
 
 function buildMeta(title, description, image, pageUrl) {
   return `
+    <link rel="canonical" href="${escapeAttr(pageUrl)}">
     <meta property="og:title" content="${escapeAttr(title)}">
     <meta property="og:description" content="${escapeAttr(description)}">
     <meta property="og:image" content="${escapeAttr(image)}">
@@ -14,6 +15,21 @@ function buildMeta(title, description, image, pageUrl) {
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
   `;
+}
+
+function injectMeta(assetResponse, title, metaHtml) {
+  return new HTMLRewriter()
+    .on("title", {
+      element(el) {
+        el.setInnerContent(title);
+      },
+    })
+    .on("head", {
+      element(el) {
+        el.append(metaHtml, { html: true });
+      },
+    })
+    .transform(assetResponse);
 }
 
 // Rewrites the <head> of the week.html asset response with OG/Twitter tags
@@ -38,18 +54,24 @@ export function injectWeekMeta(assetResponse, data, url) {
     description = "Photos haven't been posted yet. Check back after the game.";
   }
 
-  const metaHtml = buildMeta(title, description, image, pageUrl);
+  return injectMeta(assetResponse, title, buildMeta(title, description, image, pageUrl));
+}
 
-  return new HTMLRewriter()
-    .on("title", {
-      element(el) {
-        el.setInnerContent(title);
-      },
-    })
-    .on("head", {
-      element(el) {
-        el.append(metaHtml, { html: true });
-      },
-    })
-    .transform(assetResponse);
+// Same idea as injectWeekMeta, but for season.html: reflects the season's
+// win/loss record so a shared season link shows a real preview. `summary`
+// is the result of getSeasonSummary(), or null when the year is missing
+// or not present in history.json.
+export function injectSeasonMeta(assetResponse, summary, url) {
+  const fallbackImage = `${url.origin}/logo.webp`;
+  const pageUrl = url.toString();
+
+  let title = `Team History | ${SITE_NAME}`;
+  let description = "Jaguar Football season records and game results from 2004 to present.";
+
+  if (summary) {
+    title = `${summary.year} Season (${summary.record}) | ${SITE_NAME}`;
+    description = `Game-by-game results for the ${summary.year} Jaguar Football season (${summary.record}).`;
+  }
+
+  return injectMeta(assetResponse, title, buildMeta(title, description, fallbackImage, pageUrl));
 }

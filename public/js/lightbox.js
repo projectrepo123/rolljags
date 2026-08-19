@@ -8,6 +8,8 @@ function ensureBuilt() {
 
   overlay = document.createElement("div");
   overlay.className = "lightbox";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
   overlay.innerHTML = `
     <button class="lightbox-close" aria-label="Close">&times;</button>
     <div class="lightbox-content">
