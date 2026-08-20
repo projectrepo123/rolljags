@@ -42,9 +42,13 @@ export function parseNumericValue(str) {
   return match ? parseFloat(match[1]) : 0;
 }
 
-/** Em dash for the many source cells that have no value. */
+/**
+ * Renders a cell value, leaving it blank when the source has none. Blank and
+ * zero mean different things here: a blank tackle count is a stat nobody
+ * recorded, a 0 is a stat that was recorded as none.
+ */
 export function display(value) {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return "";
   return String(value);
 }
 

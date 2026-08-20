@@ -1,4 +1,4 @@
-// /records — the full record book.
+// /records: the full record book.
 //
 // Three scopes (career / single season / single game), each grouped into
 // offense, defense and special teams. Every category is a top-five card whose
@@ -45,7 +45,7 @@ const DEFENSE_COLS = [
  *
  * `source` is the key in the scope's JSON, `rank` the field it sorts on, and
  * `stat` the column heading for that value on the card. Several categories share
- * one source and differ only by `rank` — that is how one defensive table
+ * one source and differ only by `rank`, which is how one defensive table
  * produces separate tackle, sack, interception and fumble leaderboards.
  */
 const GROUPS = {
@@ -202,7 +202,9 @@ function nameOf(row, category) {
 
 function leaderboardLabel(row, scope, category) {
   const name = nameOf(row, category);
-  if (scope === "season") return `${name} (${display(row.year)})`;
+  // Many single-season rows have no usable year in the source, so drop the
+  // parenthetical entirely rather than printing an empty one.
+  if (scope === "season") return row.year ? `${name} (${row.year})` : name;
   if (scope === "game") {
     const opponent = row.playoff ? `${row.opponent} (Playoffs)` : row.opponent;
     return `${name} vs ${opponent}`;
@@ -231,7 +233,7 @@ function buildCategoryCard(scope, category, data) {
   };
 
   return renderLeaderboardCard(category.title, items, items.length ? buildFullView : null, {
-    empty: "No records on file yet.",
+    empty: "No records yet.",
   });
 }
 
