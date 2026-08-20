@@ -11,6 +11,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://rolljags.com/records</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://rolljags.com/podcast</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -122,6 +127,31 @@
   </url>
   <url>
     <loc>https://rolljags.com/season?year=2004</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://rolljags.com/season?year=2003</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://rolljags.com/season?year=2002</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://rolljags.com/season?year=2001</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://rolljags.com/season?year=2000</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://rolljags.com/season?year=1999</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>

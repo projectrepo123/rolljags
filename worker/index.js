@@ -151,7 +151,9 @@ async function handle(request, env, ctx) {
 // cover a browsing session, short enough that a deploy still lands promptly.
 const ASSET_CACHE_RULES = [
   [/\.(webp|avif|png|jpe?g|gif|svg|ico|woff2?)$/i, "public, max-age=604800"],
-  [/\.(css|js)$/i, "public, max-age=600, stale-while-revalidate=86400"],
+  // The record book fetches a JSON file per scope tab, so give the data the same
+  // short window as the code that reads it.
+  [/\.(css|js|json)$/i, "public, max-age=600, stale-while-revalidate=86400"],
 ];
 
 function withAssetCache(url, response) {

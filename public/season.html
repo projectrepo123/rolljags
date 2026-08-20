@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- One HTML file serves every season, so description/canonical/og:* are
+       injected per year by the worker (worker/lib/meta.js). Static copies here
+       would sit earlier in <head> and win, making every shared season link
+       preview as the same generic page. <title> is safe to keep: the rewriter
+       replaces its contents rather than appending a second one. -->
   <title>Season | Jaguar Football</title>
   <link rel="icon" href="/logo.webp" type="image/webp" />
   <link rel="stylesheet" href="/css/styles.css" />
-  <meta name="description" content="Full game-by-game results and scoring leaders for a Jaguar Football season." />
-  <meta property="og:title" content="Season | Jaguar Football" />
-  <meta property="og:description" content="Full game-by-game results and scoring leaders for a Jaguar Football season." />
-  <meta property="og:image" content="https://rolljags.com/logo.webp" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
   <script src="/js/theme.js"></script>
   <script src="/js/countdown.js" defer></script>
   <script src="/js/nav.js" defer></script>
@@ -27,6 +26,7 @@
         <div class="nav-links" id="nav-links">
           <a href="/">Photos</a>
           <a href="/history" class="active">History</a>
+          <a href="/records">Records</a>
           <a href="/podcast">Podcast</a>
         </div>
         <span class="kickoff-countdown" id="kickoff-countdown" hidden>

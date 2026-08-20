@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Record Book | Jaguar Football</title>
+  <link rel="icon" href="/logo.webp" type="image/webp" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <meta name="description" content="The Jaguar Football record book: career, single-season and single-game records for scoring, passing, rushing, receiving, defense and special teams." />
+  <link rel="canonical" href="https://rolljags.com/records" />
+  <script src="/js/theme.js"></script>
+  <script src="/js/countdown.js" defer></script>
+  <script src="/js/nav.js" defer></script>
+  <meta property="og:title" content="Record Book | Jaguar Football" />
+  <meta property="og:description" content="Career, single-season and single-game records for Jaguar Football — offense, defense and special teams." />
+  <meta property="og:image" content="https://rolljags.com/logo.webp" />
+  <meta property="og:url" content="https://rolljags.com/records" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <img class="site-logo" src="/logo.webp" alt="Jaguar Football logo" />
+        <h1>Jaguar Football</h1>
+      </a>
+      <nav class="site-nav">
+        <div class="nav-links" id="nav-links">
+          <a href="/">Photos</a>
+          <a href="/history">History</a>
+          <a href="/records" class="active">Records</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+        <span class="kickoff-countdown" id="kickoff-countdown" hidden>
+          <span class="kickoff-label" id="kickoff-label">Kickoff</span>
+          <span class="kickoff-clock" id="kickoff-clock"></span>
+        </span>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2>Record Book</h2>
+      <p class="page-intro">
+        Every individual record on file, from 1999 to today. Each card shows the top five —
+        open <strong>View all</strong> for the complete, searchable list.
+      </p>
+
+      <div class="level-tabs" id="scope-tabs" role="tablist" aria-label="Record scope">
+        <button class="level-tab active" role="tab" id="tab-career" aria-controls="scope-panel" aria-selected="true" data-scope="career">Career</button>
+        <button class="level-tab" role="tab" id="tab-season" aria-controls="scope-panel" aria-selected="false" data-scope="season">Single Season</button>
+        <button class="level-tab" role="tab" id="tab-game" aria-controls="scope-panel" aria-selected="false" data-scope="game">Single Game</button>
+      </div>
+
+      <div id="scope-panel" role="tabpanel" aria-labelledby="tab-career">
+        <p class="sr-only" role="status">Loading records</p>
+        <div class="leaderboards-container" aria-hidden="true">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+        <noscript><p class="empty-state">The record book needs JavaScript enabled to load.</p></noscript>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Jaguar Football</p>
+      <p class="footer-credit">Photos and Website by <a href="https://jbwebco.com">Jon Baer</a></p>
+    </div>
+  </footer>
+
+  <script src="/js/records.js" type="module"></script>
+</body>
+</html>

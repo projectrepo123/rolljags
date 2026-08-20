@@ -1,0 +1,2238 @@
+{
+  "touchdowns": [
+    {
+      "year": 2009,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 7
+    },
+    {
+      "year": 2022,
+      "opponent": "St. Louis University",
+      "playoff": true,
+      "name": "Cole Ruble",
+      "tds": 7
+    },
+    {
+      "year": 2009,
+      "opponent": "North County",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 5
+    },
+    {
+      "year": 2009,
+      "opponent": "Central (Cape Girardeau)",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 5
+    },
+    {
+      "year": 2022,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 5
+    },
+    {
+      "year": 2022,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 5
+    },
+    {
+      "year": 2022,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 5
+    },
+    {
+      "year": 2020,
+      "opponent": "Central (Park Hills)",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 5
+    },
+    {
+      "year": 2010,
+      "opponent": "Jackson",
+      "playoff": false,
+      "name": "Blake Pepper",
+      "tds": 5
+    },
+    {
+      "year": 2009,
+      "opponent": "Hillsboro",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 4
+    },
+    {
+      "year": 2008,
+      "opponent": "Howell North",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 4
+    },
+    {
+      "year": 2023,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Tommy Gibbar",
+      "tds": 4
+    },
+    {
+      "year": 2023,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Tommy Gibbar",
+      "tds": 4
+    },
+    {
+      "year": 2018,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Seth Lounsbury",
+      "tds": 4
+    },
+    {
+      "year": 2006,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Nick Baer",
+      "tds": 4
+    },
+    {
+      "year": 2022,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 4
+    },
+    {
+      "year": 2022,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 4
+    },
+    {
+      "year": 2022,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 4
+    },
+    {
+      "year": 2022,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 4
+    },
+    {
+      "year": 2021,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 4
+    },
+    {
+      "year": 2021,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 4
+    },
+    {
+      "year": 2011,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Blake Pepper",
+      "tds": 4
+    },
+    {
+      "year": 2012,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Andrew Kraus",
+      "tds": 4
+    },
+    {
+      "year": 2008,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 3
+    },
+    {
+      "year": 2008,
+      "opponent": "Central (Cape Girardeau)",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "tds": 3
+    },
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": true,
+      "name": "Tommy Gibbar",
+      "tds": 3
+    },
+    {
+      "year": 2023,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Tommy Gibbar",
+      "tds": 3
+    },
+    {
+      "year": 2021,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Tommy Gibbar",
+      "tds": 3
+    },
+    {
+      "year": 2006,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Nick Baer",
+      "tds": 3
+    },
+    {
+      "year": 2006,
+      "opponent": "Festus",
+      "playoff": false,
+      "name": "Nick Baer",
+      "tds": 3
+    },
+    {
+      "year": 2006,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Nick Baer",
+      "tds": 3
+    },
+    {
+      "year": 2005,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Nick Baer",
+      "tds": 3
+    },
+    {
+      "year": 2014,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Joe Ambrose",
+      "tds": 3
+    },
+    {
+      "year": 2018,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Dylan Hawk",
+      "tds": 3
+    },
+    {
+      "year": 2022,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 3
+    },
+    {
+      "year": 2021,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 3
+    },
+    {
+      "year": 2021,
+      "opponent": "Ladue Horton Watkins",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 3
+    },
+    {
+      "year": 2021,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 3
+    },
+    {
+      "year": 2021,
+      "opponent": "Poplar Bluff",
+      "playoff": true,
+      "name": "Cole Ruble",
+      "tds": 3
+    },
+    {
+      "year": 2020,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "tds": 3
+    },
+    {
+      "year": 2024,
+      "opponent": "Oakville",
+      "playoff": true,
+      "name": "Brady Ambrose",
+      "tds": 3
+    },
+    {
+      "year": 2010,
+      "opponent": "Poplar Bluff",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "tds": 3
+    }
+  ],
+  "rushing": [
+    {
+      "year": 2020,
+      "opponent": "Central (Park Hills)",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 406,
+      "attempts": 40,
+      "ypc": 10.15
+    },
+    {
+      "year": 2009,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "yards": 355,
+      "attempts": 18,
+      "ypc": 19.7
+    },
+    {
+      "year": 2021,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 350,
+      "attempts": 21,
+      "ypc": 16.6
+    },
+    {
+      "year": 2010,
+      "opponent": "Jackson",
+      "playoff": false,
+      "name": "Blake Pepper",
+      "yards": 334,
+      "attempts": 40,
+      "ypc": 8.35
+    },
+    {
+      "year": 2022,
+      "opponent": "St. Louis University",
+      "playoff": true,
+      "name": "Cole Ruble",
+      "yards": 323,
+      "attempts": 41,
+      "ypc": 7.87
+    },
+    {
+      "year": 2009,
+      "opponent": "North County",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "yards": 307,
+      "attempts": 28,
+      "ypc": 10.9
+    },
+    {
+      "year": 2020,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 300,
+      "attempts": 27,
+      "ypc": 11.1
+    },
+    {
+      "year": 2022,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 300,
+      "attempts": 39,
+      "ypc": 7.69
+    },
+    {
+      "year": 2009,
+      "opponent": "Central (Cape Girardeau)",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "yards": 285,
+      "attempts": 29,
+      "ypc": 9.8
+    },
+    {
+      "year": 2022,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 277,
+      "attempts": 30,
+      "ypc": 9.23
+    },
+    {
+      "year": 2022,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 269,
+      "attempts": 44,
+      "ypc": 6.1
+    },
+    {
+      "year": 2024,
+      "opponent": "Jackson",
+      "playoff": false,
+      "name": "Brady Ambrose",
+      "yards": 260,
+      "attempts": 28,
+      "ypc": 9.3
+    },
+    {
+      "year": 2021,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 256,
+      "attempts": 12,
+      "ypc": 21.3
+    },
+    {
+      "year": 2021,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 253,
+      "attempts": 22,
+      "ypc": 11.5
+    },
+    {
+      "year": 2024,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Brady Ambrose",
+      "yards": 250,
+      "attempts": 21,
+      "ypc": 11.9
+    },
+    {
+      "year": 2021,
+      "opponent": "Poplar Bluff",
+      "playoff": true,
+      "name": "Cole Ruble",
+      "yards": 248,
+      "attempts": 34,
+      "ypc": 7.2
+    },
+    {
+      "year": 2009,
+      "opponent": "Howell North",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "yards": 246,
+      "attempts": 20,
+      "ypc": 12.3
+    },
+    {
+      "year": 2004,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Charlie Holt",
+      "yards": 246,
+      "attempts": 26,
+      "ypc": 9.4
+    },
+    {
+      "year": 2021,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 240,
+      "attempts": 27,
+      "ypc": 8.88
+    },
+    {
+      "year": 2010,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Blake Pepper",
+      "yards": 236,
+      "attempts": 39,
+      "ypc": 6.1
+    },
+    {
+      "year": 2007,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Trent Melton",
+      "yards": 234,
+      "attempts": 37,
+      "ypc": 6.3
+    },
+    {
+      "year": 2022,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 231,
+      "attempts": 31,
+      "ypc": 7.5
+    },
+    {
+      "year": 2022,
+      "opponent": "Marquette",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 225,
+      "attempts": 8,
+      "ypc": 28
+    },
+    {
+      "year": 2022,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 218,
+      "attempts": 25,
+      "ypc": 8.7
+    },
+    {
+      "year": 2008,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "yards": 217,
+      "attempts": 23,
+      "ypc": 9.4
+    },
+    {
+      "year": 2021,
+      "opponent": "Ladue Horton Watkins",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 217,
+      "attempts": 34,
+      "ypc": 6.38
+    },
+    {
+      "year": 2023,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Tommy Gibbar",
+      "yards": 216,
+      "attempts": 33,
+      "ypc": 6.64
+    },
+    {
+      "year": 2019,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Luckas Salsman",
+      "yards": 215,
+      "attempts": 17,
+      "ypc": 12.6
+    },
+    {
+      "year": 2020,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 214,
+      "attempts": 19,
+      "ypc": 11.2
+    },
+    {
+      "year": 2023,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Tommy Gibbar",
+      "yards": 211,
+      "attempts": 18,
+      "ypc": 11.72
+    },
+    {
+      "year": 2013,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Andrew Kraus",
+      "yards": 207,
+      "attempts": 44,
+      "ypc": 4.7
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Tyler Fisher",
+      "yards": 207,
+      "attempts": 31,
+      "ypc": 6.6
+    },
+    {
+      "year": 2021,
+      "opponent": "Central (Cape Girardeau)",
+      "playoff": true,
+      "name": "Cole Ruble",
+      "yards": 207,
+      "attempts": 25,
+      "ypc": 8.28
+    },
+    {
+      "year": 2020,
+      "opponent": "Parkway North",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 205,
+      "attempts": 32,
+      "ypc": 5.6
+    },
+    {
+      "year": 2006,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Nick Baer",
+      "yards": 205,
+      "attempts": 29,
+      "ypc": 7.1
+    },
+    {
+      "year": 2022,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 204,
+      "attempts": 21,
+      "ypc": 9.7
+    },
+    {
+      "year": 2024,
+      "opponent": "Oakville",
+      "playoff": true,
+      "name": "Brady Ambrose",
+      "yards": 202,
+      "attempts": 21,
+      "ypc": 9.6
+    },
+    {
+      "year": 2020,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 201,
+      "attempts": 22,
+      "ypc": 9.1
+    }
+  ],
+  "passing": [
+    {
+      "year": 2008,
+      "opponent": "Howell North",
+      "playoff": false,
+      "name": "Kyle Fisher",
+      "yards": 381,
+      "completions": 17,
+      "attempts": 27,
+      "tds": 4
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 346,
+      "completions": 14,
+      "attempts": 26,
+      "tds": 4
+    },
+    {
+      "year": 2008,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Kyle Fisher",
+      "yards": 256,
+      "completions": 15,
+      "attempts": 25,
+      "tds": 4
+    },
+    {
+      "year": 2015,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Connor McCoy",
+      "yards": 251,
+      "completions": 16,
+      "attempts": 26,
+      "tds": 3
+    },
+    {
+      "year": 2008,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Kyle Fisher",
+      "yards": 233,
+      "completions": 24,
+      "attempts": 41,
+      "tds": 0
+    },
+    {
+      "year": 2025,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Brody Kube",
+      "yards": 228,
+      "completions": 10,
+      "attempts": 16,
+      "tds": 5
+    },
+    {
+      "year": 2009,
+      "opponent": "Hillsboro",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 208,
+      "completions": 10,
+      "attempts": 16,
+      "tds": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 204,
+      "completions": 12,
+      "attempts": 22,
+      "tds": 2
+    },
+    {
+      "year": 2008,
+      "opponent": "Central (Cape Girardeau)",
+      "playoff": false,
+      "name": "Kyle Fisher",
+      "yards": 198,
+      "completions": 18,
+      "attempts": 36,
+      "tds": 0
+    },
+    {
+      "year": 2025,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Brody Kube",
+      "yards": 195,
+      "completions": 13,
+      "attempts": 16,
+      "tds": 4
+    },
+    {
+      "year": 2025,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Brody Kube",
+      "yards": 193,
+      "completions": 10,
+      "attempts": 14,
+      "tds": 4
+    },
+    {
+      "year": 2023,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Gibbar/Kube",
+      "yards": 190,
+      "completions": 7,
+      "attempts": 7,
+      "tds": 1
+    },
+    {
+      "year": 2010,
+      "opponent": "Rockwood Summit",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 188,
+      "completions": 14,
+      "attempts": 33,
+      "tds": 0
+    },
+    {
+      "year": 2009,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 182,
+      "completions": 6,
+      "attempts": 16,
+      "tds": 3
+    },
+    {
+      "year": 2025,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Brody Kube",
+      "yards": 179,
+      "completions": 14,
+      "attempts": 20,
+      "tds": 1
+    },
+    {
+      "year": 2010,
+      "opponent": "Poplar Bluff",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 178,
+      "completions": 11,
+      "attempts": 20,
+      "tds": 3
+    },
+    {
+      "year": 2002,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Nathan Hoffman",
+      "yards": 168,
+      "completions": 5,
+      "attempts": 15,
+      "tds": 2
+    },
+    {
+      "year": 2014,
+      "opponent": "Hillsboro",
+      "playoff": false,
+      "name": "Connor McCoy",
+      "yards": 167,
+      "completions": 12,
+      "attempts": 20,
+      "tds": 3
+    },
+    {
+      "year": 2009,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 167,
+      "completions": 13,
+      "attempts": 35,
+      "tds": 1
+    },
+    {
+      "year": 2010,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Sam Tramel",
+      "yards": 162,
+      "completions": 10,
+      "attempts": 28,
+      "tds": 1
+    },
+    {
+      "year": 2012,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Devon McCoy",
+      "yards": 160,
+      "completions": 12,
+      "attempts": 24,
+      "tds": 2
+    },
+    {
+      "year": 2013,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Devon McCoy",
+      "yards": 160,
+      "completions": 7,
+      "attempts": 16,
+      "tds": 0
+    },
+    {
+      "year": 2024,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Brody Kube",
+      "yards": 156,
+      "completions": 6,
+      "attempts": 7,
+      "tds": 2
+    },
+    {
+      "year": 2004,
+      "opponent": "Jackson",
+      "playoff": false,
+      "name": "Dan Brown",
+      "yards": 153,
+      "completions": 10,
+      "attempts": 19,
+      "tds": 0
+    },
+    {
+      "year": 2012,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Devon McCoy",
+      "yards": 153,
+      "completions": 6,
+      "attempts": 14,
+      "tds": 0
+    },
+    {
+      "year": 2021,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 145,
+      "completions": 7,
+      "attempts": 8,
+      "tds": 3
+    },
+    {
+      "year": 2021,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 130,
+      "completions": 8,
+      "attempts": 10,
+      "tds": 3
+    },
+    {
+      "year": 2022,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 130,
+      "completions": 8,
+      "attempts": 12,
+      "tds": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Cole Ruble",
+      "yards": 120,
+      "completions": 4,
+      "attempts": 7,
+      "tds": 1
+    },
+    {
+      "year": 2024,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Brody Kube",
+      "yards": 81,
+      "completions": 9,
+      "attempts": 9,
+      "tds": 2
+    }
+  ],
+  "receiving": [
+    {
+      "year": 2010,
+      "opponent": "Poplar Bluff",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 106,
+      "receptions": 8,
+      "tds": 3
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Travis Cardona",
+      "yards": 180,
+      "receptions": 6,
+      "tds": 2
+    },
+    {
+      "year": 2008,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Travis Cardona",
+      "yards": 136,
+      "receptions": 2,
+      "tds": 2
+    },
+    {
+      "year": 2012,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Cody Tolliver",
+      "yards": 126,
+      "receptions": 9,
+      "tds": 2
+    },
+    {
+      "year": 2021,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Anthony Westervelt",
+      "yards": 109,
+      "receptions": 5,
+      "tds": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Cameron Benson",
+      "yards": 105,
+      "receptions": 5,
+      "tds": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 103,
+      "receptions": 5,
+      "tds": 2
+    },
+    {
+      "year": 2023,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Kade Heinemeier",
+      "yards": 97,
+      "receptions": 2,
+      "tds": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Anthony Westervelt",
+      "yards": 96,
+      "receptions": 6,
+      "tds": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Kylar Huckfeldt",
+      "yards": 95,
+      "receptions": 4,
+      "tds": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Cameron Benson",
+      "yards": 93,
+      "receptions": 3,
+      "tds": 2
+    },
+    {
+      "year": 2021,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Anthony Westervelt",
+      "yards": 89,
+      "receptions": 4,
+      "tds": 2
+    },
+    {
+      "year": 2014,
+      "opponent": "Hillsboro",
+      "playoff": false,
+      "name": "Randy Price",
+      "yards": 85,
+      "receptions": 4,
+      "tds": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Nick Weidler",
+      "yards": 65,
+      "receptions": 5,
+      "tds": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Cameron Benson",
+      "yards": 45,
+      "receptions": 2,
+      "tds": 2
+    },
+    {
+      "year": 2023,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Devin Gosser",
+      "yards": 40,
+      "receptions": 4,
+      "tds": 2
+    },
+    {
+      "year": 2010,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 157,
+      "receptions": 9,
+      "tds": 1
+    },
+    {
+      "year": 2009,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 134,
+      "receptions": 8,
+      "tds": 1
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 114,
+      "receptions": 4,
+      "tds": 1
+    },
+    {
+      "year": 2022,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Anthony Westervelt",
+      "yards": 108,
+      "receptions": 3,
+      "tds": 1
+    },
+    {
+      "year": 2010,
+      "opponent": "Parkway Central",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 108,
+      "receptions": 7,
+      "tds": 1
+    },
+    {
+      "year": 2008,
+      "opponent": "Howell North",
+      "playoff": false,
+      "name": "Travis Cardona",
+      "yards": 101,
+      "receptions": 4,
+      "tds": 1
+    },
+    {
+      "year": 2012,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Cody Tolliver",
+      "yards": 139,
+      "receptions": 4,
+      "tds": 0
+    },
+    {
+      "year": 2010,
+      "opponent": "Rockwood Summit",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 130,
+      "receptions": 7,
+      "tds": 0
+    },
+    {
+      "year": 2013,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Cole Luaders",
+      "yards": 121,
+      "receptions": 4,
+      "tds": 0
+    },
+    {
+      "year": 2010,
+      "opponent": "Jackson",
+      "playoff": false,
+      "name": "Alek Ferbet",
+      "yards": 115,
+      "receptions": 4,
+      "tds": 0
+    },
+    {
+      "year": 2004,
+      "opponent": "Jackson",
+      "playoff": false,
+      "name": "Jesse Zenthoeffer",
+      "yards": 114,
+      "receptions": 6,
+      "tds": 0
+    },
+    {
+      "year": 2015,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Cam Fusco",
+      "yards": 100,
+      "receptions": 7,
+      "tds": 0
+    }
+  ],
+  "tackles": [
+    {
+      "year": 2005,
+      "opponent": "Parkway North",
+      "playoff": false,
+      "name": "Justin Hamrick",
+      "tackles": 24
+    },
+    {
+      "year": 2025,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Dylan Lappe",
+      "tackles": 24
+    },
+    {
+      "year": 2025,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Dylan Lappe",
+      "tackles": 20
+    },
+    {
+      "year": 2005,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Jimmy Ferrell",
+      "tackles": 19
+    },
+    {
+      "year": 2022,
+      "opponent": "Marquette",
+      "playoff": true,
+      "name": "Jayden Ashlock",
+      "tackles": 18
+    },
+    {
+      "year": 2014,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Gage Erhart",
+      "tackles": 18
+    },
+    {
+      "year": 2005,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Justin Hamrick",
+      "tackles": 18
+    },
+    {
+      "year": 2022,
+      "opponent": "St. Louis University",
+      "playoff": true,
+      "name": "Jayden Ashlock",
+      "tackles": 17
+    },
+    {
+      "year": 2002,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Rares Micu",
+      "tackles": 17
+    },
+    {
+      "year": 2023,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Dean Moeckel",
+      "tackles": 16
+    },
+    {
+      "year": 2022,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Jayden Ashlock",
+      "tackles": 16
+    },
+    {
+      "year": 2022,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Jayden Ashlock",
+      "tackles": 15
+    },
+    {
+      "year": 2005,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Nick Baer",
+      "tackles": 15
+    },
+    {
+      "year": 2022,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Michael Stivers",
+      "tackles": 15
+    },
+    {
+      "year": 2018,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Nick Fingers",
+      "tackles": 15
+    },
+    {
+      "year": 2002,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Rares Micu",
+      "tackles": 15
+    },
+    {
+      "year": 2021,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Brandon Borawski",
+      "tackles": 15
+    },
+    {
+      "year": 2025,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Jackson Rutledge",
+      "tackles": 15
+    },
+    {
+      "year": 2023,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Eric Miller",
+      "tackles": 14
+    },
+    {
+      "year": 2022,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Michael Stivers",
+      "tackles": 14
+    },
+    {
+      "year": 2022,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Jayden Ashlock",
+      "tackles": 14
+    },
+    {
+      "year": 2022,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Jayden Ashlock",
+      "tackles": 14
+    },
+    {
+      "year": 2018,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Braden Briggs",
+      "tackles": 14
+    },
+    {
+      "year": 2018,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Devin Mullins",
+      "tackles": 14
+    },
+    {
+      "year": 2015,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Edziu Franczak",
+      "tackles": 14
+    },
+    {
+      "year": 2015,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Gage Erhart",
+      "tackles": 14
+    },
+    {
+      "year": 2014,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Gage Erhart",
+      "tackles": 14
+    },
+    {
+      "year": 2014,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "James Pettus",
+      "tackles": 14
+    },
+    {
+      "year": 2010,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Brandon Young",
+      "tackles": 14
+    },
+    {
+      "year": 2009,
+      "opponent": "Hillsboro",
+      "playoff": false,
+      "name": "Kurt Frischman",
+      "tackles": 14
+    },
+    {
+      "year": 2008,
+      "opponent": "Howell North",
+      "playoff": false,
+      "name": "Daniel Rhea",
+      "tackles": 14
+    },
+    {
+      "year": 2006,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Jimmy Ferrell",
+      "tackles": 14
+    },
+    {
+      "year": 2005,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Jimmy Ferrell",
+      "tackles": 14
+    },
+    {
+      "year": 2004,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "David Steinman",
+      "tackles": 14
+    },
+    {
+      "year": 2000,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Tony Bekemeier",
+      "tackles": 14
+    },
+    {
+      "year": 2017,
+      "opponent": "North County",
+      "playoff": false,
+      "name": "Mason Ambrose",
+      "tackles": 13
+    },
+    {
+      "year": 2015,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Edziu Franczak",
+      "tackles": 13
+    },
+    {
+      "year": 2014,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Gage Erhart",
+      "tackles": 13
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Kurt Frischman",
+      "tackles": 13
+    },
+    {
+      "year": 2009,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Kurt Frischman",
+      "tackles": 13
+    },
+    {
+      "year": 2003,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Nick Johnson",
+      "tackles": 13
+    },
+    {
+      "year": 2003,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Nick Johnson",
+      "tackles": 13
+    },
+    {
+      "year": 2003,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Nick Johnson",
+      "tackles": 13
+    },
+    {
+      "year": 2002,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Rares Micu",
+      "tackles": 13
+    },
+    {
+      "year": 2002,
+      "opponent": "Rockwood Summit",
+      "playoff": false,
+      "name": "Rares Micu",
+      "tackles": 13
+    },
+    {
+      "year": 2000,
+      "opponent": "Eureka",
+      "playoff": false,
+      "name": "Ron Lowry",
+      "tackles": 13
+    },
+    {
+      "year": 2000,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Ron Lowry",
+      "tackles": 13
+    },
+    {
+      "year": 2024,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Dominic Lograsso",
+      "tackles": 13
+    }
+  ],
+  "sacks": [
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": true,
+      "name": "Daniel Lauter",
+      "sacks": 4
+    },
+    {
+      "year": 2022,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Noa Isaia",
+      "sacks": 4
+    },
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": true,
+      "name": "Caden Lappe",
+      "sacks": 3
+    },
+    {
+      "year": 2022,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Daniel Lauter",
+      "sacks": 3
+    },
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": true,
+      "name": "Law Newman",
+      "sacks": 3
+    },
+    {
+      "year": 2007,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Tyler Cardona",
+      "sacks": 3
+    },
+    {
+      "year": 2024,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Dylan Lappe",
+      "sacks": 3
+    },
+    {
+      "year": 2024,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Lukaus Steinnerd",
+      "sacks": 3
+    },
+    {
+      "year": 2012,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Andrew Kraus",
+      "sacks": 2
+    },
+    {
+      "year": 2018,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Braden Briggs",
+      "sacks": 2
+    },
+    {
+      "year": 2020,
+      "opponent": "Parkway North",
+      "playoff": false,
+      "name": "Brandon Granger",
+      "sacks": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Brett Dawson",
+      "sacks": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Brett Dawson",
+      "sacks": 2
+    },
+    {
+      "year": 2015,
+      "opponent": "Hazelwood West",
+      "playoff": false,
+      "name": "Brett Winder",
+      "sacks": 2
+    },
+    {
+      "year": 2023,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Caden Lappe",
+      "sacks": 2
+    },
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Caden Lappe",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Caden Lappe",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Caden Lappe",
+      "sacks": 2
+    },
+    {
+      "year": 2002,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Chris Montgomery",
+      "sacks": 2
+    },
+    {
+      "year": 2001,
+      "opponent": "Fort Zumwalt South",
+      "playoff": false,
+      "name": "Chris Montgomery",
+      "sacks": 2
+    },
+    {
+      "year": 2008,
+      "opponent": "Howell North",
+      "playoff": false,
+      "name": "Christian Philipp",
+      "sacks": 2
+    },
+    {
+      "year": 2018,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Colton Critchlow",
+      "sacks": 2
+    },
+    {
+      "year": 2006,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Corey Johnson",
+      "sacks": 2
+    },
+    {
+      "year": 2023,
+      "opponent": "Valle Catholic",
+      "playoff": false,
+      "name": "Dean Moeckel",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Marquette",
+      "playoff": true,
+      "name": "Dominic Medioros",
+      "sacks": 2
+    },
+    {
+      "year": 2017,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Dylan Clark",
+      "sacks": 2
+    },
+    {
+      "year": 2017,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Dylan Clark",
+      "sacks": 2
+    },
+    {
+      "year": 2002,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Jake Hall",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Jayden Ashlock",
+      "sacks": 2
+    },
+    {
+      "year": 2006,
+      "opponent": "North County",
+      "playoff": false,
+      "name": "Jimmy Ferrell",
+      "sacks": 2
+    },
+    {
+      "year": 2020,
+      "opponent": "Central (Park Hills)",
+      "playoff": false,
+      "name": "Justice Ashlock",
+      "sacks": 2
+    },
+    {
+      "year": 1999,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Justin Montgomery",
+      "sacks": 2
+    },
+    {
+      "year": 2020,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Kaleb Niebuhr",
+      "sacks": 2
+    },
+    {
+      "year": 2020,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Kaleb Niebuhr",
+      "sacks": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Kurt Frischman",
+      "sacks": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Kurt Frischman",
+      "sacks": 2
+    },
+    {
+      "year": 2011,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Kyle Rose",
+      "sacks": 2
+    },
+    {
+      "year": 2008,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Matt Giudicy",
+      "sacks": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Matt Giudicy",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "St. Louis University",
+      "playoff": true,
+      "name": "Noa Isaia",
+      "sacks": 2
+    },
+    {
+      "year": 2021,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Noa Isaia",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Noa Isaia",
+      "sacks": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Noa Isaia",
+      "sacks": 2
+    },
+    {
+      "year": 2020,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Robert Frank",
+      "sacks": 2
+    },
+    {
+      "year": 2015,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Russell Richardson",
+      "sacks": 2
+    },
+    {
+      "year": 2019,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Sebastian Feliciano",
+      "sacks": 2
+    },
+    {
+      "year": 2006,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Steve Brownlee",
+      "sacks": 2
+    },
+    {
+      "year": 2007,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Tanner Knox",
+      "sacks": 2
+    },
+    {
+      "year": 2007,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Tanner Knox",
+      "sacks": 2
+    },
+    {
+      "year": 2010,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Zayne Tindall",
+      "sacks": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Dylan Lappe",
+      "sacks": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Luke Ferrario",
+      "sacks": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Hazelwood West",
+      "playoff": false,
+      "name": "Luke Ferrario",
+      "sacks": 2
+    }
+  ],
+  "fumbles": [
+    {
+      "year": 2009,
+      "opponent": "Central (Cape Girardeau)",
+      "playoff": false,
+      "name": "Matt Giudicy",
+      "fumbles": 3
+    },
+    {
+      "year": 2019,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Necho Mason",
+      "fumbles": 2
+    },
+    {
+      "year": 2019,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Kaleb Niebuhr",
+      "fumbles": 2
+    },
+    {
+      "year": 2009,
+      "opponent": "North County",
+      "playoff": false,
+      "name": "Kyle Eaves",
+      "fumbles": 2
+    },
+    {
+      "year": 2007,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Corey Johnson",
+      "fumbles": 2
+    },
+    {
+      "year": 2006,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Corey Buggy",
+      "fumbles": 2
+    }
+  ],
+  "interceptions": [
+    {
+      "year": 2018,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Bryce McKinnon",
+      "ints": 3
+    },
+    {
+      "year": 2019,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Luckas Salsman",
+      "ints": 2
+    },
+    {
+      "year": 2014,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Garrett St. John",
+      "ints": 2
+    },
+    {
+      "year": 2012,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Cody Tolliver",
+      "ints": 2
+    },
+    {
+      "year": 2011,
+      "opponent": "Poplar Bluff",
+      "playoff": false,
+      "name": "Zach Naes",
+      "ints": 2
+    },
+    {
+      "year": 2008,
+      "opponent": "Windsor",
+      "playoff": false,
+      "name": "Christian Philipp",
+      "ints": 2
+    },
+    {
+      "year": 2002,
+      "opponent": "Pacific",
+      "playoff": false,
+      "name": "Charlie Holt",
+      "ints": 2
+    },
+    {
+      "year": 2002,
+      "opponent": "Pacific",
+      "playoff": false,
+      "name": "David Harris",
+      "ints": 2
+    },
+    {
+      "year": 2000,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Ron Lowry",
+      "ints": 2
+    },
+    {
+      "year": 2022,
+      "opponent": "St. Louis University",
+      "playoff": true,
+      "name": "Austin Tilley",
+      "ints": 2
+    },
+    {
+      "year": 2023,
+      "opponent": "Pattonville",
+      "playoff": false,
+      "name": "Eric Miller",
+      "ints": 2
+    },
+    {
+      "year": 2025,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Colton Fowler",
+      "ints": 2
+    }
+  ],
+  "returnTds": [
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Trayton Clariday",
+      "yards": 85
+    },
+    {
+      "year": 2022,
+      "opponent": "Northwest",
+      "playoff": false,
+      "name": "Trayton Clariday",
+      "yards": 84
+    },
+    {
+      "year": 2023,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Joe Bierach",
+      "yards": 70
+    },
+    {
+      "year": 2018,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Bryce McKinnon",
+      "yards": 65
+    },
+    {
+      "year": 2019,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Luckas Salsman",
+      "yards": 58
+    },
+    {
+      "year": 2018,
+      "opponent": "Washington",
+      "playoff": false,
+      "name": "Colton Critchlow",
+      "yards": 45
+    },
+    {
+      "year": 2024,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Dominic Lograsso",
+      "yards": 34
+    },
+    {
+      "year": 2023,
+      "opponent": "Oakville",
+      "playoff": false,
+      "name": "Dylan Lappe",
+      "yards": 31
+    },
+    {
+      "year": 2015,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Brett Winder",
+      "yards": 30
+    },
+    {
+      "year": 2025,
+      "opponent": "Parkway West",
+      "playoff": false,
+      "name": "Elliot Burris",
+      "yards": 25
+    },
+    {
+      "year": 2025,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Luke Ferrario",
+      "yards": 20
+    },
+    {
+      "year": 2023,
+      "opponent": "Webster Groves",
+      "playoff": false,
+      "name": "Dylan Lappe",
+      "yards": 20
+    },
+    {
+      "year": 2023,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Colton Fowler",
+      "yards": 12
+    },
+    {
+      "year": 2023,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Trayton Clariday",
+      "yards": 15
+    },
+    {
+      "year": 2023,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Dean Moeckel",
+      "yards": 0
+    }
+  ],
+  "returnTouchdowns": [
+    {
+      "year": 2022,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Dean Moeckel",
+      "type": "Punt",
+      "yards": 7
+    },
+    {
+      "year": 2024,
+      "opponent": "Hazelwood West",
+      "playoff": false,
+      "name": "Ben Lewis",
+      "type": "Kickoff",
+      "yards": 90
+    },
+    {
+      "year": 2024,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Quinn Mattingly",
+      "type": "Kickoff",
+      "yards": 85
+    },
+    {
+      "year": 2021,
+      "opponent": "DeSoto",
+      "playoff": false,
+      "name": "Ty Kitchen",
+      "type": "Kickoff",
+      "yards": 60
+    },
+    {
+      "year": 2018,
+      "opponent": "Fox",
+      "playoff": false,
+      "name": "Dylan Hawk",
+      "type": "Kickoff",
+      "yards": 95
+    },
+    {
+      "year": 2018,
+      "opponent": "McCluer",
+      "playoff": false,
+      "name": "Dylan Hawk",
+      "type": "Kickoff",
+      "yards": 70
+    }
+  ],
+  "puntReturnYards": [
+    {
+      "year": 2022,
+      "opponent": "Mehlville",
+      "playoff": false,
+      "name": "Eli Wingbermuehle",
+      "returns": 5,
+      "yards": 105
+    },
+    {
+      "year": 2002,
+      "opponent": "Pacific",
+      "playoff": false,
+      "name": "Charlie Holt",
+      "returns": 4,
+      "yards": 92
+    },
+    {
+      "year": 2022,
+      "opponent": "University City",
+      "playoff": false,
+      "name": "Eli Wingbermuehle",
+      "returns": 4,
+      "yards": 73
+    },
+    {
+      "year": 2003,
+      "opponent": "Parkway South",
+      "playoff": false,
+      "name": "Nathan Hoffman",
+      "returns": 1,
+      "yards": 68
+    },
+    {
+      "year": 2003,
+      "opponent": "Pacific",
+      "playoff": false,
+      "name": "Nathan Hoffman",
+      "returns": 2,
+      "yards": 67
+    }
+  ]
+}

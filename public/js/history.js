@@ -1,3 +1,12 @@
+import {
+  createCell,
+  formatStatCell,
+  parseNumericValue,
+  wrapTableWithSearch,
+  openRecordsModal,
+  renderLeaderboardCard,
+} from "./records-ui.js";
+
 const seasonsEl = document.getElementById("seasons");
 const leaderboardsEl = document.getElementById("leaderboards");
 const headToHeadEl = document.getElementById("headToHead");
@@ -22,21 +31,11 @@ function seasonUrl(year) {
   return `/season?year=${encodeURIComponent(year)}`;
 }
 
-// Parses a "W-L" or "W-L-T" record string (as stored in records.json's
-// teamSeasonStats, e.g. for years with no game-by-game log) into the same
-// { wins, losses, ties } shape computeRecord() produces from real games.
-function parseRecordString(str) {
-  const [wins, losses, ties] = str.split("-").map((n) => parseInt(n, 10) || 0);
-  return { wins, losses, ties: ties || 0 };
-}
-
-// Builds one season card. Years with a real game log link to the boxscore
-// page; years with only an aggregate record (pre-2004, no game-by-game
-// data available) render as a static, non-clickable card instead.
-function buildSeasonCard(year, record, href = null) {
-  const card = document.createElement(href ? "a" : "div");
+// Builds one season card. Every season from 1999 on now has a game-by-game log,
+// so these always link to the boxscore page.
+function buildSeasonCard(year, record, href) {
+  const card = document.createElement("a");
   card.className = "week-card season-card";
-  if (!href) card.classList.add("season-card-static");
 
   if (record.wins > record.losses) {
     card.classList.add("season-win");
@@ -46,7 +45,7 @@ function buildSeasonCard(year, record, href = null) {
     card.classList.add("season-even");
   }
 
-  if (href) card.href = href;
+  card.href = href;
 
   const body = document.createElement("div");
   body.className = "card-body season-card-body";
@@ -65,11 +64,6 @@ function buildSeasonCard(year, record, href = null) {
   return card;
 }
 
-let seasonsGridEl = null;
-
-// Renders the season cards backed by real game-by-game data (history.json).
-// Returns the set of years rendered, so renderLegacySeasons() knows which
-// years from records.json still need a (static) card of their own.
 function renderSeasons(data) {
   seasonsEl.innerHTML = "";
   const years = Object.keys(data).sort((a, b) => b.localeCompare(a));
@@ -95,27 +89,6 @@ function renderSeasons(data) {
 
   section.appendChild(grid);
   seasonsEl.appendChild(section);
-
-  seasonsGridEl = grid;
-  return new Set(years);
-}
-
-// Appends static (non-linked) cards for seasons that only have an aggregate
-// record in records.json's teamSeasonStats, no game-by-game log — e.g.
-// 1999-2003. Since `years` from renderSeasons() is already sorted newest
-// first and these are all older than every history.json year, appending
-// them in descending order keeps the whole grid in order.
-function renderLegacySeasons(teamSeasonStats, knownYears) {
-  if (!seasonsGridEl || !teamSeasonStats) return;
-
-  const extra = teamSeasonStats
-    .filter((row) => !knownYears.has(String(row.year)))
-    .sort((a, b) => b.year - a.year);
-
-  for (const row of extra) {
-    const record = parseRecordString(row.record);
-    seasonsGridEl.appendChild(buildSeasonCard(row.year, record));
-  }
 }
 
 function renderCareerScoring(list) {
@@ -344,248 +317,26 @@ function renderTeamSeasonStats(list, programTotals, category = null) {
   return wrapTableWithSearch(details, table);
 }
 
-function createCell(text) {
-  const td = document.createElement("td");
-  td.textContent = text;
-  return td;
-}
-
-function wrapTableWithSearch(details, tableEl) {
-  const table = tableEl || details.querySelector("table");
-  if (!table) return details;
-
-  const scrollContainer = details.querySelector(".table-scroll");
-  const wrapper = scrollContainer || details;
-
-  const searchContainer = document.createElement("div");
-  searchContainer.className = "table-search-container";
-  searchContainer.style.marginBottom = "0.75rem";
-
-  const input = document.createElement("input");
-  input.type = "text";
-  input.className = "table-search-input";
-  input.placeholder = "Search…";
-  input.setAttribute("aria-label", "Search this table");
-  input.style.width = "100%";
-  input.style.padding = "0.7rem 0.75rem";
-  input.style.minHeight = "44px";
-  input.style.border = "1px solid var(--border)";
-  input.style.borderRadius = "4px";
-  // 16px minimum, otherwise iOS zooms the page in when the field is focused.
-  input.style.fontSize = "1rem";
-
-  const resultCount = document.createElement("span");
-  resultCount.className = "search-result-count";
-  resultCount.style.display = "block";
-  resultCount.style.marginTop = "0.5rem";
-  resultCount.style.fontSize = "0.85rem";
-  resultCount.style.color = "var(--text-muted)";
-
-  searchContainer.appendChild(input);
-  searchContainer.appendChild(resultCount);
-
-  if (scrollContainer) {
-    scrollContainer.parentNode.insertBefore(searchContainer, scrollContainer);
-  } else {
-    details.insertBefore(searchContainer, table);
-  }
-
-  function updateSearch() {
-    const query = input.value.toLowerCase();
-    const tbody = table.querySelector("tbody");
-    let visibleCount = 0;
-
-    if (tbody) {
-      tbody.querySelectorAll("tr").forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const isMatch = query === "" || text.includes(query);
-        row.style.display = isMatch ? "" : "none";
-        if (isMatch) visibleCount++;
-      });
-    }
-
-    const total = tbody ? tbody.querySelectorAll("tr").length : 0;
-    if (query) {
-      resultCount.textContent = `${visibleCount} of ${total} results`;
-    } else {
-      resultCount.textContent = "";
-    }
-  }
-
-  input.addEventListener("input", updateSearch);
-
-  return details;
-}
-
-function formatStatCell(raw) {
-  const td = document.createElement("td");
-  if (raw === null || raw === undefined || raw === "") return td;
-  const str = String(raw);
-  const match = str.match(/^(.+?)\s*\((\d+)\)$/);
-  if (!match) {
-    td.textContent = str;
-    return td;
-  }
-  td.appendChild(document.createTextNode(match[1]));
-  const rank = document.createElement("sup");
-  rank.className = "stat-rank";
-  rank.textContent = match[2];
-  td.appendChild(rank);
-  return td;
-}
-
-function parseNumericValue(str) {
-  if (!str) return 0;
-  const match = str.toString().match(/^(\d+(?:\.\d+)?)/);
-  return match ? parseFloat(match[1]) : 0;
-}
-
-let recordsModalOverlay = null;
-let recordsModalContent = null;
-let recordsModalTrigger = null;
-let cachedRecords = null;
-
-function ensureRecordsModalBuilt() {
-  if (recordsModalOverlay) return;
-
-  recordsModalOverlay = document.createElement("div");
-  recordsModalOverlay.className = "records-modal";
-  recordsModalOverlay.setAttribute("role", "dialog");
-  recordsModalOverlay.setAttribute("aria-modal", "true");
-  recordsModalOverlay.setAttribute("aria-label", "Records");
-
-  recordsModalContent = document.createElement("div");
-  recordsModalContent.className = "records-modal-content";
-
-  const closeBtn = document.createElement("button");
-  closeBtn.className = "records-modal-close";
-  closeBtn.textContent = "×";
-  closeBtn.setAttribute("aria-label", "Close");
-  closeBtn.onclick = closeRecordsModal;
-  recordsModalContent.appendChild(closeBtn);
-
-  const contentArea = document.createElement("div");
-  contentArea.className = "records-modal-inner";
-  recordsModalContent.appendChild(contentArea);
-
-  recordsModalOverlay.appendChild(recordsModalContent);
-  recordsModalOverlay.onclick = (e) => {
-    if (e.target === recordsModalOverlay) closeRecordsModal();
-  };
-
-  document.body.appendChild(recordsModalOverlay);
-
-  document.addEventListener("keydown", (e) => {
-    if (!recordsModalOverlay.classList.contains("open")) return;
-    if (e.key === "Escape") closeRecordsModal();
-    if (e.key === "Tab") trapRecordsModalFocus(e);
-  });
-}
-
-// Keeps Tab inside the modal so keyboard users don't end up on the page
-// behind it while it's covering the screen.
-function trapRecordsModalFocus(e) {
-  const focusable = recordsModalContent.querySelectorAll(
-    'button, a[href], input, summary, [tabindex]:not([tabindex="-1"])'
-  );
-  if (focusable.length === 0) return;
-  const first = focusable[0];
-  const last = focusable[focusable.length - 1];
-
-  if (e.shiftKey && document.activeElement === first) {
-    e.preventDefault();
-    last.focus();
-  } else if (!e.shiftKey && document.activeElement === last) {
-    e.preventDefault();
-    first.focus();
-  }
-}
-
-function openRecordsModal(title, contentElement) {
-  ensureRecordsModalBuilt();
-  recordsModalTrigger = document.activeElement;
-  const inner = recordsModalContent.querySelector(".records-modal-inner");
-  inner.innerHTML = "";
-
-  const heading = document.createElement("h2");
-  heading.textContent = title;
-  heading.className = "records-modal-title";
-  inner.appendChild(heading);
-
-  inner.appendChild(contentElement);
-  recordsModalOverlay.setAttribute("aria-label", title);
-  recordsModalOverlay.classList.add("open");
-  document.body.style.overflow = "hidden";
-  recordsModalContent.querySelector(".records-modal-close").focus();
-}
-
-function closeRecordsModal() {
-  if (recordsModalOverlay) {
-    recordsModalOverlay.classList.remove("open");
-    document.body.style.overflow = "";
-    // Return focus to the "View all" link that opened the modal.
-    if (recordsModalTrigger && document.contains(recordsModalTrigger)) {
-      recordsModalTrigger.focus();
-    }
-    recordsModalTrigger = null;
-  }
-}
-
-function renderLeaderboardCard(title, items, renderFn) {
-  const card = document.createElement("div");
-  card.className = "leaderboard-card";
-
-  const titleEl = document.createElement("h3");
-  titleEl.textContent = title;
-  card.appendChild(titleEl);
-
-  const listEl = document.createElement("ol");
-  listEl.className = "leaderboard-list";
-  for (let i = 0; i < Math.min(5, items.length); i++) {
-    const item = items[i];
-    const li = document.createElement("li");
-    li.className = "leaderboard-item";
-    const nameEl = document.createElement("span");
-    nameEl.className = "player";
-    nameEl.textContent = item.name;
-
-    const valueEl = document.createElement("span");
-    valueEl.className = "value";
-    valueEl.textContent = item.value;
-
-    li.append(nameEl, " ", valueEl);
-    listEl.appendChild(li);
-  }
-  card.appendChild(listEl);
-
-  const link = document.createElement("a");
-  link.className = "leaderboard-link";
-  link.href = "#";
-  link.textContent = "View all";
-  link.onclick = (e) => {
-    e.preventDefault();
-    openRecordsModal(title, renderFn(cachedRecords));
-  };
-  card.appendChild(link);
-
-  return card;
-}
-
 function renderLeaderboards(records) {
   if (!leaderboardsEl) return;
 
-  cachedRecords = records;
   leaderboardsEl.innerHTML = "";
 
-  const heading = document.createElement("h3");
-  heading.className = "year-section";
-  heading.style.fontSize = "1rem";
-  heading.style.marginBottom = "1.5rem";
+  const headingWrapper = document.createElement("div");
+  headingWrapper.className = "year-section section-heading-row";
   const headingText = document.createElement("h2");
   headingText.className = "section-heading";
   headingText.textContent = "Program Leaders";
-  heading.appendChild(headingText);
-  leaderboardsEl.appendChild(heading);
+  headingWrapper.appendChild(headingText);
+
+  // These six cards are a teaser; every other category lives in the record book.
+  const allLink = document.createElement("a");
+  allLink.className = "section-heading-link";
+  allLink.href = "/records";
+  allLink.textContent = "Full record book →";
+  headingWrapper.appendChild(allLink);
+
+  leaderboardsEl.appendChild(headingWrapper);
 
   const container = document.createElement("div");
   container.className = "leaderboards-container";
@@ -714,12 +465,11 @@ function renderHeadToHead(data) {
 }
 
 async function init() {
-  let knownYears = new Set();
-
   try {
     const res = await fetch("/data/history.json");
+    if (!res.ok) throw new Error(`history.json ${res.status}`);
     const data = await res.json();
-    knownYears = renderSeasons(data);
+    renderSeasons(data);
     renderHeadToHead(data);
   } catch (err) {
     seasonsEl.innerHTML = '<p class="empty-state">Couldn\'t load history. Try refreshing.</p>';
@@ -727,9 +477,8 @@ async function init() {
 
   try {
     const res = await fetch("/data/records.json");
-    const records = await res.json();
-    renderLeaderboards(records);
-    renderLegacySeasons(records.teamSeasonStats, knownYears);
+    if (!res.ok) throw new Error(`records.json ${res.status}`);
+    renderLeaderboards(await res.json());
   } catch (err) {
     leaderboardsEl.innerHTML = '<p class="empty-state">Couldn\'t load leaders. Try refreshing.</p>';
   }

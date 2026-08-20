@@ -1,268 +1,2312 @@
 {
-  "2025": [
-    { "date": "2025-08-29", "opponent": "Parkway West", "homeAway": "Home", "result": "L", "pointsFor": 27, "pointsAgainst": 28 },
-    { "date": "2025-09-05", "opponent": "Fox", "homeAway": "Away", "result": "W", "pointsFor": 21, "pointsAgainst": 14 },
-    { "date": "2025-09-12", "opponent": "Northwest", "homeAway": "Home", "result": "W", "pointsFor": 49, "pointsAgainst": 14 },
-    { "date": "2025-09-19", "opponent": "Mehlville", "homeAway": "Home", "result": "W", "pointsFor": 53, "pointsAgainst": 0 },
-    { "date": "2025-09-26", "opponent": "Oakville", "homeAway": "Away", "result": "W", "pointsFor": 14, "pointsAgainst": 10 },
-    { "date": "2025-10-03", "opponent": "Pattonville", "homeAway": "Home", "result": "L", "pointsFor": 28, "pointsAgainst": 40 },
-    { "date": "2025-10-10", "opponent": "Parkway South", "homeAway": "Away", "result": "W", "pointsFor": 49, "pointsAgainst": 0 },
-    { "date": "2025-10-17", "opponent": "Hazelwood West", "homeAway": "Home", "result": "W", "pointsFor": 54, "pointsAgainst": 12 },
-    { "date": "2025-10-24", "opponent": "Webster Groves", "homeAway": "Away", "result": "W", "pointsFor": 56, "pointsAgainst": 23 },
-    { "date": "2025-11-07", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 14, "gameType": "Playoffs" }
+  "1999": [
+    {
+      "date": null,
+      "gameNo": 1,
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 28
+    },
+    {
+      "date": null,
+      "gameNo": 2,
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 8,
+      "pointsAgainst": 26
+    },
+    {
+      "date": null,
+      "gameNo": 3,
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 17,
+      "pointsAgainst": 24
+    },
+    {
+      "date": null,
+      "gameNo": 4,
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 9,
+      "pointsAgainst": 36
+    },
+    {
+      "date": null,
+      "gameNo": 5,
+      "opponent": "Ladue Horton Watkins",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 41
+    },
+    {
+      "date": null,
+      "gameNo": 6,
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 36
+    },
+    {
+      "date": null,
+      "gameNo": 7,
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 8,
+      "pointsAgainst": 41
+    },
+    {
+      "date": null,
+      "gameNo": 8,
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 47
+    },
+    {
+      "date": null,
+      "gameNo": 9,
+      "opponent": "Pacific",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 26
+    },
+    {
+      "date": null,
+      "gameNo": 10,
+      "opponent": "University City",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 43
+    }
   ],
-  "2024": [
-    { "date": "2024-08-30", "opponent": "Parkway West", "homeAway": "Away", "result": "W", "pointsFor": 40, "pointsAgainst": 14 },
-    { "date": "2024-09-06", "opponent": "Fox", "homeAway": "Home", "result": "W", "pointsFor": 34, "pointsAgainst": 7 },
-    { "date": "2024-09-13", "opponent": "Northwest", "homeAway": "Away", "result": "W", "pointsFor": 41, "pointsAgainst": 7 },
-    { "date": "2024-09-20", "opponent": "Mehlville", "homeAway": "Away", "result": "W", "pointsFor": 43, "pointsAgainst": 8 },
-    { "date": "2024-09-27", "opponent": "Oakville", "homeAway": "Home", "result": "W", "pointsFor": 30, "pointsAgainst": 0 },
-    { "date": "2024-10-04", "opponent": "Pattonville", "homeAway": "Away", "result": "W", "pointsFor": 27, "pointsAgainst": 13 },
-    { "date": "2024-10-10", "opponent": "Parkway South", "homeAway": "Home", "result": "W", "pointsFor": 28, "pointsAgainst": 7 },
-    { "date": "2024-10-17", "opponent": "Hazelwood West", "homeAway": "Away", "result": "W", "pointsFor": 41, "pointsAgainst": 7 },
-    { "date": "2024-10-25", "opponent": "Webster Groves", "homeAway": "Home", "result": "W", "pointsFor": 28, "pointsAgainst": 0 },
-    { "date": "2024-11-08", "opponent": "Oakville", "homeAway": "Home", "result": "W", "pointsFor": 34, "pointsAgainst": 7, "gameType": "Playoffs" },
-    { "date": "2024-11-15", "opponent": "Jackson", "homeAway": "Home", "result": "L", "pointsFor": 28, "pointsAgainst": 49, "gameType": "Playoffs" }
+  "2000": [
+    {
+      "date": null,
+      "gameNo": 1,
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 23
+    },
+    {
+      "date": null,
+      "gameNo": 2,
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 38
+    },
+    {
+      "date": null,
+      "gameNo": 3,
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 25
+    },
+    {
+      "date": null,
+      "gameNo": 4,
+      "opponent": "North County",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 29
+    },
+    {
+      "date": null,
+      "gameNo": 5,
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 42
+    },
+    {
+      "date": null,
+      "gameNo": 6,
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 20,
+      "pointsAgainst": 6
+    },
+    {
+      "date": null,
+      "gameNo": 7,
+      "opponent": "Fort Zumwalt South",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 12,
+      "pointsAgainst": 28
+    },
+    {
+      "date": null,
+      "gameNo": 8,
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 23
+    },
+    {
+      "date": null,
+      "gameNo": 9,
+      "opponent": "Rockwood Summit",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 23
+    },
+    {
+      "date": null,
+      "gameNo": 10,
+      "opponent": "Parkway South",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 34
+    }
   ],
-  "2023": [
-    { "date": "2023-08-25", "opponent": "Valle Catholic", "homeAway": "Home", "result": "W", "pointsFor": 34, "pointsAgainst": 21 },
-    { "date": "2023-09-01", "opponent": "University City/Maplewood-Richmond Heights", "homeAway": "Home", "result": "W", "pointsFor": 70, "pointsAgainst": 0 },
-    { "date": "2023-09-08", "opponent": "Northwest", "homeAway": "Home", "result": "W", "pointsFor": 56, "pointsAgainst": 7 },
-    { "date": "2023-09-15", "opponent": "Mehlville", "homeAway": "Home", "result": "W", "pointsFor": 48, "pointsAgainst": 6 },
-    { "date": "2023-09-22", "opponent": "Fox", "homeAway": "Home", "result": "W", "pointsFor": 27, "pointsAgainst": 14 },
-    { "date": "2023-09-29", "opponent": "Parkway South", "homeAway": "Away", "result": "W", "pointsFor": 49, "pointsAgainst": 7 },
-    { "date": "2023-10-06", "opponent": "Pattonville", "homeAway": "Home", "result": "W", "pointsFor": 28, "pointsAgainst": 3 },
-    { "date": "2023-10-13", "opponent": "Oakville", "homeAway": "Away", "result": "W", "pointsFor": 28, "pointsAgainst": 7 },
-    { "date": "2023-10-20", "opponent": "Webster Groves", "homeAway": "Away", "result": "W", "pointsFor": 35, "pointsAgainst": 0 },
-    { "date": "2023-11-03", "opponent": "Oakville", "homeAway": "Home", "result": "W", "pointsFor": 33, "pointsAgainst": 0, "gameType": "Playoffs" },
-    { "date": "2023-11-10", "opponent": "Jackson", "homeAway": "Home", "result": "L", "pointsFor": 21, "pointsAgainst": 55, "gameType": "Playoffs" }
+  "2001": [
+    {
+      "date": null,
+      "gameNo": 1,
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 43
+    },
+    {
+      "date": null,
+      "gameNo": 2,
+      "opponent": "Parkway North",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 47
+    },
+    {
+      "date": null,
+      "gameNo": 3,
+      "opponent": "Eureka",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 57
+    },
+    {
+      "date": null,
+      "gameNo": 4,
+      "opponent": "North County",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 49
+    },
+    {
+      "date": null,
+      "gameNo": 5,
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 63
+    },
+    {
+      "date": null,
+      "gameNo": 6,
+      "opponent": "University City",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 53
+    },
+    {
+      "date": null,
+      "gameNo": 7,
+      "opponent": "Fort Zumwalt South",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 26
+    },
+    {
+      "date": null,
+      "gameNo": 8,
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 7
+    },
+    {
+      "date": null,
+      "gameNo": 9,
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 49
+    },
+    {
+      "date": null,
+      "gameNo": 10,
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 41
+    }
   ],
-  "2022": [
-    { "date": "2022-08-26", "opponent": "Valle Catholic", "homeAway": "Away", "result": "L", "pointsFor": 36, "pointsAgainst": 61 },
-    { "date": "2022-09-02", "opponent": "University City", "homeAway": "Home", "result": "W", "pointsFor": 69, "pointsAgainst": 6 },
-    { "date": "2022-09-09", "opponent": "Northwest", "homeAway": "Away", "result": "W", "pointsFor": 64, "pointsAgainst": 6 },
-    { "date": "2022-09-16", "opponent": "Mehlville", "homeAway": "Away", "result": "W", "pointsFor": 58, "pointsAgainst": 7 },
-    { "date": "2022-09-23", "opponent": "Fox", "homeAway": "Away", "result": "W", "pointsFor": 49, "pointsAgainst": 14 },
-    { "date": "2022-09-30", "opponent": "Parkway South", "homeAway": "Home", "result": "W", "pointsFor": 50, "pointsAgainst": 6 },
-    { "date": "2022-10-07", "opponent": "Pattonville", "homeAway": "Away", "result": "W", "pointsFor": 50, "pointsAgainst": 48 },
-    { "date": "2022-10-14", "opponent": "Oakville", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 14 },
-    { "date": "2022-10-21", "opponent": "Webster Groves", "homeAway": "Home", "result": "W", "pointsFor": 48, "pointsAgainst": 6 },
-    { "date": "2022-10-28", "opponent": "St. Louis University", "homeAway": "Home", "result": "W", "pointsFor": 50, "pointsAgainst": 41, "gameType": "Playoffs" },
-    { "date": "2022-11-04", "opponent": "Marquette", "homeAway": "Home", "result": "L", "pointsFor": 14, "pointsAgainst": 42, "gameType": "Playoffs" }
+  "2002": [
+    {
+      "date": null,
+      "gameNo": 1,
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 6
+    },
+    {
+      "date": null,
+      "gameNo": 2,
+      "opponent": "Parkway South",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 37
+    },
+    {
+      "date": null,
+      "gameNo": 3,
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 16
+    },
+    {
+      "date": null,
+      "gameNo": 4,
+      "opponent": "Pacific",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 26,
+      "pointsAgainst": 0
+    },
+    {
+      "date": null,
+      "gameNo": 5,
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 2,
+      "pointsAgainst": 31
+    },
+    {
+      "date": null,
+      "gameNo": 6,
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 50
+    },
+    {
+      "date": null,
+      "gameNo": 7,
+      "opponent": "University City",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 33,
+      "pointsAgainst": 49
+    },
+    {
+      "date": null,
+      "gameNo": 8,
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 8,
+      "pointsAgainst": 42
+    },
+    {
+      "date": null,
+      "gameNo": 9,
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 35
+    },
+    {
+      "date": null,
+      "gameNo": 10,
+      "opponent": "Rockwood Summit",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 28
+    }
   ],
-  "2021": [
-    { "date": "2021-08-27", "opponent": "DeSoto", "homeAway": "Away", "result": "W", "pointsFor": 55, "pointsAgainst": 0 },
-    { "date": "2021-09-03", "opponent": "Oakville", "homeAway": "Away", "result": "W", "pointsFor": 49, "pointsAgainst": 15 },
-    { "date": "2021-09-10", "opponent": "Northwest", "homeAway": "Home", "result": "W", "pointsFor": 41, "pointsAgainst": 21 },
-    { "date": "2021-09-18", "opponent": "Hazelwood Central", "homeAway": "Away", "result": "L", "pointsFor": 13, "pointsAgainst": 46 },
-    { "date": "2021-09-24", "opponent": "Mehlville", "homeAway": "Home", "result": "W", "pointsFor": 54, "pointsAgainst": 20 },
-    { "date": "2021-10-01", "opponent": "Ladue Horton Watkins", "homeAway": "Home", "result": "L", "pointsFor": 27, "pointsAgainst": 35 },
-    { "date": "2021-10-08", "opponent": "Webster Groves", "homeAway": "Away", "result": "W", "pointsFor": 48, "pointsAgainst": 21 },
-    { "date": "2021-10-15", "opponent": "Fox", "homeAway": "Home", "result": "W", "pointsFor": 20, "pointsAgainst": 13 },
-    { "date": "2021-10-22", "opponent": "Parkway South", "homeAway": "Away", "result": "W", "pointsFor": 42, "pointsAgainst": 7 },
-    { "date": "2021-10-29", "opponent": "Central (Cape Girardeau)", "homeAway": "Home", "result": "W", "pointsFor": 25, "pointsAgainst": 0, "gameType": "Playoffs" },
-    { "date": "2021-11-05", "opponent": "Poplar Bluff", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 34, "gameType": "Playoffs" },
-    { "date": "2021-11-12", "opponent": "Jackson", "homeAway": "Away", "result": "L", "pointsFor": 14, "pointsAgainst": 52, "gameType": "Playoffs" }
-  ],
-  "2020": [
-    { "date": "2020-08-28", "opponent": "DeSoto", "homeAway": "Home", "result": "W", "pointsFor": 49, "pointsAgainst": 21 },
-    { "date": "2020-09-04", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 34 },
-    { "date": "2020-09-25", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 28, "pointsAgainst": 48 },
-    { "date": "2020-10-02", "opponent": "Parkway North", "homeAway": "Home", "result": "W", "pointsFor": 21, "pointsAgainst": 13 },
-    { "date": "2020-10-09", "opponent": "Webster Groves", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 0 },
-    { "date": "2020-10-16", "opponent": "Central (Park Hills)", "homeAway": "Away", "result": "W", "pointsFor": 35, "pointsAgainst": 33 },
-    { "date": "2020-10-23", "opponent": "Parkway South", "homeAway": "Home", "result": "W", "pointsFor": 33, "pointsAgainst": 0 },
-    { "date": "2020-11-06", "opponent": "Farmington", "homeAway": "Home", "result": "L", "pointsFor": 6, "pointsAgainst": 24, "gameType": "Playoffs" }
-  ],
-  "2019": [
-    { "date": "2019-08-30", "opponent": "Washington", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 7 },
-    { "date": "2019-09-06", "opponent": "Windsor", "homeAway": "Home", "result": "L", "pointsFor": 19, "pointsAgainst": 20 },
-    { "date": "2019-09-14", "opponent": "University City", "homeAway": "Away", "result": "W", "pointsFor": 29, "pointsAgainst": 14 },
-    { "date": "2019-09-20", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 13, "pointsAgainst": 20 },
-    { "date": "2019-09-27", "opponent": "Mehlville", "homeAway": "Home", "result": "L", "pointsFor": 14, "pointsAgainst": 38 },
-    { "date": "2019-10-04", "opponent": "Oakville", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 13 },
-    { "date": "2019-10-12", "opponent": "McCluer", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 26 },
-    { "date": "2019-10-18", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 26, "pointsAgainst": 41 },
-    { "date": "2019-10-25", "opponent": "Eureka", "homeAway": "Home", "result": "L", "pointsFor": 2, "pointsAgainst": 42 },
-    { "date": "2019-11-08", "opponent": "Jackson", "homeAway": "Away", "result": "L", "pointsFor": 14, "pointsAgainst": 55, "gameType": "Playoffs" }
-  ],
-  "2018": [
-    { "date": "2018-08-24", "opponent": "Washington", "homeAway": "Home", "result": "W", "pointsFor": 27, "pointsAgainst": 13 },
-    { "date": "2018-08-31", "opponent": "Windsor", "homeAway": "Away", "result": "W", "pointsFor": 47, "pointsAgainst": 14 },
-    { "date": "2018-09-06", "opponent": "University City", "homeAway": "Home", "result": "W", "pointsFor": 50, "pointsAgainst": 16 },
-    { "date": "2018-09-14", "opponent": "Northwest", "homeAway": "Away", "result": "W", "pointsFor": 14, "pointsAgainst": 6 },
-    { "date": "2018-09-21", "opponent": "Mehlville", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 49 },
-    { "date": "2018-09-28", "opponent": "Oakville", "homeAway": "Away", "result": "W", "pointsFor": 49, "pointsAgainst": 22 },
-    { "date": "2018-10-05", "opponent": "McCluer", "homeAway": "Home", "result": "W", "pointsFor": 53, "pointsAgainst": 16 },
-    { "date": "2018-10-12", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 49 },
-    { "date": "2018-10-18", "opponent": "Eureka", "homeAway": "Away", "result": "L", "pointsFor": 15, "pointsAgainst": 55 },
-    { "date": "2018-11-02", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 35, "pointsAgainst": 62, "gameType": "Playoffs" }
-  ],
-  "2017": [
-    { "date": "2017-08-18", "opponent": "North County", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 51 },
-    { "date": "2017-08-25", "opponent": "Affton", "homeAway": "Away", "result": "W", "pointsFor": 27, "pointsAgainst": 22 },
-    { "date": "2017-09-01", "opponent": "McCluer", "homeAway": "Home", "result": "L", "pointsFor": 14, "pointsAgainst": 30 },
-    { "date": "2017-09-08", "opponent": "Parkway South", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 47 },
-    { "date": "2017-09-15", "opponent": "Mehlville", "homeAway": "Away", "result": "L", "pointsFor": 20, "pointsAgainst": 48 },
-    { "date": "2017-09-22", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 13, "pointsAgainst": 51 },
-    { "date": "2017-09-30", "opponent": "Riverview Gardens", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 44 },
-    { "date": "2017-10-06", "opponent": "Oakville", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 28 },
-    { "date": "2017-10-13", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 48 },
-    { "date": "2017-10-20", "opponent": "Eureka", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 70, "gameType": "Playoffs" }
-  ],
-  "2016": [
-    { "date": "2016-08-19", "opponent": "North County", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 35 },
-    { "date": "2016-08-26", "opponent": "Affton", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 23 },
-    { "date": "2016-09-02", "opponent": "McCluer", "homeAway": "Away", "result": "L", "pointsFor": 9, "pointsAgainst": 26 },
-    { "date": "2016-09-10", "opponent": "Parkway South", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 24 },
-    { "date": "2016-09-17", "opponent": "Mehlville", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 40 },
-    { "date": "2016-09-23", "opponent": "Northwest", "homeAway": "Away", "result": "L", "pointsFor": 13, "pointsAgainst": 41 },
-    { "date": "2016-09-30", "opponent": "Riverview Gardens", "homeAway": "Home", "result": "L", "pointsFor": 13, "pointsAgainst": 52 },
-    { "date": "2016-10-07", "opponent": "Oakville", "homeAway": "Away", "result": "L", "pointsFor": 0, "pointsAgainst": 42 },
-    { "date": "2016-10-14", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 35 },
-    { "date": "2016-10-21", "opponent": "Kirkwood", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 58, "gameType": "Playoffs" }
-  ],
-  "2015": [
-    { "date": "2015-08-21", "opponent": "Pattonville", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 55 },
-    { "date": "2015-08-28", "opponent": "Rockwood Summit", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 52 },
-    { "date": "2015-09-04", "opponent": "Hillsboro", "homeAway": "Away", "result": "L", "pointsFor": 21, "pointsAgainst": 57 },
-    { "date": "2015-09-11", "opponent": "Mehlville", "homeAway": "Away", "result": "W", "pointsFor": 21, "pointsAgainst": 14 },
-    { "date": "2015-09-18", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 35 },
-    { "date": "2015-09-25", "opponent": "Northwest", "homeAway": "Away", "result": "L", "pointsFor": 14, "pointsAgainst": 35 },
-    { "date": "2015-10-02", "opponent": "Oakville", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 42 },
-    { "date": "2015-10-09", "opponent": "Jackson", "homeAway": "Home", "result": "L", "pointsFor": 6, "pointsAgainst": 49 },
-    { "date": "2015-10-17", "opponent": "Hazelwood West", "homeAway": "Away", "result": "L", "pointsFor": 0, "pointsAgainst": 20 },
-    { "date": "2015-10-23", "opponent": "Eureka", "homeAway": "Away", "result": "L", "pointsFor": 20, "pointsAgainst": 31, "gameType": "Playoffs" }
-  ],
-  "2014": [
-    { "date": "2014-08-22", "opponent": "Pattonville", "homeAway": "Away", "result": "L", "pointsFor": 0, "pointsAgainst": 28 },
-    { "date": "2014-08-29", "opponent": "Rockwood Summit", "homeAway": "Away", "result": "L", "pointsFor": 0, "pointsAgainst": 51 },
-    { "date": "2014-09-05", "opponent": "Hillsboro", "homeAway": "Home", "result": "L", "pointsFor": 27, "pointsAgainst": 61 },
-    { "date": "2014-09-12", "opponent": "Mehlville", "homeAway": "Home", "result": "L", "pointsFor": 9, "pointsAgainst": 33 },
-    { "date": "2014-09-19", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 12, "pointsAgainst": 21 },
-    { "date": "2014-09-26", "opponent": "Northwest", "homeAway": "Home", "result": "W", "pointsFor": 21, "pointsAgainst": 7 },
-    { "date": "2014-10-03", "opponent": "Oakville", "homeAway": "Away", "result": "L", "pointsFor": 14, "pointsAgainst": 55 },
-    { "date": "2014-10-10", "opponent": "Jackson", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 55 },
-    { "date": "2014-10-17", "opponent": "Hazelwood West", "homeAway": "Home", "result": "W", "pointsFor": 13, "pointsAgainst": 9 },
-    { "date": "2014-10-24", "opponent": "Eureka", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 35, "gameType": "Playoffs" }
-  ],
-  "2013": [
-    { "date": "2013-08-30", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 21, "pointsAgainst": 28 },
-    { "date": "2013-09-06", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 20 },
-    { "date": "2013-09-12", "opponent": "Parkway Central", "homeAway": "Home", "result": "L", "pointsFor": 10, "pointsAgainst": 56 },
-    { "date": "2013-09-20", "opponent": "Webster Groves", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 48 },
-    { "date": "2013-09-28", "opponent": "University City", "homeAway": "Away", "result": "L", "pointsFor": 19, "pointsAgainst": 55 },
-    { "date": "2013-10-04", "opponent": "Kirkwood", "homeAway": "Home", "result": "L", "pointsFor": 17, "pointsAgainst": 63 },
-    { "date": "2013-10-11", "opponent": "Rockwood Summit", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 42 },
-    { "date": "2013-10-18", "opponent": "Parkway North", "homeAway": "Away", "result": "L", "pointsFor": 13, "pointsAgainst": 49 },
-    { "date": "2013-10-25", "opponent": "Parkway West", "homeAway": "Away", "result": "L", "pointsFor": 19, "pointsAgainst": 42 },
-    { "date": "2013-11-01", "opponent": "Poplar Bluff", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 34, "gameType": "Playoffs" }
-  ],
-  "2012": [
-    { "date": "2012-08-24", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 13, "pointsAgainst": 32 },
-    { "date": "2012-08-31", "opponent": "Northwest", "homeAway": "Home", "result": "W", "pointsFor": 16, "pointsAgainst": 6 },
-    { "date": "2012-09-07", "opponent": "Parkway Central", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 49 },
-    { "date": "2012-09-14", "opponent": "Webster Groves", "homeAway": "Home", "result": "L", "pointsFor": 14, "pointsAgainst": 47 },
-    { "date": "2012-09-21", "opponent": "University City", "homeAway": "Home", "result": "L", "pointsFor": 35, "pointsAgainst": 45 },
-    { "date": "2012-09-28", "opponent": "Kirkwood", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 59 },
-    { "date": "2012-10-06", "opponent": "Rockwood Summit", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 49 },
-    { "date": "2012-10-12", "opponent": "Parkway North", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 56 },
-    { "date": "2012-10-19", "opponent": "Parkway West", "homeAway": "Home", "result": "W", "pointsFor": 34, "pointsAgainst": 20 },
-    { "date": "2012-10-25", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 14, "pointsAgainst": 19, "gameType": "Playoffs" }
-  ],
-  "2011": [
-    { "date": "2011-09-02", "opponent": "Parkway Central", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 42 },
-    { "date": "2011-09-09", "opponent": "Kirkwood", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 42 },
-    { "date": "2011-09-15", "opponent": "Parkway West", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 0 },
-    { "date": "2011-09-24", "opponent": "University City", "homeAway": "Home", "result": "W", "pointsFor": 34, "pointsAgainst": 30 },
-    { "date": "2011-09-30", "opponent": "Parkway North", "homeAway": "Away", "result": "L", "pointsFor": 19, "pointsAgainst": 24 },
-    { "date": "2011-10-07", "opponent": "Webster Groves", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 44 },
-    { "date": "2011-10-14", "opponent": "Rockwood Summit", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 35 },
-    { "date": "2011-10-21", "opponent": "Jackson", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 8 },
-    { "date": "2011-10-28", "opponent": "Poplar Bluff", "homeAway": "Away", "result": "W", "pointsFor": 42, "pointsAgainst": 30 },
-    { "date": "2011-11-02", "opponent": "McCluer", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 42, "gameType": "Playoffs" }
-  ],
-  "2010": [
-    { "date": "2010-09-03", "opponent": "Parkway Central", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 39 },
-    { "date": "2010-09-10", "opponent": "Kirkwood", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 48 },
-    { "date": "2010-09-16", "opponent": "Parkway West", "homeAway": "Away", "result": "L", "pointsFor": 21, "pointsAgainst": 56 },
-    { "date": "2010-09-24", "opponent": "University City", "homeAway": "Home", "result": "W", "pointsFor": 19, "pointsAgainst": 14 },
-    { "date": "2010-10-01", "opponent": "Parkway North", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 35 },
-    { "date": "2010-10-08", "opponent": "Webster Groves", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 42 },
-    { "date": "2010-10-15", "opponent": "Rockwood Summit", "homeAway": "Away", "result": "L", "pointsFor": 21, "pointsAgainst": 44 },
-    { "date": "2010-10-22", "opponent": "Jackson", "homeAway": "Home", "result": "W", "pointsFor": 42, "pointsAgainst": 14 },
-    { "date": "2010-10-29", "opponent": "Poplar Bluff", "homeAway": "Away", "result": "W", "pointsFor": 58, "pointsAgainst": 35 },
-    { "date": "2010-11-03", "opponent": "Webster Groves", "homeAway": "Away", "result": "L", "pointsFor": 14, "pointsAgainst": 50, "gameType": "Playoffs" }
-  ],
-  "2009": [
-    { "date": "2009-08-28", "opponent": "Hillsboro", "homeAway": "Away", "result": "W", "pointsFor": 43, "pointsAgainst": 6 },
-    { "date": "2009-09-04", "opponent": "Festus", "homeAway": "Home", "result": "L", "pointsFor": 22, "pointsAgainst": 28 },
-    { "date": "2009-09-11", "opponent": "North County", "homeAway": "Away", "result": "W", "pointsFor": 41, "pointsAgainst": 18 },
-    { "date": "2009-09-18", "opponent": "DeSoto", "homeAway": "Home", "result": "L", "pointsFor": 34, "pointsAgainst": 43 },
-    { "date": "2009-09-25", "opponent": "Howell North", "homeAway": "Away", "result": "L", "pointsFor": 22, "pointsAgainst": 58 },
-    { "date": "2009-10-02", "opponent": "Windsor", "homeAway": "Home", "result": "W", "pointsFor": 55, "pointsAgainst": 45 },
-    { "date": "2009-10-09", "opponent": "Central (Cape Girardeau)", "homeAway": "Home", "result": "W", "pointsFor": 41, "pointsAgainst": 26 },
-    { "date": "2009-10-16", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 20, "pointsAgainst": 51 },
-    { "date": "2009-10-23", "opponent": "Oakville", "homeAway": "Away", "result": "L", "pointsFor": 29, "pointsAgainst": 52 },
-    { "date": "2009-10-30", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 14, "pointsAgainst": 20 }
-  ],
-  "2008": [
-    { "date": "2008-08-29", "opponent": "Hillsboro", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 24 },
-    { "date": "2008-09-05", "opponent": "Festus", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 53 },
-    { "date": "2008-09-12", "opponent": "North County", "homeAway": "Home", "result": "L", "pointsFor": 19, "pointsAgainst": 54 },
-    { "date": "2008-09-19", "opponent": "DeSoto", "homeAway": "Away", "result": "L", "pointsFor": 30, "pointsAgainst": 45 },
-    { "date": "2008-09-26", "opponent": "Howell North", "homeAway": "Home", "result": "L", "pointsFor": 40, "pointsAgainst": 49 },
-    { "date": "2008-10-03", "opponent": "Windsor", "homeAway": "Away", "result": "L", "pointsFor": 28, "pointsAgainst": 33 },
-    { "date": "2008-10-10", "opponent": "Central (Cape Girardeau)", "homeAway": "Away", "result": "L", "pointsFor": 18, "pointsAgainst": 26 },
-    { "date": "2008-10-17", "opponent": "Fox", "homeAway": "Home", "result": "L", "pointsFor": 6, "pointsAgainst": 28 },
-    { "date": "2008-10-24", "opponent": "Oakville", "homeAway": "Home", "result": "L", "pointsFor": 21, "pointsAgainst": 48 },
-    { "date": "2008-10-31", "opponent": "Northwest", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 56 }
-  ],
-  "2007": [
-    { "date": "2007-08-31", "opponent": "Festus", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 40 },
-    { "date": "2007-09-07", "opponent": "Farmington", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 48 },
-    { "date": "2007-09-14", "opponent": "North County", "homeAway": "Home", "result": "W", "pointsFor": 21, "pointsAgainst": 14 },
-    { "date": "2007-09-21", "opponent": "Windsor", "homeAway": "Away", "result": "W", "pointsFor": 34, "pointsAgainst": 6 },
-    { "date": "2007-09-28", "opponent": "DeSoto", "homeAway": "Away", "result": "W", "pointsFor": 21, "pointsAgainst": 3 },
-    { "date": "2007-10-05", "opponent": "Hillsboro", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 21 },
-    { "date": "2007-10-12", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 25, "pointsAgainst": 28 },
-    { "date": "2007-10-19", "opponent": "Parkway West", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 42 },
-    { "date": "2007-10-26", "opponent": "Eureka", "homeAway": "Away", "result": "L", "pointsFor": 12, "pointsAgainst": 44 },
-    { "date": "2007-11-01", "opponent": "Jackson", "homeAway": "Away", "result": "L", "pointsFor": 0, "pointsAgainst": 42 }
-  ],
-  "2006": [
-    { "date": "2006-09-01", "opponent": "Festus", "homeAway": "Away", "result": "L", "pointsFor": 20, "pointsAgainst": 29 },
-    { "date": "2006-09-08", "opponent": "Farmington", "homeAway": "Home", "result": "L", "pointsFor": 21, "pointsAgainst": 38 },
-    { "date": "2006-09-15", "opponent": "North County", "homeAway": "Away", "result": "W", "pointsFor": 31, "pointsAgainst": 28 },
-    { "date": "2006-09-22", "opponent": "Windsor", "homeAway": "Home", "result": "W", "pointsFor": 44, "pointsAgainst": 19 },
-    { "date": "2006-09-29", "opponent": "DeSoto", "homeAway": "Home", "result": "W", "pointsFor": 28, "pointsAgainst": 0 },
-    { "date": "2006-10-06", "opponent": "Hillsboro", "homeAway": "Away", "result": "W", "pointsFor": 30, "pointsAgainst": 0 },
-    { "date": "2006-10-13", "opponent": "Fox", "homeAway": "Home", "result": "W", "pointsFor": 35, "pointsAgainst": 14 },
-    { "date": "2006-10-20", "opponent": "Parkway West", "homeAway": "Away", "result": "L", "pointsFor": 26, "pointsAgainst": 43 },
-    { "date": "2006-10-27", "opponent": "Eureka", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 22 },
-    { "date": "2006-11-02", "opponent": "Jackson", "homeAway": "Home", "result": "L", "pointsFor": 6, "pointsAgainst": 23 }
-  ],
-  "2005": [
-    { "date": "2005-09-02", "opponent": "Northwest", "homeAway": "Home", "result": "L", "pointsFor": 13, "pointsAgainst": 14 },
-    { "date": "2005-09-09", "opponent": "Fox", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 12 },
-    { "date": "2005-09-16", "opponent": "Parkway North", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 28 },
-    { "date": "2005-09-23", "opponent": "Webster Groves", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 35 },
-    { "date": "2005-09-30", "opponent": "Parkway West", "homeAway": "Home", "result": "L", "pointsFor": 10, "pointsAgainst": 34 },
-    { "date": "2005-10-07", "opponent": "Parkway Central", "homeAway": "Away", "result": "L", "pointsFor": 6, "pointsAgainst": 35 },
-    { "date": "2005-10-15", "opponent": "University City", "homeAway": "Away", "result": "W", "pointsFor": 29, "pointsAgainst": 24 },
-    { "date": "2005-10-21", "opponent": "Eureka", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 41 },
-    { "date": "2005-10-28", "opponent": "Rockwood Summit", "homeAway": "Home", "result": "L", "pointsFor": 24, "pointsAgainst": 44 },
-    { "date": "2005-11-04", "opponent": "Jackson", "homeAway": "Home", "result": "L", "pointsFor": 7, "pointsAgainst": 27 }
+  "2003": [
+    {
+      "date": null,
+      "gameNo": 1,
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 14
+    },
+    {
+      "date": null,
+      "gameNo": 2,
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 61
+    },
+    {
+      "date": null,
+      "gameNo": 3,
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 31,
+      "pointsAgainst": 27
+    },
+    {
+      "date": null,
+      "gameNo": 4,
+      "opponent": "Pacific",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 20,
+      "pointsAgainst": 0
+    },
+    {
+      "date": null,
+      "gameNo": 5,
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 38
+    },
+    {
+      "date": null,
+      "gameNo": 6,
+      "opponent": "Eureka",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 26
+    },
+    {
+      "date": null,
+      "gameNo": 7,
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 13
+    },
+    {
+      "date": null,
+      "gameNo": 8,
+      "opponent": "Parkway North",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 31,
+      "pointsAgainst": 35
+    },
+    {
+      "date": null,
+      "gameNo": 9,
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 34
+    },
+    {
+      "date": null,
+      "gameNo": 10,
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 38
+    }
   ],
   "2004": [
-    { "date": "2004-09-04", "opponent": "Northwest", "homeAway": "Home", "result": "W", "pointsFor": 21, "pointsAgainst": 6 },
-    { "date": "2004-09-10", "opponent": "Fox", "homeAway": "Home", "result": "W", "pointsFor": 12, "pointsAgainst": 7 },
-    { "date": "2004-09-17", "opponent": "Parkway North", "homeAway": "Away", "result": "L", "pointsFor": 7, "pointsAgainst": 42 },
-    { "date": "2004-09-24", "opponent": "Webster Groves", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 21 },
-    { "date": "2004-10-04", "opponent": "Parkway West", "homeAway": "Away", "result": "L", "pointsFor": 20, "pointsAgainst": 23 },
-    { "date": "2004-10-08", "opponent": "Parkway Central", "homeAway": "Home", "result": "L", "pointsFor": 13, "pointsAgainst": 38 },
-    { "date": "2004-10-15", "opponent": "University City", "homeAway": "Home", "result": "L", "pointsFor": 51, "pointsAgainst": 52 },
-    { "date": "2004-10-22", "opponent": "Eureka", "homeAway": "Away", "result": "L", "pointsFor": 0, "pointsAgainst": 44 },
-    { "date": "2004-10-29", "opponent": "Rockwood Summit", "homeAway": "Home", "result": "L", "pointsFor": 0, "pointsAgainst": 49 }
+    {
+      "date": "2004-09-04",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2004-09-10",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 12,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2004-09-17",
+      "opponent": "Parkway North",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2004-09-24",
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2004-10-04",
+      "opponent": "Parkway West",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 20,
+      "pointsAgainst": 23
+    },
+    {
+      "date": "2004-10-08",
+      "opponent": "Parkway Central",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 38
+    },
+    {
+      "date": "2004-10-15",
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 51,
+      "pointsAgainst": 52
+    },
+    {
+      "date": "2004-10-22",
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 44
+    },
+    {
+      "date": "2004-10-29",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 49
+    },
+    {
+      "date": null,
+      "gameNo": 10,
+      "opponent": "Jackson",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 21
+    }
+  ],
+  "2005": [
+    {
+      "date": "2005-09-02",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2005-09-09",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 12
+    },
+    {
+      "date": "2005-09-16",
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2005-09-23",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2005-09-30",
+      "opponent": "Parkway West",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 10,
+      "pointsAgainst": 34
+    },
+    {
+      "date": "2005-10-07",
+      "opponent": "Parkway Central",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2005-10-15",
+      "opponent": "University City",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 29,
+      "pointsAgainst": 24
+    },
+    {
+      "date": "2005-10-21",
+      "opponent": "Eureka",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 41
+    },
+    {
+      "date": "2005-10-28",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 24,
+      "pointsAgainst": 44
+    },
+    {
+      "date": "2005-11-04",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 27
+    }
+  ],
+  "2006": [
+    {
+      "date": "2006-09-01",
+      "opponent": "Festus",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 20,
+      "pointsAgainst": 29
+    },
+    {
+      "date": "2006-09-08",
+      "opponent": "Farmington",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 38
+    },
+    {
+      "date": "2006-09-15",
+      "opponent": "North County",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 31,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2006-09-22",
+      "opponent": "Windsor",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 44,
+      "pointsAgainst": 19
+    },
+    {
+      "date": "2006-09-29",
+      "opponent": "DeSoto",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 28,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2006-10-06",
+      "opponent": "Hillsboro",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 30,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2006-10-13",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2006-10-20",
+      "opponent": "Parkway West",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 26,
+      "pointsAgainst": 43
+    },
+    {
+      "date": "2006-10-27",
+      "opponent": "Eureka",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 22
+    },
+    {
+      "date": "2006-11-02",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 23
+    }
+  ],
+  "2007": [
+    {
+      "date": "2007-08-31",
+      "opponent": "Festus",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 40
+    },
+    {
+      "date": "2007-09-07",
+      "opponent": "Farmington",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2007-09-14",
+      "opponent": "North County",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2007-09-21",
+      "opponent": "Windsor",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2007-09-28",
+      "opponent": "DeSoto",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 3
+    },
+    {
+      "date": "2007-10-05",
+      "opponent": "Hillsboro",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2007-10-12",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 25,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2007-10-19",
+      "opponent": "Parkway West",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2007-10-26",
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 12,
+      "pointsAgainst": 44
+    },
+    {
+      "date": "2007-11-01",
+      "opponent": "Jackson",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 42
+    }
+  ],
+  "2008": [
+    {
+      "date": "2008-08-29",
+      "opponent": "Hillsboro",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 24
+    },
+    {
+      "date": "2008-09-05",
+      "opponent": "Festus",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 53
+    },
+    {
+      "date": "2008-09-12",
+      "opponent": "North County",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 19,
+      "pointsAgainst": 54
+    },
+    {
+      "date": "2008-09-19",
+      "opponent": "DeSoto",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 30,
+      "pointsAgainst": 45
+    },
+    {
+      "date": "2008-09-26",
+      "opponent": "Howell North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 40,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2008-10-03",
+      "opponent": "Windsor",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 28,
+      "pointsAgainst": 33
+    },
+    {
+      "date": "2008-10-10",
+      "opponent": "Central (Cape Girardeau)",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 18,
+      "pointsAgainst": 26
+    },
+    {
+      "date": "2008-10-17",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2008-10-24",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2008-10-31",
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 56
+    }
+  ],
+  "2009": [
+    {
+      "date": "2009-08-28",
+      "opponent": "Hillsboro",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 43,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2009-09-04",
+      "opponent": "Festus",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 22,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2009-09-11",
+      "opponent": "North County",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 41,
+      "pointsAgainst": 18
+    },
+    {
+      "date": "2009-09-18",
+      "opponent": "DeSoto",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 34,
+      "pointsAgainst": 43
+    },
+    {
+      "date": "2009-09-25",
+      "opponent": "Howell North",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 22,
+      "pointsAgainst": 58
+    },
+    {
+      "date": "2009-10-02",
+      "opponent": "Windsor",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 55,
+      "pointsAgainst": 45
+    },
+    {
+      "date": "2009-10-09",
+      "opponent": "Central (Cape Girardeau)",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 41,
+      "pointsAgainst": 26
+    },
+    {
+      "date": "2009-10-16",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 20,
+      "pointsAgainst": 51
+    },
+    {
+      "date": "2009-10-23",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 29,
+      "pointsAgainst": 52
+    },
+    {
+      "date": "2009-10-30",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 20
+    }
+  ],
+  "2010": [
+    {
+      "date": "2010-09-03",
+      "opponent": "Parkway Central",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 39
+    },
+    {
+      "date": "2010-09-10",
+      "opponent": "Kirkwood",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2010-09-16",
+      "opponent": "Parkway West",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 56
+    },
+    {
+      "date": "2010-09-24",
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 19,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2010-10-01",
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2010-10-08",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2010-10-15",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 44
+    },
+    {
+      "date": "2010-10-22",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 42,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2010-10-29",
+      "opponent": "Poplar Bluff",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 58,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2010-11-03",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 50,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2011": [
+    {
+      "date": "2011-09-02",
+      "opponent": "Parkway Central",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2011-09-09",
+      "opponent": "Kirkwood",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2011-09-15",
+      "opponent": "Parkway West",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2011-09-24",
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 30
+    },
+    {
+      "date": "2011-09-30",
+      "opponent": "Parkway North",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 19,
+      "pointsAgainst": 24
+    },
+    {
+      "date": "2011-10-07",
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 44
+    },
+    {
+      "date": "2011-10-14",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2011-10-21",
+      "opponent": "Jackson",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 8
+    },
+    {
+      "date": "2011-10-28",
+      "opponent": "Poplar Bluff",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 42,
+      "pointsAgainst": 30
+    },
+    {
+      "date": "2011-11-02",
+      "opponent": "McCluer",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 42,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2012": [
+    {
+      "date": "2012-08-24",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 32
+    },
+    {
+      "date": "2012-08-31",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 16,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2012-09-07",
+      "opponent": "Parkway Central",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2012-09-14",
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 47
+    },
+    {
+      "date": "2012-09-21",
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 35,
+      "pointsAgainst": 45
+    },
+    {
+      "date": "2012-09-28",
+      "opponent": "Kirkwood",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 59
+    },
+    {
+      "date": "2012-10-06",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2012-10-12",
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 56
+    },
+    {
+      "date": "2012-10-19",
+      "opponent": "Parkway West",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 20
+    },
+    {
+      "date": "2012-10-25",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 19,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2013": [
+    {
+      "date": "2013-08-30",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2013-09-06",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 20
+    },
+    {
+      "date": "2013-09-12",
+      "opponent": "Parkway Central",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 10,
+      "pointsAgainst": 56
+    },
+    {
+      "date": "2013-09-20",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2013-09-28",
+      "opponent": "University City",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 19,
+      "pointsAgainst": 55
+    },
+    {
+      "date": "2013-10-04",
+      "opponent": "Kirkwood",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 17,
+      "pointsAgainst": 63
+    },
+    {
+      "date": "2013-10-11",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2013-10-18",
+      "opponent": "Parkway North",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2013-10-25",
+      "opponent": "Parkway West",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 19,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2013-11-01",
+      "opponent": "Poplar Bluff",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 34,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2014": [
+    {
+      "date": "2014-08-22",
+      "opponent": "Pattonville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2014-08-29",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 51
+    },
+    {
+      "date": "2014-09-05",
+      "opponent": "Hillsboro",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 27,
+      "pointsAgainst": 61
+    },
+    {
+      "date": "2014-09-12",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 9,
+      "pointsAgainst": 33
+    },
+    {
+      "date": "2014-09-19",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 12,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2014-09-26",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2014-10-03",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 55
+    },
+    {
+      "date": "2014-10-10",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 55
+    },
+    {
+      "date": "2014-10-17",
+      "opponent": "Hazelwood West",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 13,
+      "pointsAgainst": 9
+    },
+    {
+      "date": "2014-10-24",
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 35,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2015": [
+    {
+      "date": "2015-08-21",
+      "opponent": "Pattonville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 55
+    },
+    {
+      "date": "2015-08-28",
+      "opponent": "Rockwood Summit",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 52
+    },
+    {
+      "date": "2015-09-04",
+      "opponent": "Hillsboro",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 57
+    },
+    {
+      "date": "2015-09-11",
+      "opponent": "Mehlville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2015-09-18",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2015-09-25",
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2015-10-02",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2015-10-09",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2015-10-17",
+      "opponent": "Hazelwood West",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 20
+    },
+    {
+      "date": "2015-10-23",
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 20,
+      "pointsAgainst": 31,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2016": [
+    {
+      "date": "2016-08-19",
+      "opponent": "North County",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2016-08-26",
+      "opponent": "Affton",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 23
+    },
+    {
+      "date": "2016-09-02",
+      "opponent": "McCluer",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 9,
+      "pointsAgainst": 26
+    },
+    {
+      "date": "2016-09-10",
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 24
+    },
+    {
+      "date": "2016-09-17",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 40
+    },
+    {
+      "date": "2016-09-23",
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 41
+    },
+    {
+      "date": "2016-09-30",
+      "opponent": "Riverview Gardens",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 52
+    },
+    {
+      "date": "2016-10-07",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2016-10-14",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2016-10-21",
+      "opponent": "Kirkwood",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 58,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2017": [
+    {
+      "date": "2017-08-18",
+      "opponent": "North County",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 51
+    },
+    {
+      "date": "2017-08-25",
+      "opponent": "Affton",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 27,
+      "pointsAgainst": 22
+    },
+    {
+      "date": "2017-09-01",
+      "opponent": "McCluer",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 30
+    },
+    {
+      "date": "2017-09-08",
+      "opponent": "Parkway South",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 47
+    },
+    {
+      "date": "2017-09-15",
+      "opponent": "Mehlville",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 20,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2017-09-22",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 51
+    },
+    {
+      "date": "2017-09-30",
+      "opponent": "Riverview Gardens",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 44
+    },
+    {
+      "date": "2017-10-06",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2017-10-13",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2017-10-20",
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 70,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2018": [
+    {
+      "date": "2018-08-24",
+      "opponent": "Washington",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 27,
+      "pointsAgainst": 13
+    },
+    {
+      "date": "2018-08-31",
+      "opponent": "Windsor",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 47,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2018-09-06",
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 50,
+      "pointsAgainst": 16
+    },
+    {
+      "date": "2018-09-14",
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 14,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2018-09-21",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2018-09-28",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 22
+    },
+    {
+      "date": "2018-10-05",
+      "opponent": "McCluer",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 53,
+      "pointsAgainst": 16
+    },
+    {
+      "date": "2018-10-12",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 0,
+      "pointsAgainst": 49
+    },
+    {
+      "date": "2018-10-18",
+      "opponent": "Eureka",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 15,
+      "pointsAgainst": 55
+    },
+    {
+      "date": "2018-11-02",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 35,
+      "pointsAgainst": 62,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2019": [
+    {
+      "date": "2019-08-30",
+      "opponent": "Washington",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2019-09-06",
+      "opponent": "Windsor",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 19,
+      "pointsAgainst": 20
+    },
+    {
+      "date": "2019-09-14",
+      "opponent": "University City",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 29,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2019-09-20",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 20
+    },
+    {
+      "date": "2019-09-27",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 38
+    },
+    {
+      "date": "2019-10-04",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 13
+    },
+    {
+      "date": "2019-10-12",
+      "opponent": "McCluer",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 26
+    },
+    {
+      "date": "2019-10-18",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 26,
+      "pointsAgainst": 41
+    },
+    {
+      "date": "2019-10-25",
+      "opponent": "Eureka",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 2,
+      "pointsAgainst": 42
+    },
+    {
+      "date": "2019-11-08",
+      "opponent": "Jackson",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 55,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2020": [
+    {
+      "date": "2020-08-28",
+      "opponent": "DeSoto",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2020-09-04",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 34
+    },
+    {
+      "date": "2020-09-25",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 28,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2020-10-02",
+      "opponent": "Parkway North",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 13
+    },
+    {
+      "date": "2020-10-09",
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2020-10-16",
+      "opponent": "Central (Park Hills)",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 33
+    },
+    {
+      "date": "2020-10-23",
+      "opponent": "Parkway South",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 33,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2020-11-06",
+      "opponent": "Farmington",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 6,
+      "pointsAgainst": 24,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2021": [
+    {
+      "date": "2021-08-27",
+      "opponent": "DeSoto",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 55,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2021-09-03",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 15
+    },
+    {
+      "date": "2021-09-10",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 41,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2021-09-18",
+      "opponent": "Hazelwood Central",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 13,
+      "pointsAgainst": 46
+    },
+    {
+      "date": "2021-09-24",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 54,
+      "pointsAgainst": 20
+    },
+    {
+      "date": "2021-10-01",
+      "opponent": "Ladue Horton Watkins",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 27,
+      "pointsAgainst": 35
+    },
+    {
+      "date": "2021-10-08",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 48,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2021-10-15",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 20,
+      "pointsAgainst": 13
+    },
+    {
+      "date": "2021-10-22",
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 42,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2021-10-29",
+      "opponent": "Central (Cape Girardeau)",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 25,
+      "pointsAgainst": 0,
+      "gameType": "Playoffs"
+    },
+    {
+      "date": "2021-11-05",
+      "opponent": "Poplar Bluff",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 34,
+      "gameType": "Playoffs"
+    },
+    {
+      "date": "2021-11-12",
+      "opponent": "Jackson",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 52,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2022": [
+    {
+      "date": "2022-08-26",
+      "opponent": "Valle Catholic",
+      "homeAway": "Away",
+      "result": "L",
+      "pointsFor": 36,
+      "pointsAgainst": 61
+    },
+    {
+      "date": "2022-09-02",
+      "opponent": "University City",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 69,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2022-09-09",
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 64,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2022-09-16",
+      "opponent": "Mehlville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 58,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2022-09-23",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2022-09-30",
+      "opponent": "Parkway South",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 50,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2022-10-07",
+      "opponent": "Pattonville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 50,
+      "pointsAgainst": 48
+    },
+    {
+      "date": "2022-10-14",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2022-10-21",
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 48,
+      "pointsAgainst": 6
+    },
+    {
+      "date": "2022-10-28",
+      "opponent": "St. Louis University",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 50,
+      "pointsAgainst": 41,
+      "gameType": "Playoffs"
+    },
+    {
+      "date": "2022-11-04",
+      "opponent": "Marquette",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 14,
+      "pointsAgainst": 42,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2023": [
+    {
+      "date": "2023-08-25",
+      "opponent": "Valle Catholic",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 21
+    },
+    {
+      "date": "2023-09-01",
+      "opponent": "University City/Maplewood-Richmond Heights",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 70,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2023-09-08",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 56,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2023-09-15",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 48,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2023-09-22",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 27,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2023-09-29",
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2023-10-06",
+      "opponent": "Pattonville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 28,
+      "pointsAgainst": 3
+    },
+    {
+      "date": "2023-10-13",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 28,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2023-10-20",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 35,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2023-11-03",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 33,
+      "pointsAgainst": 0,
+      "gameType": "Playoffs"
+    },
+    {
+      "date": "2023-11-10",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 21,
+      "pointsAgainst": 55,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2024": [
+    {
+      "date": "2024-08-30",
+      "opponent": "Parkway West",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 40,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2024-09-06",
+      "opponent": "Fox",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2024-09-13",
+      "opponent": "Northwest",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 41,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2024-09-20",
+      "opponent": "Mehlville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 43,
+      "pointsAgainst": 8
+    },
+    {
+      "date": "2024-09-27",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 30,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2024-10-04",
+      "opponent": "Pattonville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 27,
+      "pointsAgainst": 13
+    },
+    {
+      "date": "2024-10-10",
+      "opponent": "Parkway South",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 28,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2024-10-17",
+      "opponent": "Hazelwood West",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 41,
+      "pointsAgainst": 7
+    },
+    {
+      "date": "2024-10-25",
+      "opponent": "Webster Groves",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 28,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2024-11-08",
+      "opponent": "Oakville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 34,
+      "pointsAgainst": 7,
+      "gameType": "Playoffs"
+    },
+    {
+      "date": "2024-11-15",
+      "opponent": "Jackson",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 28,
+      "pointsAgainst": 49,
+      "gameType": "Playoffs"
+    }
+  ],
+  "2025": [
+    {
+      "date": "2025-08-29",
+      "opponent": "Parkway West",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 27,
+      "pointsAgainst": 28
+    },
+    {
+      "date": "2025-09-05",
+      "opponent": "Fox",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 21,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2025-09-12",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 14
+    },
+    {
+      "date": "2025-09-19",
+      "opponent": "Mehlville",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 53,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2025-09-26",
+      "opponent": "Oakville",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 14,
+      "pointsAgainst": 10
+    },
+    {
+      "date": "2025-10-03",
+      "opponent": "Pattonville",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 27,
+      "pointsAgainst": 40
+    },
+    {
+      "date": "2025-10-10",
+      "opponent": "Parkway South",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 49,
+      "pointsAgainst": 0
+    },
+    {
+      "date": "2025-10-17",
+      "opponent": "Hazelwood West",
+      "homeAway": "Home",
+      "result": "W",
+      "pointsFor": 54,
+      "pointsAgainst": 12
+    },
+    {
+      "date": "2025-10-24",
+      "opponent": "Webster Groves",
+      "homeAway": "Away",
+      "result": "W",
+      "pointsFor": 56,
+      "pointsAgainst": 23
+    },
+    {
+      "date": "2025-11-07",
+      "opponent": "Northwest",
+      "homeAway": "Home",
+      "result": "L",
+      "pointsFor": 7,
+      "pointsAgainst": 14,
+      "gameType": "Playoffs"
+    }
   ]
 }

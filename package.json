@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "import-stats": "node scripts/import-stats.mjs",
+    "check-stats": "node scripts/import-stats.mjs --check"
   },
   "devDependencies": {
     "wrangler": "4.123.0"

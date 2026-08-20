@@ -699,17 +699,6 @@ footer.site-footer p + p {
   background: var(--surface-hover);
 }
 
-.season-card-static {
-  cursor: default;
-}
-
-.season-card-static:hover {
-  background: none;
-  border-color: var(--border);
-  transform: none;
-  box-shadow: var(--shadow-1), var(--surface-highlight);
-}
-
 .season-card .card-body {
   width: 100%;
   text-align: center;
@@ -896,7 +885,8 @@ footer.site-footer p + p {
   background-attachment: local, local, scroll, scroll;
 }
 
-.table-scroll .records-table {
+.table-scroll .records-table,
+.table-scroll .season-table {
   min-width: 100%;
 }
 
@@ -1058,6 +1048,93 @@ footer.site-footer p + p {
   margin: 0 0 0.9rem;
   padding-bottom: 0.35rem;
   border-bottom: 2px solid var(--gold);
+}
+
+/* A section heading with a link pushed to the trailing edge, e.g.
+   "Program Leaders … Full record book →". */
+.section-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-heading-link {
+  color: var(--navy-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.section-heading-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.page-intro {
+  color: var(--text-muted);
+  max-width: 60ch;
+  margin: 0 0 1.5rem;
+}
+
+/* ---------------------------------------------------------------- record book */
+
+.record-group {
+  margin-bottom: 2rem;
+}
+
+.record-table-block {
+  margin-top: 0.25rem;
+}
+
+/* -------------------------------------------------------------- table search */
+
+.table-search-container {
+  margin-bottom: 0.75rem;
+}
+
+.table-search-input {
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text);
+  /* 16px minimum, otherwise iOS zooms the page in when the field is focused. */
+  font-size: 1rem;
+}
+
+.search-result-count {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------- season page sections */
+
+.season-leaders-heading {
+  margin: 2rem 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+.season-subsection {
+  margin-bottom: 2rem;
+}
+
+.subsection-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--navy-text);
 }
 
 .podcast-intro {
