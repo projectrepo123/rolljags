@@ -10,7 +10,7 @@ const LEVEL_LABELS = {
   varsity: "Varsity",
   jv: "JV",
   freshman: "Freshman",
-  instagram: "Instagram Picks",
+  instagram: "Instagram Pics",
   full: "Full Gallery",
 };
 
