@@ -30,6 +30,11 @@ export async function initPhotoBanner() {
 
     trackEl.style.animationDuration = `${images.length * SECONDS_PER_PHOTO}s`;
 
+    function clearZoom() {
+      trackEl.querySelectorAll("img.zoomed").forEach((el) => el.classList.remove("zoomed"));
+      trackEl.classList.remove("has-zoom");
+    }
+
     // Touch devices have no hover, so tapping a photo toggles the same
     // zoomed-in look (and pauses the scroll) instead. Tapping it again, or a
     // different photo, clears it.
@@ -37,10 +42,16 @@ export async function initPhotoBanner() {
       const img = e.target.closest("img");
       if (!img) return;
       const alreadyZoomed = img.classList.contains("zoomed");
-      trackEl.querySelectorAll("img.zoomed").forEach((el) => el.classList.remove("zoomed"));
+      clearZoom();
       img.classList.toggle("zoomed", !alreadyZoomed);
       trackEl.classList.toggle("has-zoom", !alreadyZoomed);
     });
+
+    // On desktop, a click also counts as a hover — without this, moving the
+    // mouse away after clicking left has-zoom set with nothing to clear it,
+    // since only clicking the same photo again removed it. That permanently
+    // froze the strip. Leaving the banner now always resumes it.
+    bannerEl.addEventListener("mouseleave", clearZoom);
 
     bannerEl.hidden = false;
   } catch (err) {
