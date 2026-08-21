@@ -858,6 +858,59 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
+.photo-banner {
+  overflow: hidden;
+  height: 200px;
+  background: var(--navy-dark);
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.photo-banner-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: max-content;
+  animation-name: photo-banner-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.photo-banner-track img {
+  height: 100%;
+  width: auto;
+  flex: none;
+  object-fit: cover;
+  margin-right: 3px;
+}
+
+.photo-banner:hover .photo-banner-track {
+  animation-play-state: paused;
+}
+
+@keyframes photo-banner-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* Exactly half the track's width, since the image set is duplicated
+       once — this is what makes the loop seamless. */
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-banner-track {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-banner {
+    height: 120px;
+  }
+}
+
 /* Records Tables (used in modals) */
 
 .records-table {
