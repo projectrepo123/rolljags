@@ -27,7 +27,12 @@ function ensureBuilt() {
         <span class="lightbox-counter"></span>
         <button class="lightbox-nav" data-dir="1" aria-label="Next photo">&#8250;</button>
       </div>
-      <a class="btn btn-gold lightbox-download" download>Download</a>
+      <a class="btn btn-gold lightbox-download" download>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1.5v8m0 0-3-3m3 3 3-3M2.5 11.5v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Download
+      </a>
     </div>
   `;
   document.body.appendChild(overlay);

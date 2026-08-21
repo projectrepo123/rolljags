@@ -670,6 +670,22 @@ main {
   line-height: 1;
 }
 
+/* .btn-gold's usual shadow (--shadow-1/2) is tuned for the light card
+   backgrounds it normally sits on, so it all but disappears against the
+   lightbox's solid black - the button ends up reading as a flat sticker
+   instead of a raised control. A gold-tinted glow keeps it grounded here. */
+.lightbox-download {
+  box-shadow: 0 4px 18px rgba(255, 199, 44, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.lightbox-download:hover {
+  box-shadow: 0 6px 24px rgba(255, 199, 44, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.lightbox-download svg {
+  flex-shrink: 0;
+}
+
 footer.site-footer {
   flex-shrink: 0;
   border-top: 1px solid var(--border);
