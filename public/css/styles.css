@@ -845,6 +845,19 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
+.season-table .schedule-next {
+  background-color: var(--row-accent);
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+
+.season-table .schedule-next td {
+  font-weight: 600;
+}
+
+.season-table .schedule-past td {
+  color: var(--text-muted);
+}
+
 /* Records Tables (used in modals) */
 
 .records-table {

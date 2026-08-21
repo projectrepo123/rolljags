@@ -2,6 +2,7 @@ import { handleWeeks } from "./routes/weeks.js";
 import { handleWeek, getWeekData } from "./routes/week.js";
 import { getSeasonSummary } from "./routes/season.js";
 import { handleZip } from "./routes/zip.js";
+import { handleSchedule } from "./routes/schedule.js";
 import { injectWeekMeta, injectSeasonMeta } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum, isValidLevel } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
@@ -73,6 +74,15 @@ async function handle(request, env, ctx) {
           return Response.json({ error: "Invalid week" }, { status: 400 });
         }
         return withCache(request, ctx, () => handleWeek(env, year, week));
+      }
+
+      // GET /api/schedule/:year
+      if (parts[1] === "schedule" && parts.length === 3) {
+        const [, , year] = parts;
+        if (!isValidYear(year)) {
+          return Response.json({ error: "Invalid year" }, { status: 400 });
+        }
+        return handleSchedule(year);
       }
 
       // GET /api/zip/:year/:week/:level

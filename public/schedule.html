@@ -3,17 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- One HTML file serves every season, so description/canonical/og:* are
-       injected per year by the worker (worker/lib/meta.js). Static copies here
-       would sit earlier in <head> and win, making every shared season link
-       preview as the same generic page. <title> is safe to keep: the rewriter
-       replaces its contents rather than appending a second one. -->
-  <title>Season | Jaguar Football</title>
+  <title>2026 Schedule | Jaguar Football</title>
   <link rel="icon" href="/logo.webp" type="image/webp" />
   <link rel="stylesheet" href="/css/styles.css" />
+  <meta name="description" content="Jaguar Football 2026 schedule: game dates, opponents, and home/away for every week of the season." />
+  <link rel="canonical" href="https://rolljags.com/schedule" />
   <script src="/js/theme.js"></script>
   <script src="/js/countdown.js" defer></script>
   <script src="/js/nav.js" defer></script>
+  <meta property="og:title" content="2026 Schedule | Jaguar Football" />
+  <meta property="og:description" content="Jaguar Football 2026 schedule: game dates, opponents, and home/away for every week of the season." />
+  <meta property="og:image" content="https://rolljags.com/logo.webp" />
+  <meta property="og:url" content="https://rolljags.com/schedule" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
   <header class="site-header">
@@ -25,8 +28,8 @@
       <nav class="site-nav">
         <div class="nav-links" id="nav-links">
           <a href="/">Photos</a>
-          <a href="/schedule">Schedule</a>
-          <a href="/history" class="active">History</a>
+          <a href="/schedule" class="active">Schedule</a>
+          <a href="/history">History</a>
           <a href="/records">Records</a>
           <a href="/podcast">Podcast</a>
         </div>
@@ -45,26 +48,23 @@
 
   <main>
     <div class="container">
-      <a class="back-link" href="/history">&larr; All seasons</a>
-      <h2 class="season-title loading" id="season-title">Loading…</h2>
-      <div class="season-record" id="season-record"></div>
+      <h2 id="schedule-title">2026 Schedule</h2>
       <div class="table-scroll">
-        <table class="season-table" id="season-table">
+        <table class="season-table" id="schedule-table">
           <thead>
             <tr>
               <th>Date</th>
               <th>Opponent</th>
               <th>H/A</th>
-              <th>Result</th>
-              <th>Game Type</th>
+              <th>Notes</th>
             </tr>
           </thead>
-          <tbody id="season-tbody">
+          <tbody id="schedule-tbody">
           </tbody>
         </table>
       </div>
-      <div id="season-status"></div>
-      <section id="season-leaders"></section>
+      <div id="schedule-status"></div>
+      <noscript><p class="empty-state">The schedule needs JavaScript enabled to load.</p></noscript>
     </div>
   </main>
 
@@ -75,6 +75,6 @@
     </div>
   </footer>
 
-  <script src="/js/season.js" type="module"></script>
+  <script src="/js/schedule.js" type="module"></script>
 </body>
 </html>
