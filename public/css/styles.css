@@ -540,14 +540,22 @@ main {
   box-shadow: var(--shadow-1), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* A frosted-glass gold, rather than a flat gradient sticker: translucent
+   enough that backdrop-filter actually has something to blur, a light rim to
+   read as a distinct pane, and the existing inset highlight doubling as the
+   glass's top-edge sheen. Falls back to the plain translucent color (no
+   blur, but still legible) wherever backdrop-filter isn't supported. */
 .btn.btn-gold {
-  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  background: linear-gradient(180deg, rgba(255, 215, 94, 0.62) 0%, rgba(245, 184, 0, 0.62) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
   color: var(--navy-dark);
-  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 .btn.btn-gold:hover {
-  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
 .photo-grid {
@@ -662,11 +670,13 @@ main {
   line-height: 1;
 }
 
-/* .btn-gold's usual shadow (--shadow-1/2) is tuned for the light card
-   backgrounds it normally sits on, so it all but disappears against the
-   lightbox's solid black - the button ends up reading as a flat sticker
-   instead of a raised control. A gold-tinted glow keeps it grounded here. */
+/* A gold ambient glow around the glass pane, so it reads as a raised control
+   against the lightbox's solid black rather than sitting flush with it.
+   Sits below the nav row with real separation at every width - it was
+   sharing lightbox-content's 0.75rem flex gap with the arrows above it,
+   which read as one crowded cluster instead of two distinct controls. */
 .lightbox-download {
+  margin-top: 1.25rem;
   box-shadow: 0 4px 18px rgba(255, 199, 44, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
@@ -1409,17 +1419,10 @@ footer.site-footer p + p {
     font-size: 1.2rem;
   }
 
-  /* At this width the nav arrows and the download button only had the
-     shared 0.75rem .lightbox-content gap between them, which read as one
-     crowded row instead of two separate controls - easy to fat-finger the
-     wrong one. The fixed 75vh figure also left little vertical room to
-     spread them out on a short phone screen, so it shrinks here too. */
+  /* The fixed 75vh figure leaves little vertical room for the controls
+     below it to breathe on a short phone screen. */
   .lightbox-figure {
     height: 60vh;
-  }
-
-  .lightbox-download {
-    margin-top: 0.5rem;
   }
 }
 
