@@ -1,4 +1,4 @@
-import { LEVELS, listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, publicUrl } from "../lib/r2.js";
+import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, publicUrl } from "../lib/r2.js";
 import { SCHEDULE, scheduleCaption } from "../lib/schedule.js";
 
 async function loadRealWeeks(env, year, yearPrefix) {
@@ -12,7 +12,7 @@ async function loadRealWeeks(env, year, yearPrefix) {
     let totalCount = 0;
     let cover = null;
 
-    for (const level of LEVELS) {
+    for (const level of await findWeekLevels(env.PHOTOS, weekPrefix)) {
       const levelPrefix = `${weekPrefix}${level}/`;
       const objects = await listObjects(env.PHOTOS, levelPrefix);
       totalCount += objects.length;

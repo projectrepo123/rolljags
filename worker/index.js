@@ -3,8 +3,7 @@ import { handleWeek, getWeekData } from "./routes/week.js";
 import { getSeasonSummary } from "./routes/season.js";
 import { handleZip } from "./routes/zip.js";
 import { injectWeekMeta, injectSeasonMeta } from "./lib/meta.js";
-import { isValidYear, isValidWeekNum } from "./lib/validate.js";
-import { LEVELS } from "./lib/r2.js";
+import { isValidYear, isValidWeekNum, isValidLevel } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
 
 const SECURITY_HEADERS = {
@@ -79,7 +78,7 @@ async function handle(request, env, ctx) {
       // GET /api/zip/:year/:week/:level
       if (parts[1] === "zip" && parts.length === 5) {
         const [, , year, week, level] = parts;
-        if (!isValidYear(year) || !isValidWeekNum(week) || !LEVELS.includes(level)) {
+        if (!isValidYear(year) || !isValidWeekNum(week) || !isValidLevel(level)) {
           return Response.json({ error: "Invalid request" }, { status: 400 });
         }
 

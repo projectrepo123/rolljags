@@ -1,13 +1,34 @@
+// The three roster levels are the common case, but a week's photos don't have
+// to be split by roster level at all — a scrimmage or a one-off shoot might
+// instead hold a curated "Instagram picks" set alongside the full take.
+// Both are just named folders directly under the week (see findWeekLevels),
+// so nothing here is hardcoded to a fixed list. LEVELS itself only remains
+// as the set upload-week.mjs's README examples point to.
 export const LEVELS = ["varsity", "jv", "freshman"];
 
 const LEVEL_LABELS = {
   varsity: "Varsity",
   jv: "JV",
   freshman: "Freshman",
+  instagram: "Instagram Picks",
+  full: "Full Gallery",
 };
 
+// Known groups display in this order; an unrecognized folder name sorts
+// after them, alphabetically.
+const LEVEL_ORDER = ["varsity", "jv", "freshman", "instagram", "full"];
+
 export function levelLabel(level) {
-  return LEVEL_LABELS[level] || level;
+  return LEVEL_LABELS[level] || level.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function levelRank(level) {
+  const i = LEVEL_ORDER.indexOf(level);
+  return i === -1 ? LEVEL_ORDER.length : i;
+}
+
+export function sortLevels(names) {
+  return [...names].sort((a, b) => levelRank(a) - levelRank(b) || a.localeCompare(b));
 }
 
 // Lists the "folders" (common prefixes) directly under `prefix`, using R2's
@@ -69,6 +90,14 @@ export async function getCaption(bucket, weekPrefix) {
   if (!obj) return null;
   const text = (await obj.text()).trim();
   return text || null;
+}
+
+// Finds every named photo group directly under a week (e.g. "varsity",
+// "instagram"), in display order — whatever's actually there, rather than
+// assuming LEVELS.
+export async function findWeekLevels(bucket, weekPrefix) {
+  const prefixes = await listPrefixes(bucket, weekPrefix);
+  return sortLevels(prefixes.map(lastSegment));
 }
 
 // Finds the real R2 week folder for a given year + week number (e.g. "01"),

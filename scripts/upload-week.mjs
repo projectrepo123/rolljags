@@ -1,10 +1,20 @@
 #!/usr/bin/env node
-// Uploads one team level's photos for one week to R2, generating a thumbnail
-// for each and stripping EXIF/GPS metadata from the originals. Run once per
-// level per week, see README.md for usage.
+// Uploads one named group of photos for one week to R2, generating a
+// thumbnail for each and stripping EXIF/GPS metadata from the originals. Run
+// once per group per week, see README.md for usage.
 //
 //   node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
 //     --level varsity --dir ~/Photos/wk3-varsity --caption "vs. Fox, W 28-14"
+//
+// --level is usually a roster level (varsity/jv/freshman), but it's really
+// just the folder name the site groups these photos under and shows as a
+// tab — for a week that isn't split by roster level, e.g. a scrimmage, use
+// whatever name fits instead, such as "instagram" and "full":
+//
+//   node upload-week.mjs --year 2026 --week 0 --date 2026-08-15 \
+//     --level instagram --dir ~/Photos/scrimmage-ig --caption "Blue & Gold Scrimmage"
+//   node upload-week.mjs --year 2026 --week 0 --date 2026-08-15 \
+//     --level full --dir ~/Photos/scrimmage-all --caption "Blue & Gold Scrimmage"
 
 import { parseArgs } from "node:util";
 import { readdir, readFile } from "node:fs/promises";
@@ -13,7 +23,10 @@ import "dotenv/config";
 import sharp from "sharp";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const VALID_LEVELS = ["varsity", "jv", "freshman"];
+// Not a fixed enum — see the --level note above. This just keeps the value
+// safe to drop into an R2 key and a URL segment, matching the server's
+// isValidLevel (worker/lib/validate.js).
+const LEVEL_RE = /^[a-z0-9-]{1,32}$/;
 const THUMB_WIDTH = 640;
 // What the lightbox actually displays. The originals are full-resolution
 // camera files (several MB each); serving those just to fill a phone screen
@@ -50,8 +63,8 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
   console.error("--date must be YYYY-MM-DD, e.g. 2026-09-11");
   process.exit(1);
 }
-if (!VALID_LEVELS.includes(level)) {
-  console.error(`--level must be one of: ${VALID_LEVELS.join(", ")}`);
+if (!LEVEL_RE.test(level)) {
+  console.error("--level must be lowercase letters, numbers, and hyphens only, e.g. varsity, jv, freshman, instagram, full");
   process.exit(1);
 }
 

@@ -1,4 +1,4 @@
-import { LEVELS, levelLabel, listObjects, findWeekFolder, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
+import { levelLabel, listObjects, findWeekFolder, findWeekLevels, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
 import { findScheduledGame, scheduleCaption } from "../lib/schedule.js";
 
 // Looks up a week's data. Returns null if the week doesn't exist and isn't
@@ -22,7 +22,7 @@ export async function getWeekData(env, year, weekNum) {
   }
 
   const levels = [];
-  for (const level of LEVELS) {
+  for (const level of await findWeekLevels(env.PHOTOS, found.weekPrefix)) {
     const levelPrefix = `${found.weekPrefix}${level}/`;
     const objects = await listObjects(env.PHOTOS, levelPrefix);
     if (objects.length === 0) continue;

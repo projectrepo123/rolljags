@@ -13,28 +13,9 @@ const statusEl = document.getElementById("week-status");
 
 let levels = [];
 let activeLevel = null;
-let caption = "";
-let weekLabel = "";
-
-// A regular-season week is always titled "Week N ..." (see formatWeekLabel in
-// worker/lib/r2.js); a custom-labelled week (a scrimmage, a photo day) isn't
-// tied to one roster level the way a normal game's varsity/JV/freshman split
-// is, so its single level tab would misleadingly claim "Varsity" for photos
-// that mix every level. Show its caption there instead of a level name.
-function isCustomLabelWeek(label) {
-  return !/^Week \d+/.test(label || "");
-}
 
 function renderTabs() {
   tabsEl.innerHTML = "";
-
-  if (levels.length === 1 && isCustomLabelWeek(weekLabel) && caption) {
-    const label = document.createElement("span");
-    label.className = "level-tab active level-tab-static";
-    label.textContent = caption;
-    tabsEl.appendChild(label);
-    return;
-  }
 
   for (const lvl of levels) {
     const btn = document.createElement("button");
@@ -110,23 +91,21 @@ async function init() {
 
     titleEl.textContent = data.label;
     document.title = `${data.label} | Jaguar Football`;
-    weekLabel = data.label;
-    caption = data.caption || "";
+
+    // A custom-labelled week's caption is sometimes exactly its title with
+    // the date stripped off (e.g. both read "Blue & Gold Scrimmage") — printing
+    // it again right underneath would just repeat the heading, so skip it.
+    const titleWithoutDate = data.label.replace(/\s*\([^)]*\)\s*$/, "").trim();
+    const caption = data.caption && data.caption !== titleWithoutDate ? data.caption : "";
+    captionEl.textContent = caption;
 
     if (data.status === "coming-soon") {
-      captionEl.textContent = caption;
       showComingSoon();
       return;
     }
 
     levels = data.levels;
     activeLevel = levels[0]?.level;
-
-    // A single-level, custom-labelled week (see renderTabs) shows its caption
-    // as the level tab instead, so it isn't repeated verbatim right under a
-    // title that already says the same thing.
-    const captionMovedToTabs = levels.length === 1 && isCustomLabelWeek(data.label) && caption;
-    captionEl.textContent = captionMovedToTabs ? "" : caption;
 
     renderTabs();
     renderLevel();

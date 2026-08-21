@@ -478,14 +478,6 @@ main {
   border-bottom-color: var(--gold);
 }
 
-/* A week with only one, non-level-specific set of photos (see gallery.js)
-   shows its caption in the tab position as a label, not a control. */
-.level-tab-static {
-  display: inline-flex;
-  align-items: center;
-  cursor: default;
-}
-
 .level-toolbar {
   display: flex;
   justify-content: space-between;
@@ -1415,6 +1407,19 @@ footer.site-footer p + p {
 
   header.site-header h1 {
     font-size: 1.2rem;
+  }
+
+  /* At this width the nav arrows and the download button only had the
+     shared 0.75rem .lightbox-content gap between them, which read as one
+     crowded row instead of two separate controls - easy to fat-finger the
+     wrong one. The fixed 75vh figure also left little vertical room to
+     spread them out on a short phone screen, so it shrinks here too. */
+  .lightbox-figure {
+    height: 60vh;
+  }
+
+  .lightbox-download {
+    margin-top: 0.5rem;
   }
 }
 
