@@ -859,11 +859,13 @@ footer.site-footer p + p {
 }
 
 .photo-banner {
-  overflow-x: hidden;
-  /* Vertical overflow stays visible so a hovered/zoomed photo can bulge
-     above and below the band instead of being clipped by it. */
-  overflow-y: visible;
-  height: 200px;
+  /* CSS quirk: mixing overflow-x: hidden with overflow-y: visible silently
+     forces the "visible" axis back to a clipping value (auto), so a zoomed
+     photo would get clipped right back down to band height anyway. Instead
+     the band is simply taller than the resting photo height, giving a
+     zoomed photo room to grow within a single overflow: hidden box. */
+  overflow: hidden;
+  height: 260px;
   background: var(--navy-dark);
   mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
@@ -880,7 +882,7 @@ footer.site-footer p + p {
 }
 
 .photo-banner-track img {
-  height: 100%;
+  height: 180px;
   width: auto;
   flex: none;
   object-fit: cover;
@@ -891,7 +893,7 @@ footer.site-footer p + p {
 
 .photo-banner-track img:hover,
 .photo-banner-track img.zoomed {
-  transform: scale(1.6);
+  transform: scale(1.3);
   position: relative;
   z-index: 2;
   box-shadow: var(--shadow-3);
@@ -921,7 +923,16 @@ footer.site-footer p + p {
 
 @media (max-width: 480px) {
   .photo-banner {
-    height: 120px;
+    height: 150px;
+  }
+
+  .photo-banner-track img {
+    height: 110px;
+  }
+
+  .photo-banner-track img:hover,
+  .photo-banner-track img.zoomed {
+    transform: scale(1.2);
   }
 }
 
