@@ -1,3 +1,5 @@
+import { openLightbox } from "./lightbox.js";
+
 // Keeps per-photo scroll speed constant regardless of how many photos are in
 // the set, so adding more later doesn't speed up the loop.
 const SECONDS_PER_PHOTO = 6;
@@ -16,42 +18,38 @@ export async function initPhotoBanner() {
     const images = data.images || [];
     if (images.length === 0) return;
 
-    // The strip scrolls continuously; duplicating the set once lets the
-    // animation loop from -50% back to 0% without a visible seam.
-    const tiles = [...images, ...images];
+    // The banner only has one size per photo (no separate view/thumb the way
+    // week photos do), so the same URL serves as both the on-screen display
+    // and the downloadable file.
+    const photos = images.map((src) => ({
+      name: src.split("/").pop(),
+      thumbUrl: src,
+      viewUrl: src,
+      fullUrl: src,
+    }));
+
+    // The strip scrolls continuously; duplicating the tiles once lets the
+    // animation loop from -50% back to 0% without a visible seam. Each tile
+    // still opens the lightbox on the underlying (non-duplicated) photo list,
+    // so prev/next navigation inside it cycles through the real set of photos.
     trackEl.innerHTML = "";
-    for (const src of tiles) {
+    for (let i = 0; i < images.length * 2; i++) {
+      const photoIndex = i % images.length;
+
+      const btn = document.createElement("button");
+      btn.setAttribute("aria-label", `Open photo ${photoIndex + 1} of ${images.length}`);
+      btn.addEventListener("click", () => openLightbox(photos, photoIndex));
+
       const img = document.createElement("img");
-      img.src = src;
+      img.src = images[photoIndex];
       img.loading = "lazy";
       img.alt = "";
-      trackEl.appendChild(img);
+
+      btn.appendChild(img);
+      trackEl.appendChild(btn);
     }
 
     trackEl.style.animationDuration = `${images.length * SECONDS_PER_PHOTO}s`;
-
-    function clearZoom() {
-      trackEl.querySelectorAll("img.zoomed").forEach((el) => el.classList.remove("zoomed"));
-      trackEl.classList.remove("has-zoom");
-    }
-
-    // Touch devices have no hover, so tapping a photo toggles the same
-    // zoomed-in look (and pauses the scroll) instead. Tapping it again, or a
-    // different photo, clears it.
-    trackEl.addEventListener("click", (e) => {
-      const img = e.target.closest("img");
-      if (!img) return;
-      const alreadyZoomed = img.classList.contains("zoomed");
-      clearZoom();
-      img.classList.toggle("zoomed", !alreadyZoomed);
-      trackEl.classList.toggle("has-zoom", !alreadyZoomed);
-    });
-
-    // On desktop, a click also counts as a hover — without this, moving the
-    // mouse away after clicking left has-zoom set with nothing to clear it,
-    // since only clicking the same photo again removed it. That permanently
-    // froze the strip. Leaving the banner now always resumes it.
-    bannerEl.addEventListener("mouseleave", clearZoom);
 
     bannerEl.hidden = false;
   } catch (err) {
