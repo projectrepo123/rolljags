@@ -58,43 +58,7 @@ function render(games) {
   });
 }
 
-async function initBanner() {
-  const bannerEl = document.getElementById("photo-banner");
-  const trackEl = document.getElementById("photo-banner-track");
-  if (!bannerEl || !trackEl) return;
-
-  try {
-    const res = await fetch("/api/banner");
-    if (!res.ok) throw new Error(`banner ${res.status}`);
-    const data = await res.json();
-    const images = data.images || [];
-    if (images.length === 0) return;
-
-    // The strip scrolls continuously; duplicating the set once lets the
-    // animation loop from -50% back to 0% without a visible seam.
-    const tiles = [...images, ...images];
-    trackEl.innerHTML = "";
-    for (const src of tiles) {
-      const img = document.createElement("img");
-      img.src = src;
-      img.loading = "lazy";
-      img.alt = "";
-      trackEl.appendChild(img);
-    }
-
-    // Keeps per-photo scroll speed constant regardless of how many photos
-    // are in the set, so adding more later doesn't speed up the loop.
-    trackEl.style.animationDuration = `${images.length * 6}s`;
-
-    bannerEl.hidden = false;
-  } catch (err) {
-    // Decorative only — leave it hidden on failure rather than showing an error.
-  }
-}
-
 async function init() {
-  initBanner();
-
   if (!/^\d{4}$/.test(year)) {
     titleEl.textContent = "Schedule not found";
     return;

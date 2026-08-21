@@ -1,3 +1,5 @@
+import { initPhotoBanner } from "./banner.js";
+
 const weeksEl = document.getElementById("weeks");
 
 function weekUrl(year, week) {
@@ -130,3 +132,4 @@ async function init() {
 }
 
 init();
+initPhotoBanner();

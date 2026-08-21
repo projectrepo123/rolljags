@@ -859,7 +859,10 @@ footer.site-footer p + p {
 }
 
 .photo-banner {
-  overflow: hidden;
+  overflow-x: hidden;
+  /* Vertical overflow stays visible so a hovered/zoomed photo can bulge
+     above and below the band instead of being clipped by it. */
+  overflow-y: visible;
   height: 200px;
   background: var(--navy-dark);
   mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
@@ -882,9 +885,20 @@ footer.site-footer p + p {
   flex: none;
   object-fit: cover;
   margin-right: 3px;
+  cursor: zoom-in;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.photo-banner:hover .photo-banner-track {
+.photo-banner-track img:hover,
+.photo-banner-track img.zoomed {
+  transform: scale(1.6);
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow-3);
+}
+
+.photo-banner:hover .photo-banner-track,
+.photo-banner-track.has-zoom {
   animation-play-state: paused;
 }
 
