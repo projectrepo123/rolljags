@@ -864,11 +864,31 @@ footer.site-footer p + p {
      photo would get clipped right back down to band height anyway. Instead
      the band is simply taller than the resting photo height, giving a
      zoomed photo room to grow within a single overflow: hidden box. */
+  position: relative;
   overflow: hidden;
   height: 260px;
   background: var(--navy-dark);
+  border-bottom: 3px solid var(--gold);
   mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.photo-banner-label {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 1rem;
+  z-index: 3;
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(20, 44, 82, 0.55);
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
 }
 
 .photo-banner-track {
