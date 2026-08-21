@@ -478,6 +478,14 @@ main {
   border-bottom-color: var(--gold);
 }
 
+/* A week with only one, non-level-specific set of photos (see gallery.js)
+   shows its caption in the tab position as a label, not a control. */
+.level-tab-static {
+  display: inline-flex;
+  align-items: center;
+  cursor: default;
+}
+
 .level-toolbar {
   display: flex;
   justify-content: space-between;
