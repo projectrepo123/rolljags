@@ -43,6 +43,7 @@ export async function initPhotoBanner() {
       const img = document.createElement("img");
       img.src = images[photoIndex];
       img.loading = "lazy";
+      img.fetchPriority = "low";
       img.alt = "";
 
       btn.appendChild(img);

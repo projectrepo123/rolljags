@@ -132,4 +132,9 @@ async function init() {
 }
 
 init();
-initPhotoBanner();
+
+// Deferred until the page's own resources (including the week grid's cover
+// photos, one of which is the LCP candidate) have finished loading, so the
+// banner's own image requests don't compete with them for bandwidth on the
+// same photos.rolljags.com origin and drag out LCP.
+window.addEventListener("load", () => initPhotoBanner());
