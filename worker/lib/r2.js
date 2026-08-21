@@ -49,9 +49,12 @@ export function parseWeekFolder(folderName) {
   return { weekNum: match[1], date: match[2] };
 }
 
-export function formatWeekLabel(weekNum, date) {
+// `customLabel` overrides the "Week N" title entirely, for weeks that aren't
+// a regular-season game against a single opponent (e.g. a preseason
+// scrimmage) — set via a `label` field on the SCHEDULE entry.
+export function formatWeekLabel(weekNum, date, customLabel) {
   const num = parseInt(weekNum, 10);
-  const label = Number.isNaN(num) ? `Week ${weekNum}` : `Week ${num}`;
+  const label = customLabel || (Number.isNaN(num) ? `Week ${weekNum}` : `Week ${num}`);
   if (!date) return label;
   const d = new Date(`${date}T12:00:00`);
   const dateLabel = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });

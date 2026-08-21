@@ -5,6 +5,7 @@
 // with its own array of games.
 export const SCHEDULE = {
   "2026": [
+    { week: "00", date: "2026-08-15", label: "Blue & Gold Scrimmage" },
     { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
     { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home" },
     { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away" },
@@ -48,10 +49,13 @@ export function kickoffInstant(game) {
 }
 
 // The next game that hasn't kicked off yet, across every scheduled season.
-// Returns null once the last game on the schedule has started.
+// Returns null once the last game on the schedule has started. Only counts
+// entries with a single opponent — the countdown reads "Home vs. X", which
+// doesn't fit something like an intrasquad scrimmage.
 export function nextGame(now = new Date()) {
   const upcoming = Object.values(SCHEDULE)
     .flat()
+    .filter((game) => game.opponent)
     .map((game) => ({ game, at: new Date(kickoffInstant(game)) }))
     .filter((entry) => entry.at > now)
     .sort((a, b) => a.at - b.at);
@@ -63,7 +67,11 @@ export function findScheduledGame(year, weekNum) {
   return (SCHEDULE[year] || []).find((game) => game.week === weekNum) || null;
 }
 
+// Not every entry is a game against a single opponent (e.g. a preseason
+// scrimmage) — those fall back to their label rather than producing
+// "undefined vs. undefined".
 export function scheduleCaption(game) {
-  const base = `${game.homeAway} vs. ${game.opponent}`;
+  const base = game.opponent ? `${game.homeAway} vs. ${game.opponent}` : game.label;
+  if (!base) return null;
   return game.notes ? `${base} (${game.notes})` : base;
 }

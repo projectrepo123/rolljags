@@ -12,7 +12,7 @@ export async function getWeekData(env, year, weekNum) {
       return {
         year,
         week: weekNum,
-        label: formatWeekLabel(weekNum, scheduledGame.date),
+        label: formatWeekLabel(weekNum, scheduledGame.date, scheduledGame.label),
         status: "coming-soon",
         levels: [],
         caption: scheduleCaption(scheduledGame),
@@ -48,7 +48,7 @@ export async function getWeekData(env, year, weekNum) {
   return {
     year,
     week: weekNum,
-    label: formatWeekLabel(weekNum, found.date),
+    label: formatWeekLabel(weekNum, found.date, scheduledGame?.label),
     status: levels.length > 0 ? "live" : "coming-soon",
     levels,
     cover,
