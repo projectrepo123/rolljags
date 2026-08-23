@@ -42,6 +42,19 @@ async function loadRealWeeks(env, year, yearPrefix) {
   return weeks;
 }
 
+// Weeks are chronological events, so order them by date rather than by week
+// number. The number is an ID and a label source ("Week 3"), not a sort key —
+// preseason entries like a scrimmage or a jamboree fall between numbered weeks
+// with no integer available to express that (see the 90-99 range in
+// lib/schedule.js). A week whose folder name didn't parse has no date, so fall
+// back to the number for those rather than dropping them somewhere arbitrary.
+function compareWeeks(a, b) {
+  if (a.date && b.date && a.date !== b.date) return a.date.localeCompare(b.date);
+  if (a.date && !b.date) return -1;
+  if (!a.date && b.date) return 1;
+  return a.weekNum.localeCompare(b.weekNum, undefined, { numeric: true });
+}
+
 export async function handleWeeks(env) {
   const yearPrefixes = await listPrefixes(env.PHOTOS, "");
   const years = new Map();
@@ -76,9 +89,7 @@ export async function handleWeeks(env) {
   const result = [...years.entries()]
     .map(([year, weeks]) => ({
       year,
-      weeks: [...weeks.values()].sort((a, b) =>
-        a.weekNum.localeCompare(b.weekNum, undefined, { numeric: true })
-      ),
+      weeks: [...weeks.values()].sort(compareWeeks),
     }))
     .filter((yearGroup) => yearGroup.weeks.length > 0)
     .sort((a, b) => b.year.localeCompare(a.year));

@@ -37,6 +37,33 @@ cover thumbnail) automatically takes over and the "Coming soon" badge goes
 away. No need to remove the entry from the schedule. To start a new season,
 add a new year key the same way.
 
+### Week numbering
+
+`01`–`09` are regular-season weeks and produce the "Week N" title, with `10`+
+left free for playoff weeks. Preseason and other one-off events (a scrimmage,
+a jamboree) use **`90`–`99`** and set an explicit `label`, which replaces the
+"Week N" title entirely.
+
+The reason for the split range: those events fall *between* numbered weeks and
+there's no integer to express that (a jamboree on Aug 21 sits between the Aug
+15 scrimmage and week `01`'s Aug 28 opener). Weeks are ordered on the site by
+**date**, not by number, so the number is only an ID and a label source.
+
+### Photo groups within a week
+
+`--level` is just the folder name a set of photos is grouped under, and becomes
+its tab on the week page. Roster levels (`varsity`/`jv`/`freshman`) are the
+common case, but any lowercase name works. For weeks that aren't split by
+roster level, the convention is:
+
+```
+instagram   the curated set posted to Instagram  -> "Instagram Pics" tab
+full        everything from that day             -> "Full Gallery" tab
+```
+
+Tabs are ordered `varsity, jv, freshman, instagram, full`, then anything else
+alphabetically, so the first one uploaded isn't necessarily the default tab.
+
 ### Per-week caption
 
 To show an optional one-line caption near the top of a week's page (e.g. the
@@ -159,6 +186,29 @@ node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
 
 That's it, no redeploy needed. The site lists whatever's in R2, live, with
 a short cache (~5 minutes) on the home page listing.
+
+## The homepage photo banner
+
+The scrolling "From the Archives" strip above the homepage grid is a flat set
+of decorative photos in R2 under `site/schedule-banner/`, unrelated to any
+week. Clicking one opens it in the same lightbox the week galleries use. Add
+to it with:
+
+```
+cd scripts
+node upload-banner.mjs --dir ~/Photos/old-seasons
+```
+
+It uploads every `.jpg`/`.jpeg` in that folder (subfolders are ignored),
+resized to 1400px wide, and never deletes — so re-running it **adds** to the
+strip rather than replacing it. To remove a photo, delete its object in the
+R2 dashboard.
+
+> **Point `--dir` at a folder kept solely for banner photos.** The script
+> uploads whatever it finds, so aiming it at a general export folder that has
+> since been reused for something else will bury the archive strip in
+> unrelated photos. Removing them afterwards is a manual object-by-object
+> cleanup in the R2 dashboard.
 
 ## Local development
 

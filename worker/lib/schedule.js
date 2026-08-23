@@ -3,9 +3,23 @@
 // until upload-week.mjs is run for that week's date, at which point real R2
 // data takes over automatically. To start a new season, add a new year key
 // with its own array of games.
+//
+// Week numbers: "01".."09" are regular-season weeks and drive the "Week N"
+// label, with 10+ left free for playoff weeks. Preseason and other one-off
+// events use **90-99** and carry an explicit `label` instead, because they
+// fall between numbered weeks with no integer available to express that (a
+// jamboree on Aug 21 sits between week 01's Aug 28 opener and the Aug 15
+// scrimmage). Ordering on the site comes from the date, not the number —
+// see compareWeeks in routes/weeks.js. The Blue & Gold Scrimmage predates
+// this convention and stays at "00" so its shared "?week=0" links keep
+// working.
 export const SCHEDULE = {
   "2026": [
     { week: "00", date: "2026-08-15", label: "Blue & Gold Scrimmage" },
+    // Preseason/exhibition entries use week numbers 90-99 (see the note above
+    // the SCHEDULE export). Keep this array in date order — /schedule renders
+    // it as-is and picks its "next game" highlight by scanning it.
+    { week: "90", date: "2026-08-21", label: "Festus Jamboree" },
     { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
     { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home" },
     { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away" },
