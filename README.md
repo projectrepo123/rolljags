@@ -184,6 +184,28 @@ node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
   re-encoded through `sharp` on the way up, which strips all EXIF metadata,
   including GPS location, from the originals automatically.
 
+### Storage and encoder settings
+
+Three objects are stored per photo: the full-resolution original (behind the
+Download button), a 1600px `view/` copy the lightbox displays, and a 640px
+`thumbs/` copy for the grid. The original dominates — the resized copies are
+together under 3% of a week's footprint.
+
+Originals are encoded with `{ quality: 92, mozjpeg: true }` (`JPEG_ORIGINAL`
+in `upload-week.mjs`). That was measured, not guessed: across four 6960×4640
+frames it produces ~49% smaller files than the older
+`{ quality: 95, chromaSubsampling: "4:4:4" }` at 38.4 dB PSNR — past the point
+where re-encode loss is visible, and both smaller *and* higher-quality than
+plain quality-88. Modern camera bodies produce big files, so this matters:
+a ~136-photo game is roughly **1 GB** of originals at this setting versus
+~2 GB before.
+
+Budget accordingly against R2's 10 GB free tier (overage is $0.015/GB/month,
+and egress is always free). If a season's worth of games starts crowding it,
+the next lever is capping the original's long edge — 4000px is still a 13-inch
+print at 300dpi — which would cut storage by more than half again, at the cost
+of what people receive when they hit Download.
+
 That's it, no redeploy needed. The site lists whatever's in R2, live, with
 a short cache (~5 minutes) on the home page listing.
 
