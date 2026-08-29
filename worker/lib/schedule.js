@@ -21,7 +21,7 @@ export const SCHEDULE = {
     // it as-is and picks its "next game" highlight by scanning it.
     { week: "90", date: "2026-08-21", label: "Festus Jamboree" },
     { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
-    { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home" },
+    { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home", cover: "/npgrizzlies.webp" },
     { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away" },
     { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away" },
     { week: "05", date: "2026-09-25", opponent: "Fox", homeAway: "Home" },
