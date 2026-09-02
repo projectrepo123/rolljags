@@ -53,6 +53,7 @@ export async function getWeekData(env, year, weekNum) {
     levels,
     cover,
     ...(caption ? { caption } : {}),
+    ...(scheduledGame?.moreToCome ? { moreToCome: true } : {}),
   };
 }
 

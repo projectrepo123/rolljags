@@ -6,6 +6,7 @@ const week = params.get("week");
 
 const titleEl = document.getElementById("week-title");
 const captionEl = document.getElementById("week-caption");
+const moreToComeEl = document.getElementById("week-more-coming");
 const tabsEl = document.getElementById("level-tabs");
 const toolbarEl = document.getElementById("level-toolbar");
 const gridEl = document.getElementById("photo-grid");
@@ -98,6 +99,10 @@ async function init() {
     const titleWithoutDate = data.label.replace(/\s*\([^)]*\)\s*$/, "").trim();
     const caption = data.caption && data.caption !== titleWithoutDate ? data.caption : "";
     captionEl.textContent = caption;
+
+    // A partly-uploaded week says so, rather than letting a half set read as
+    // the finished gallery. Set in lib/schedule.js, cleared when the rest go up.
+    moreToComeEl.hidden = !data.moreToCome;
 
     if (data.status === "coming-soon") {
       showComingSoon();

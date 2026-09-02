@@ -36,6 +36,7 @@ async function loadRealWeeks(env, year, yearPrefix) {
       status: "live",
       opponent: scheduledGame?.opponent,
       homeAway: scheduledGame?.homeAway,
+      ...(scheduledGame?.moreToCome ? { moreToCome: true } : {}),
     });
   }
 

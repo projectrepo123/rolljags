@@ -1623,6 +1623,14 @@ footer.site-footer p + p {
   gap: 0.5rem;
 }
 
+/* Keeps .card-meta a two-part row — photo count left, badges grouped right —
+   no matter how many badges a week carries. */
+.card-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .badge-latest {
   display: inline-block;
   background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
@@ -1634,6 +1642,28 @@ footer.site-footer p + p {
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+/* Gold, like .badge-coming-soon, because both mean "not the full story yet".
+   They never appear together — a coming-soon week renders that badge instead
+   of the whole meta row. */
+.badge-more-coming {
+  display: inline-block;
+  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  color: var(--navy-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.week-more-coming {
+  margin: -0.6rem 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 /* Brand-tinted text selection. */

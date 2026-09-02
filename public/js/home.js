@@ -92,13 +92,26 @@ function renderYear(yearGroup, latestKey) {
       count.textContent = `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
       meta.appendChild(count);
 
+      // Grouped so the row stays two-part — count on the left, badges together
+      // on the right — however many badges a week ends up carrying.
+      const badges = document.createElement("div");
+      badges.className = "card-badges";
+
+      if (week.moreToCome) {
+        const badge = document.createElement("span");
+        badge.className = "badge-more-coming";
+        badge.textContent = "More coming";
+        badges.appendChild(badge);
+      }
+
       if (latestKey && `${week.year}/${week.week}` === latestKey) {
         const badge = document.createElement("span");
         badge.className = "badge-latest";
         badge.textContent = "Latest";
-        meta.appendChild(badge);
+        badges.appendChild(badge);
       }
 
+      meta.appendChild(badges);
       body.appendChild(meta);
     }
 

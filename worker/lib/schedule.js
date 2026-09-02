@@ -13,6 +13,11 @@
 // see compareWeeks in routes/weeks.js. The Blue & Gold Scrimmage predates
 // this convention and stays at "00" so its shared "?week=0" links keep
 // working.
+//
+// `moreToCome: true` marks a week whose photos are only partly uploaded. It
+// puts a "More coming" badge on that week's card and a note on the week page,
+// so visitors know to check back rather than taking a partial set as the whole
+// gallery. Nothing infers it — clear the flag once the last batch is up.
 export const SCHEDULE = {
   "2026": [
     { week: "00", date: "2026-08-15", label: "Blue & Gold Scrimmage" },
@@ -20,7 +25,7 @@ export const SCHEDULE = {
     // the SCHEDULE export). Keep this array in date order — /schedule renders
     // it as-is and picks its "next game" highlight by scanning it.
     { week: "90", date: "2026-08-21", label: "Festus Jamboree" },
-    { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
+    { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif", moreToCome: true },
     { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home", cover: "/npgrizzlies.webp" },
     { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away" },
     { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away" },
