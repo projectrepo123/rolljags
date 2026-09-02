@@ -18,8 +18,22 @@ const LEVEL_LABELS = {
 // after them, alphabetically.
 const LEVEL_ORDER = ["varsity", "jv", "freshman", "instagram", "full"];
 
+// Optional explanation for a group whose contents aren't what the rest of the
+// site trains people to expect. Surfaced as an (i) next to the photo count, so
+// nobody downloads a cropped social edit thinking it's the full-size frame.
+// A level with no entry here simply gets no (i).
+const LEVEL_NOTES = {
+  instagram:
+    "These are edited and exported for Instagram, so they're cropped and " +
+    "sized for the feed. The other tabs have the full-resolution versions.",
+};
+
 export function levelLabel(level) {
   return LEVEL_LABELS[level] || level.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+export function levelNote(level) {
+  return LEVEL_NOTES[level] || null;
 }
 
 function levelRank(level) {

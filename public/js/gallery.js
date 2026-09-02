@@ -31,15 +31,77 @@ function renderTabs() {
   }
 }
 
+// The (i) beside the photo count, for a group whose contents need explaining
+// (see LEVEL_NOTES in worker/lib/r2.js). Hover alone would hide this on every
+// phone, and a `title` attribute is unreadable on touch and unstyleable, so
+// this is a real disclosure: tap or click toggles it, a pointer opens it on
+// hover, and it opens on keyboard focus. All three drive the same `open`
+// class so they can't disagree about whether it's showing.
+function buildLevelNote(text) {
+  const wrap = document.createElement("span");
+  wrap.className = "info-wrap";
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "info-btn";
+  btn.textContent = "i";
+  btn.setAttribute("aria-expanded", "false");
+  btn.setAttribute("aria-label", "About this tab");
+
+  const pop = document.createElement("span");
+  pop.className = "info-pop";
+  pop.id = "level-note-pop";
+  pop.setAttribute("role", "note");
+  pop.textContent = text;
+  btn.setAttribute("aria-controls", pop.id);
+
+  const setOpen = (open) => {
+    wrap.classList.toggle("open", open);
+    btn.setAttribute("aria-expanded", String(open));
+  };
+
+  btn.addEventListener("click", () => setOpen(!wrap.classList.contains("open")));
+  btn.addEventListener("focus", () => setOpen(true));
+  btn.addEventListener("blur", () => setOpen(false));
+
+  // Only wire hover where there's a real pointer. On touch, browsers emit a
+  // synthetic mouseenter on tap, which would fight the click toggle.
+  if (window.matchMedia("(hover: hover)").matches) {
+    wrap.addEventListener("mouseenter", () => setOpen(true));
+    wrap.addEventListener("mouseleave", () => setOpen(false));
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+
+  // A tap anywhere else dismisses it, the way any popover should.
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) setOpen(false);
+  });
+
+  wrap.append(btn, pop);
+  return wrap;
+}
+
 function renderLevel() {
   const lvl = levels.find((l) => l.level === activeLevel);
   if (!lvl) return;
 
   toolbarEl.innerHTML = "";
+
+  // Count and its (i) travel together on the left, so the toolbar stays a
+  // two-part row with the download button on the right.
+  const countGroup = document.createElement("div");
+  countGroup.className = "count-group";
+
   const count = document.createElement("span");
   count.className = "photo-count";
   count.textContent = `${lvl.photos.length} photo${lvl.photos.length === 1 ? "" : "s"}`;
-  toolbarEl.appendChild(count);
+  countGroup.appendChild(count);
+
+  if (lvl.note) countGroup.appendChild(buildLevelNote(lvl.note));
+  toolbarEl.appendChild(countGroup);
 
   const zipLink = document.createElement("a");
   zipLink.className = "btn btn-gold";

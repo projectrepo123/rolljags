@@ -1,4 +1,4 @@
-import { levelLabel, listObjects, findWeekFolder, findWeekLevels, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
+import { levelLabel, levelNote, listObjects, findWeekFolder, findWeekLevels, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
 import { findScheduledGame, scheduleCaption } from "../lib/schedule.js";
 
 // Looks up a week's data. Returns null if the week doesn't exist and isn't
@@ -38,7 +38,8 @@ export async function getWeekData(env, year, weekNum) {
       };
     });
 
-    levels.push({ level, label: levelLabel(level), photos });
+    const note = levelNote(level);
+    levels.push({ level, label: levelLabel(level), photos, ...(note ? { note } : {}) });
   }
 
   const realCaption = await getCaption(env.PHOTOS, found.weekPrefix);
