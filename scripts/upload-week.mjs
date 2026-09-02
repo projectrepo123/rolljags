@@ -6,6 +6,11 @@
 //   node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
 //     --level varsity --dir ~/Photos/wk3-varsity --caption "vs. Fox, W 28-14"
 //
+// Photos are ordered by EXIF capture time, not filename, and stored under a
+// numbered key that preserves that order (see ORDINAL_WIDTH below). Add
+// --dry-run to print the resulting order and exit without uploading or
+// needing credentials — worth doing before a long run.
+//
 // --level is usually a roster level (varsity/jv/freshman), but it's really
 // just the folder name the site groups these photos under and shows as a
 // tab — for a week that isn't split by roster level, e.g. a scrimmage, use
@@ -21,6 +26,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import "dotenv/config";
 import sharp from "sharp";
+import exifReader from "exif-reader";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 // Not a fixed enum — see the --level note above. This just keeps the value
@@ -46,6 +52,80 @@ const IMAGE_EXT = /\.(jpe?g)$/i;
 // A full game at 6960x4640 is ~1 GB of originals rather than ~2 GB.
 const JPEG_ORIGINAL = { quality: 92, mozjpeg: true };
 
+// Photos appear on the site in R2 key order — the Worker sorts by key
+// (worker/lib/r2.js) and never sees the order we upload in — so the sequence
+// has to be baked into the stored name. Camera filenames can't be trusted for
+// that: an export can number the last frame of the game lowest, and a counter
+// can roll over from IMG_9999 to IMG_0001 mid-game. So we order by EXIF
+// capture time and prefix each key with its position.
+const ORDINAL_WIDTH = 4;
+
+// EXIF DateTimeOriginal only resolves to the second, which a burst blows
+// through several times over; SubSecTimeOriginal holds the fractional part.
+// Returns null when there's no readable capture time.
+function captureTime(exifBuffer) {
+  if (!exifBuffer) return null;
+
+  let parsed;
+  try {
+    parsed = exifReader(exifBuffer);
+  } catch {
+    return null;
+  }
+
+  const taken = parsed?.Photo?.DateTimeOriginal;
+  if (!(taken instanceof Date) || Number.isNaN(taken.getTime())) return null;
+
+  // "35" means .35 of a second, not 35ms.
+  const fraction = Number.parseFloat(`0.${String(parsed?.Photo?.SubSecTimeOriginal ?? "").trim()}`);
+  return taken.getTime() + (Number.isNaN(fraction) ? 0 : fraction * 1000);
+}
+
+// Frames shot in the same burst can share a capture time down to the
+// subsecond, so the filename is the tiebreaker — but only once we know which
+// direction the filenames run. Walking the capture times in filename order
+// answers that: mostly-decreasing means the numbering is backwards.
+function filenamesRunBackwards(entriesInNameOrder) {
+  const timed = entriesInNameOrder.filter((e) => e.time !== null);
+  let forward = 0;
+  let backward = 0;
+  for (let i = 1; i < timed.length; i++) {
+    const delta = timed[i].time - timed[i - 1].time;
+    if (delta > 0) forward += 1;
+    else if (delta < 0) backward += 1;
+  }
+  return backward > forward;
+}
+
+// `force` comes from --reverse, for exports that stripped EXIF entirely (some
+// Lightroom/Photoshop presets remove all camera metadata, which is also what
+// takes the GPS out). With no capture times there's nothing to detect from,
+// so the direction has to be stated.
+function orderPhotos(entriesInNameOrder, force = null) {
+  const backwards = force ?? filenamesRunBackwards(entriesInNameOrder);
+  const byName = (a, b) =>
+    backwards ? b.fileName.localeCompare(a.fileName) : a.fileName.localeCompare(b.fileName);
+
+  return {
+    backwards,
+    ordered: [...entriesInNameOrder].sort((a, b) => {
+      // A frame with no capture time can't be placed against the others, so
+      // group those at the end rather than guessing a spot mid-game.
+      if (a.time === null || b.time === null) {
+        if (a.time !== b.time) return a.time === null ? 1 : -1;
+        return byName(a, b);
+      }
+      return a.time - b.time || byName(a, b);
+    }),
+  };
+}
+
+// "IMG_0412.jpg" -> "0007_IMG_0412.jpg". The camera's name is kept so a photo
+// stays traceable back to the original file on disk.
+function storedName(entry, index) {
+  return `${String(index + 1).padStart(ORDINAL_WIDTH, "0")}_${entry.fileName}`;
+}
+
 const { values } = parseArgs({
   options: {
     year: { type: "string" },
@@ -54,6 +134,8 @@ const { values } = parseArgs({
     level: { type: "string" },
     dir: { type: "string" },
     caption: { type: "string" },
+    "dry-run": { type: "boolean" },
+    reverse: { type: "boolean" },
   },
 });
 
@@ -84,22 +166,27 @@ const weekFolder = `week-${weekNum}_${date}`;
 const weekRootPrefix = `${year}/${weekFolder}/`;
 const prefix = `${weekRootPrefix}${level}/`;
 
-const required = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
-for (const key of required) {
-  if (!process.env[key]) {
-    console.error(`Missing ${key} in scripts/.env — copy .env.example and fill it in.`);
-    process.exit(1);
+// A dry run only reads local files, so don't make it wait on credentials.
+if (!values["dry-run"]) {
+  const required = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
+  for (const key of required) {
+    if (!process.env[key]) {
+      console.error(`Missing ${key} in scripts/.env — copy .env.example and fill it in.`);
+      process.exit(1);
+    }
   }
 }
 
-const s3 = new S3Client({
-  region: "auto",
-  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-  },
-});
+const s3 = values["dry-run"]
+  ? null
+  : new S3Client({
+      region: "auto",
+      endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+      credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+      },
+    });
 
 async function main() {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -113,10 +200,59 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`Uploading ${files.length} photos to ${prefix}\n`);
+  // Only the JPEG header is read here, not the whole frame, so this pass is
+  // cheap even on a few hundred full-resolution files.
+  process.stdout.write(`Reading capture times from ${files.length} photos... `);
+  const photos = [];
+  for (const fileName of files) {
+    const { exif } = await sharp(path.join(dir, fileName)).metadata();
+    photos.push({ fileName, time: captureTime(exif) });
+  }
+  const { ordered, backwards } = orderPhotos(photos, values.reverse ? true : null);
+  console.log("done.");
+
+  const undated = ordered.filter((e) => e.time === null);
+
+  if (undated.length === photos.length) {
+    // Nothing to sort by but the filenames — say so plainly rather than
+    // listing every file as a warning.
+    console.log(
+      `No EXIF capture times (this export stripped them), so order comes from the filenames, ` +
+        `${backwards ? "reversed" : "as-is"}.` +
+        (values.reverse ? "" : "\nIf that reads backwards on the site, re-run with --reverse.")
+    );
+  } else {
+    if (backwards) {
+      console.log(
+        values.reverse
+          ? "Reversing filename order (--reverse)."
+          : "Filenames run backwards against capture time — reordering to match the game."
+      );
+    }
+    if (undated.length > 0) {
+      console.warn(
+        `Warning: ${undated.length} photo(s) have no EXIF capture time and were placed last:\n` +
+          undated.map((e) => `  ${e.fileName}`).join("\n")
+      );
+    }
+  }
+
+  if (values["dry-run"]) {
+    console.log(`\nOrder that would be uploaded to ${prefix}:\n`);
+    for (const [i, entry] of ordered.entries()) {
+      const when = entry.time === null ? "no EXIF time" : new Date(entry.time).toISOString().slice(0, 23).replace("T", " ");
+      console.log(`  ${storedName(entry, i)}  (${when})`);
+    }
+    console.log(`\nDry run — nothing was uploaded.`);
+    return;
+  }
+
+  console.log(`\nUploading ${files.length} photos to ${prefix}\n`);
 
   let done = 0;
-  for (const fileName of files) {
+  for (const [i, entry] of ordered.entries()) {
+    const { fileName } = entry;
+    const uploadName = storedName(entry, i);
     const filePath = path.join(dir, fileName);
     const buffer = await readFile(filePath);
 
@@ -145,10 +281,12 @@ async function main() {
     await s3.send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET,
-        Key: `${prefix}${fileName}`,
+        Key: `${prefix}${uploadName}`,
         Body: originalBuffer,
         ContentType: "image/jpeg",
-        ContentDisposition: `attachment; filename="${fileName}"`,
+        // Matches the key (and so the zip entry name), so a photo downloaded
+        // on its own and the same photo pulled out of the bulk zip agree.
+        ContentDisposition: `attachment; filename="${uploadName}"`,
         CacheControl: "public, max-age=31536000, immutable",
       })
     );
@@ -156,7 +294,7 @@ async function main() {
     await s3.send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET,
-        Key: `${prefix}view/${fileName}`,
+        Key: `${prefix}view/${uploadName}`,
         Body: viewBuffer,
         ContentType: "image/jpeg",
         CacheControl: "public, max-age=31536000, immutable",
@@ -166,7 +304,7 @@ async function main() {
     await s3.send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET,
-        Key: `${prefix}thumbs/${fileName}`,
+        Key: `${prefix}thumbs/${uploadName}`,
         Body: thumbBuffer,
         ContentType: "image/jpeg",
         CacheControl: "public, max-age=31536000, immutable",
@@ -174,7 +312,7 @@ async function main() {
     );
 
     done += 1;
-    console.log(`  [${done}/${files.length}] ${fileName}`);
+    console.log(`  [${done}/${files.length}] ${uploadName}`);
   }
 
   if (values.caption) {

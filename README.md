@@ -183,6 +183,75 @@ node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
   original (tagged for direct download) and the thumbnail to R2. Both are
   re-encoded through `sharp` on the way up, which strips all EXIF metadata,
   including GPS location, from the originals automatically.
+- `--dry-run` prints the order the photos would be stored in and exits without
+  uploading anything. It reads only local files, so it doesn't need R2
+  credentials. Worth running first on a big folder — see below for why.
+- `--reverse` flips the filename order, for exports whose numbering runs
+  backwards against the game. Only needed when the export stripped EXIF — see
+  "Photo order" below.
+
+### Photo order
+
+The site shows a week's photos in **R2 key order** — the Worker sorts by key
+(`listObjects` in `worker/lib/r2.js`) and never sees what order the upload
+script ran in. The same sort picks the week's cover thumbnail (the first key)
+and drives next/previous in the lightbox and the file order inside the zip.
+
+Camera filenames can't be trusted to express game order. An export can number
+the last frame of the game lowest, and a shutter counter can roll over from
+`IMG_9999` to `IMG_0001` mid-game. So the script reads each frame's EXIF
+`DateTimeOriginal` (plus `SubSecTimeOriginal`, since a burst fires several
+times within one second) and stores photos under a position-prefixed key:
+
+```
+IMG_0412.jpg  ->  0001_IMG_0412.jpg
+```
+
+The camera's own name is kept in the key so a photo on the site stays
+traceable back to the file on disk, and `ContentDisposition` is set to the
+same prefixed name so a single download and the same photo pulled out of the
+bulk zip agree. When two frames share a capture time exactly, the filename
+breaks the tie — in whichever direction the filenames actually run, which the
+script infers by walking the capture times in filename order. Frames with no
+readable EXIF time can't be placed against the rest and are grouped at the
+end, with a warning naming them.
+
+This is why `--dry-run` is worth a look before uploading a few hundred photos:
+it prints the full resulting order with each capture time.
+
+#### When the export stripped EXIF (`--reverse`)
+
+Some Lightroom/Photoshop export presets remove *all* camera metadata — which
+is also what takes the GPS out, so it's often deliberate. Those files have no
+capture time at all, and the script says so:
+
+```
+No EXIF capture times (this export stripped them), so order comes from the
+filenames, as-is.
+```
+
+With nothing to sort by but the filenames, the direction can't be detected and
+has to be stated. If the set reads backwards on the site, re-run with
+`--reverse`, which flips filename order:
+
+```
+node upload-week.mjs --year 2026 --week 1 --date 2026-08-28 \
+  --level varsity --dir ~/Photos/wk1 --reverse
+```
+
+The 2026 week 01 (Oakville) set was exactly this case: EXIF stripped, and the
+export numbered the pregame team entrance highest and the closing night plays
+lowest. `--dry-run` plus a look at the actual frames is the way to tell —
+light level across a Friday night game is a reliable clue, but note that the
+night frames are the *larger* files, since high-ISO noise doesn't compress.
+
+**Re-running the same folder is safe** — the numbering is derived from the
+photos themselves, so a repeat run produces identical keys and overwrites
+cleanly. But
+uploading a *second, different* batch into a level that already has photos
+restarts the count at `0001`, and those keys sort ahead of the existing ones
+(digits before letters). For a week you're posting in stages, either re-run
+with one combined folder or give the second batch its own `--level`.
 
 ### Storage and encoder settings
 
