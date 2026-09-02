@@ -1,5 +1,12 @@
 {
   "name": "rolljags-photos",
+  // Pinned deliberately. This login can reach several Cloudflare accounts, and
+  // without this wrangler picks one on its own — deploying to the wrong one
+  // fails on the R2 binding below with "Please enable R2 through the
+  // Cloudflare Dashboard" (code 10042), which reads like R2 is switched off
+  // rather than like the bucket simply living in a different account.
+  // This is the account that owns rolljags-photos.
+  "account_id": "f869f349882f6a87ab0a1421507a703a",
   "main": "./worker/index.js",
   "compatibility_date": "2026-08-17",
   "assets": {
