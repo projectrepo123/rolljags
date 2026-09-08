@@ -3,27 +3,84 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jaguar Football</title>
+  <title>Seckman Jaguars Football | Game Photos &amp; Schedule</title>
   <link rel="icon" href="/logo.webp" type="image/webp" />
   <link rel="stylesheet" href="/css/styles.css" />
-  <meta name="description" content="Game photos for Jaguar Football, sorted by week. Browse the gallery and download full-resolution shots for free." />
+  <meta name="description" content="Game day photos and schedule for Seckman High School Jaguars football in Imperial, MO. Browse by week, download full-resolution photos for free." />
   <link rel="canonical" href="https://rolljags.com/" />
   <script src="/js/theme.js"></script>
   <script src="/js/countdown.js" defer></script>
   <script src="/js/nav.js" defer></script>
-  <meta property="og:title" content="Jaguar Football" />
-  <meta property="og:description" content="Season photos for Jaguar Football. Browse by week and download full-resolution photos." />
+  <meta property="og:title" content="Seckman Jaguars Football | Game Photos &amp; Schedule" />
+  <meta property="og:description" content="Game day photos and schedule for Seckman High School Jaguars football in Imperial, MO. Browse by week, download full-resolution photos for free." />
   <meta property="og:image" content="https://rolljags.com/logo.webp" />
   <meta property="og:url" content="https://rolljags.com/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
+  <!-- Explicit local signal. The site was matching bare "jaguar" queries from
+       outside the US with nothing tying it to Imperial, MO. Coordinates are
+       the town center, not the school building. -->
+  <meta name="geo.region" content="US-MO" />
+  <meta name="geo.placename" content="Imperial" />
+  <meta name="geo.position" content="38.3706;-90.3779" />
+  <meta name="ICBM" content="38.3706, -90.3779" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://rolljags.com/#website",
+        "url": "https://rolljags.com/",
+        "name": "Seckman Jaguars Football",
+        "description": "Game day photos and schedule for Seckman High School Jaguars football in Imperial, MO."
+      },
+      {
+        "@type": "SportsTeam",
+        "@id": "https://rolljags.com/#team",
+        "name": "Seckman Jaguars",
+        "alternateName": "Seckman High School Jaguars",
+        "sport": "American Football",
+        "url": "https://rolljags.com/",
+        "logo": "https://rolljags.com/logo.webp",
+        "parentOrganization": {
+          "@type": "HighSchool",
+          "name": "Seckman High School",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "2800 Seckman Road",
+            "addressLocality": "Imperial",
+            "addressRegion": "MO",
+            "postalCode": "63052",
+            "addressCountry": "US"
+          }
+        },
+        "location": {
+          "@type": "Place",
+          "name": "Seckman High School",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Imperial",
+            "addressRegion": "MO",
+            "addressCountry": "US"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 38.3706,
+            "longitude": -90.3779
+          }
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="/">
         <img class="site-logo" src="/logo.webp" alt="Jaguar Football logo" />
-        <h1>Jaguar Football</h1>
+        <span class="brand-name">Jaguar Football</span>
       </a>
       <nav class="site-nav">
         <div class="nav-links" id="nav-links">
@@ -52,6 +109,14 @@
       <span class="photo-banner-label" aria-hidden="true">From the Archives</span>
     </div>
     <div class="container">
+      <!-- The heading and intro sit outside #weeks on purpose: home.js clears
+           that container's innerHTML once the week list loads, and this copy is
+           the only thing a crawler without JS ever sees. -->
+      <h1>Seckman Jaguars Football</h1>
+      <p class="page-intro">
+        Seckman High School Jaguars football photos from Imperial, MO, updated weekly
+        during the season. Browse by week, download full-resolution images for free.
+      </p>
       <div id="weeks">
         <p class="sr-only" role="status">Loading photos</p>
         <div class="week-grid" aria-hidden="true">

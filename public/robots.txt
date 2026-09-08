@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+# Streams a full-resolution archive and is rate-limited per IP, so a crawler
+# wandering in burns bandwidth and trips the limiter for real visitors. The
+# rest of /api/ stays crawlable: the pages need it to render.
+Disallow: /api/zip/
 
 Sitemap: https://rolljags.com/sitemap.xml

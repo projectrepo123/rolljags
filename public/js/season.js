@@ -248,8 +248,10 @@ function renderSeasonLeaders(records, seasonRecords, games) {
 function renderSeason(games) {
   const record = computeRecord(games);
 
-  titleEl.textContent = `${year} Season`;
-  document.title = `${year} Season | Jaguar Football`;
+  // Matches the heading the Worker server-renders in injectSeasonMeta, so the
+  // text doesn't change under the reader once this fetch lands.
+  titleEl.textContent = `${year} Seckman Jaguars Football Season`;
+  document.title = `${year} Seckman Jaguars Football Season (${recordString(record)}) | Imperial, MO`;
 
   // This page is one HTML file serving every season, so point the canonical
   // at the specific year rather than letting them all collapse together.

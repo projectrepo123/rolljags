@@ -886,12 +886,21 @@ function writeJson(file, value) {
 
 const STATIC_URLS = [
   { loc: "https://rolljags.com/", changefreq: "weekly", priority: "1.0" },
+  { loc: "https://rolljags.com/schedule", changefreq: "weekly", priority: "0.8" },
   { loc: "https://rolljags.com/history", changefreq: "monthly", priority: "0.8" },
   { loc: "https://rolljags.com/records", changefreq: "monthly", priority: "0.8" },
   { loc: "https://rolljags.com/podcast", changefreq: "weekly", priority: "0.8" },
 ];
 
-/** Regenerated here so a newly imported season can never be left out of it. */
+/**
+ * Regenerated here so a newly imported season can never be left out of it.
+ *
+ * This file is now only a *fallback*. The live sitemap is built per request by
+ * worker/routes/sitemap.js, which is the only thing that can enumerate the
+ * /week gallery URLs (they come from R2 folder listings, not from any file in
+ * the repo). The Worker serves this file if that route ever throws, so it's
+ * still worth keeping accurate.
+ */
 function writeSitemap(history) {
   const urls = [
     ...STATIC_URLS,

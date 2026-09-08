@@ -3,7 +3,10 @@ import { initPhotoBanner } from "./banner.js";
 const weeksEl = document.getElementById("weeks");
 
 function weekUrl(year, week) {
-  return `/week.html?year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`;
+  // The extensionless form, matching the canonical the Worker injects and the
+  // links on /schedule. Both paths serve the same page; using one keeps the
+  // alias out of the crawl graph.
+  return `/week?year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`;
 }
 
 // The most recent week that actually has photos, so it can be flagged as the
@@ -54,7 +57,11 @@ function renderYear(yearGroup, latestKey) {
       } else {
         img.loading = "lazy";
       }
-      img.alt = week.label;
+      // Names the team and opponent rather than just "Week 2 (Sep 4)", so the
+      // cover shots mean something in image search.
+      img.alt = week.opponent
+        ? `Seckman Jaguars football ${week.homeAway === "Away" ? "at" : "vs."} ${week.opponent}, ${week.label}`
+        : `Seckman Jaguars football, ${week.label}`;
       img.src = week.cover;
       card.appendChild(img);
     } else {

@@ -16,6 +16,9 @@ export async function getWeekData(env, year, weekNum) {
         status: "coming-soon",
         levels: [],
         caption: scheduleCaption(scheduledGame),
+        date: scheduledGame.date,
+        ...(scheduledGame.opponent ? { opponent: scheduledGame.opponent } : {}),
+        ...(scheduledGame.homeAway ? { homeAway: scheduledGame.homeAway } : {}),
       };
     }
     return null;
@@ -53,6 +56,12 @@ export async function getWeekData(env, year, weekNum) {
     status: levels.length > 0 ? "live" : "coming-soon",
     levels,
     cover,
+    // The opponent drives photo alt text and the page heading. /api/weeks has
+    // exposed these all along; this endpoint was the odd one out, which left
+    // the client parsing them back out of the caption string.
+    date: found.date,
+    ...(scheduledGame?.opponent ? { opponent: scheduledGame.opponent } : {}),
+    ...(scheduledGame?.homeAway ? { homeAway: scheduledGame.homeAway } : {}),
     ...(caption ? { caption } : {}),
     ...(scheduledGame?.moreToCome ? { moreToCome: true } : {}),
   };

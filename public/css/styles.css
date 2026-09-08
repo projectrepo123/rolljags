@@ -171,10 +171,17 @@ header.site-header .site-logo {
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
 }
 
-header.site-header h1 {
+/* The brand is a <span>, not the page heading — each page's own <h1> lives in
+   <main> so every page has one heading that describes that page. .brand is a
+   flex container, so the span is blockified and lays out exactly as the old
+   <h1> did. */
+header.site-header .brand-name {
   margin: 0;
   font-size: 1.2rem;
   letter-spacing: -0.01em;
+  /* Was an <h1>, which the browser bolds for free. A <span> doesn't, so this
+     has to be stated or the masthead thins out on every page. */
+  font-weight: 700;
 }
 
 header.site-header a {
@@ -333,6 +340,16 @@ header.site-header .site-nav a.active {
 main {
   flex: 1 0 auto;
   padding: 1.5rem 0;
+}
+
+/* Page headings used to be <h2> (the brand in the header was the <h1>). They're
+   <h1> now so each page has its own heading, and this pins them to the old <h2>
+   metrics so nothing moves. Pages with a class on the heading (.week-title,
+   .season-title) win on specificity and keep their own sizing. */
+main h1 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+  font-weight: 700;
 }
 
 .year-section {
@@ -1536,7 +1553,7 @@ footer.site-footer p + p {
     min-width: 0;
   }
 
-  header.site-header h1 {
+  header.site-header .brand-name {
     white-space: nowrap;
   }
 
@@ -1609,7 +1626,7 @@ footer.site-footer p + p {
     height: 34px;
   }
 
-  header.site-header h1 {
+  header.site-header .brand-name {
     font-size: 1.2rem;
   }
 

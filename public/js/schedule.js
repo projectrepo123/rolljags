@@ -1,5 +1,8 @@
 const params = new URLSearchParams(location.search);
-const year = params.get("year") || "2026";
+// The season schedule.html is written for. Any other year is fetched the same
+// way, but has to say which year it is in the heading.
+const DEFAULT_YEAR = "2026";
+const year = params.get("year") || DEFAULT_YEAR;
 
 const titleEl = document.getElementById("schedule-title");
 const tbodyEl = document.getElementById("schedule-tbody");
@@ -15,8 +18,13 @@ function gameDateLabel(dateStr) {
 }
 
 function render(games) {
-  titleEl.textContent = `${year} Schedule`;
-  document.title = `${year} Schedule | Jaguar Football`;
+  // The static HTML already carries the current season's heading; only a
+  // request for a different year needs the year spelled out. Rewriting it
+  // unconditionally would strip the team name back out of the page's one <h1>.
+  if (year !== DEFAULT_YEAR) {
+    titleEl.textContent = `${year} Seckman Jaguars Football Schedule`;
+    document.title = `${year} Seckman Jaguars Football Schedule | Imperial, MO`;
+  }
 
   tbodyEl.innerHTML = "";
 

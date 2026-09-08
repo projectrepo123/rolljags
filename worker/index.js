@@ -2,11 +2,17 @@ import { handleWeeks } from "./routes/weeks.js";
 import { handleWeek, getWeekData } from "./routes/week.js";
 import { getSeasonSummary } from "./routes/season.js";
 import { handleZip } from "./routes/zip.js";
-import { handleSchedule } from "./routes/schedule.js";
+import { handleSchedule, scheduleGames } from "./routes/schedule.js";
 import { handleBanner } from "./routes/banner.js";
-import { injectWeekMeta, injectSeasonMeta } from "./lib/meta.js";
+import { handleSitemap } from "./routes/sitemap.js";
+import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum, isValidLevel } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
+
+// The season /schedule shows when no ?year= is given. Matches DEFAULT_YEAR in
+// public/js/schedule.js, so the structured data describes the season the page
+// actually renders.
+const DEFAULT_SCHEDULE_YEAR = "2026";
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -151,6 +157,43 @@ async function handle(request, env, ctx) {
       return validParams
         ? withCache(request, ctx, buildResponse, ["year"], "/season")
         : buildResponse();
+    }
+
+    if (url.pathname === "/schedule.html" || url.pathname === "/schedule") {
+      // Same "fetch the canonical extensionless path" reasoning as /week above.
+      // This branch only appends SportsEvent structured data; the page keeps
+      // its own title and og tags, which sit earlier in <head> and win.
+      const requested = url.searchParams.get("year");
+      const year = requested && isValidYear(requested) ? requested : DEFAULT_SCHEDULE_YEAR;
+
+      const buildResponse = async () => {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = "/schedule";
+        const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+        try {
+          return injectScheduleMeta(asset, scheduleGames(year), year, url);
+        } catch (err) {
+          // Structured data is an enhancement. Without this, a bug in the
+          // graph builder would hit the outer catch below and turn the whole
+          // schedule page into a JSON 500.
+          console.error(err);
+          return asset;
+        }
+      };
+
+      return withCache(request, ctx, buildResponse, ["year"], "/schedule");
+    }
+
+    if (url.pathname === "/sitemap.xml") {
+      try {
+        return await withCache(request, ctx, () => handleSitemap(env, url.origin));
+      } catch (err) {
+        // The outer catch would answer with a JSON 500, which Search Console
+        // reports as a broken sitemap. Serve the committed static file instead,
+        // so the worst case is a stale sitemap rather than none.
+        console.error(err);
+        return env.ASSETS.fetch(request);
+      }
     }
 
     return withAssetCache(url, await env.ASSETS.fetch(request));

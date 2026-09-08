@@ -1,6 +1,10 @@
 let photos = [];
 let index = 0;
 let lastFocused = null;
+// Supplied by the caller so the viewer can describe the photo (opponent, week)
+// rather than just its position. Defaults to the position-only form for any
+// caller that doesn't pass one.
+let describe = (i, total) => `Photo ${i + 1} of ${total}`;
 
 let overlay, imgEl, downloadLink, counterEl, closeBtn;
 
@@ -108,7 +112,7 @@ function preloadNeighbours() {
 function render() {
   const photo = photos[index];
   imgEl.src = displayUrl(photo);
-  imgEl.alt = `Photo ${index + 1} of ${photos.length}`;
+  imgEl.alt = describe(index, photos.length);
   downloadLink.href = photo.fullUrl;
   downloadLink.setAttribute("download", photo.name);
   counterEl.textContent = `${index + 1} / ${photos.length}`;
@@ -120,11 +124,12 @@ function step(dir) {
   render();
 }
 
-export function openLightbox(photoList, startIndex) {
+export function openLightbox(photoList, startIndex, describeFn) {
   ensureBuilt();
   lastFocused = document.activeElement;
   photos = photoList;
   index = startIndex;
+  describe = describeFn || ((i, total) => `Photo ${i + 1} of ${total}`);
   render();
   overlay.classList.add("open");
   document.body.style.overflow = "hidden";
