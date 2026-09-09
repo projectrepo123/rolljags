@@ -16,7 +16,10 @@ const LEVEL_LABELS = {
 
 // Known groups display in this order; an unrecognized folder name sorts
 // after them, alphabetically.
-const LEVEL_ORDER = ["varsity", "jv", "freshman", "instagram", "full"];
+// A week leads with its own photos and ends with the social edits, whichever
+// groups it happens to have — so "full" sorts ahead of "instagram" rather than
+// after it, and a week with only those two opens on the full gallery.
+const LEVEL_ORDER = ["varsity", "jv", "freshman", "full", "instagram"];
 
 // Optional explanation for a group whose contents aren't what the rest of the
 // site trains people to expect. Surfaced as an (i) next to the photo count, so

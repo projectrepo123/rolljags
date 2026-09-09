@@ -267,9 +267,15 @@ header.site-header .site-nav {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.22) 100%);
   border: 1px solid rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.14);
-  padding: 0.25rem 0.6rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 7px;
   white-space: nowrap;
+  /* Set apart from the links, which sit 0.85rem from each other — at that same
+     spacing the countdown read as one more nav item rather than its own
+     readout. No separator rule: the pill is already a recessed well, and a
+     border-left here would recolour its own border rather than draw a divider.
+     Reset at the mobile breakpoint, where the bar has no room to spare. */
+  margin-left: 1.25rem;
 }
 
 .kickoff-label {
@@ -331,10 +337,13 @@ header.site-header .site-nav a:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Muted box, gold text — the gold is what says "you are here", not the fill.
+   At 0.14 plus the inset catch this read as a solid pale block over the navy,
+   closer to a button than a current-page marker. */
 header.site-header .site-nav a.active {
   color: var(--gold);
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 main {
@@ -402,6 +411,20 @@ main h1 {
 
 .week-card:hover .cover {
   transform: scale(1.04);
+}
+
+/* An opponent crest, not a photo. `cover` would crop it to a fragment, so fit
+   the whole mark inside the same 4:3 box and inset it off the edges. */
+.week-card .cover.cover-logo {
+  object-fit: contain;
+  padding: 14%;
+  background: var(--row-accent);
+}
+
+/* Zooming a fitted logo on hover reads as a rendering glitch rather than the
+   photo lift it's borrowing. */
+.week-card:hover .cover.cover-logo {
+  transform: none;
 }
 
 .week-card .card-body {
@@ -1091,9 +1114,12 @@ footer.site-footer p + p {
   animation-iteration-count: infinite;
 }
 
+/* Every frame is the same window onto its photo. Sizing by the image's own
+   aspect ratio instead (width: auto) left portraits narrow and landscapes
+   wide, which read as random crops rather than one curated band. */
 .photo-banner-track button {
   height: 100%;
-  width: auto;
+  width: 150px;
   flex: none;
   margin-right: 3px;
   padding: 0;
@@ -1103,9 +1129,11 @@ footer.site-footer p + p {
   line-height: 0;
 }
 
+/* Fills the fixed tile above — with width: auto this had nothing to do,
+   because the box was already the image's own shape. */
 .photo-banner-track img {
   height: 100%;
-  width: auto;
+  width: 100%;
   object-fit: cover;
   transition: filter 0.15s ease;
 }
@@ -1139,6 +1167,12 @@ footer.site-footer p + p {
 @media (max-width: 480px) {
   .photo-banner {
     height: 130px;
+  }
+
+  /* Narrower tiles keep roughly the same number of photos in view once the
+     strip itself gets shorter. */
+  .photo-banner-track button {
+    width: 110px;
   }
 }
 
@@ -1492,6 +1526,90 @@ footer.site-footer p + p {
   box-shadow: var(--shadow-2);
 }
 
+/* Our own poster, shown until the visitor asks for the video. Built from the
+   site logo and type rather than a raster still, so there's no extra asset to
+   keep current and nothing to go stale as episodes are published. The header
+   navy is fixed in both themes, so this panel is deliberately theme-independent
+   — it's brand artwork, not chrome. */
+.video-poster {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(43, 83, 145, 0.85) 0%, transparent 62%),
+    linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
+}
+
+.video-poster-logo {
+  width: clamp(52px, 12%, 84px);
+  height: auto;
+  margin-bottom: 0.35rem;
+}
+
+.video-poster-title {
+  color: #fff;
+  font-size: clamp(1rem, 2.6vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.video-poster-sub {
+  color: var(--gold);
+  font-size: clamp(0.72rem, 1.5vw, 0.85rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+/* Gold pill with a border-drawn triangle inside it — no icon font and no inline
+   SVG. The triangle is a child rather than a negatively-stacked pseudo-element:
+   neither the poster nor .embed-container creates a stacking context, so a
+   z-index of -1 would have dropped the pill behind the poster's own background
+   and made it invisible. */
+.video-poster-play {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--gold);
+  box-shadow: var(--shadow-2);
+  transition: transform 0.18s ease, background-color 0.18s ease;
+}
+
+.video-poster-play::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 9px 0 9px 15px;
+  border-color: transparent transparent transparent var(--navy-dark);
+  /* A triangle's visual centre sits left of its bounding box. */
+  margin-left: 4px;
+}
+
+.video-poster:hover .video-poster-play,
+.video-poster:focus-visible .video-poster-play {
+  transform: scale(1.08);
+  background: var(--gold-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-poster-play {
+    transition: none;
+  }
+}
+
 .embed-container iframe {
   position: absolute;
   inset: 0;
@@ -1588,31 +1706,66 @@ footer.site-footer p + p {
   padding: 0.6rem 0.7rem;
 }
 
-/* Season win/loss indicators */
+/* A wide record (Total Tackles carries eight stat columns) already scrolls
+   sideways inside .table-scroll. On a phone that scroll is close to useless on
+   its own: push past the second column and the row is anonymous. Pinning the
+   name keeps every number attached to a player. */
+@media (max-width: 640px) {
+  .records-modal .records-table th:first-child,
+  .records-modal .records-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    /* Opaque, or the scrolling columns show through underneath. */
+    background: var(--card-bg);
+    border-right: 1px solid var(--border);
+  }
 
-.season-card.season-win .season-record-display::before {
-  content: "●";
-  margin-right: 0.5rem;
-  color: var(--navy-text);
-  font-size: 0.8rem;
+  /* The header's own gradient has to win over the cell background above,
+     otherwise the corner cell breaks the navy bar. */
+  .records-modal .records-table thead th:first-child {
+    background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  }
+
+  /* Tighter cells fit more columns before any scrolling is needed at all. */
+  .records-modal .records-table th,
+  .records-modal .records-table td {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+  }
 }
 
-.season-card.season-loss .season-record-display::before {
-  content: "○";
-  margin-right: 0.5rem;
-  color: var(--navy-text);
-  font-size: 0.8rem;
+/* Season win/loss indicators */
+
+/* A winning or losing season should be readable at a glance across the whole
+   grid. The old ●/○ glyphs were 0.8rem and both drawn in --navy-text, so they
+   carried almost no signal. A left edge plus a wash of the same hue does, and
+   both --win and --loss already have light and dark values.
+
+   Colour isn't the only cue: the record itself ("8-3") is right there, and a
+   losing season keeps its muted text. */
+.season-card.season-win {
+  border-left: 4px solid var(--win);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--win) 9%, transparent) 0%, transparent 45%),
+    var(--surface);
+}
+
+.season-card.season-loss {
+  border-left: 4px solid var(--loss);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--loss) 9%, transparent) 0%, transparent 45%),
+    var(--surface);
+}
+
+/* A .500 season is neither, so it gets the edge without the wash rather than
+   being left with no marker at all. */
+.season-card.season-even {
+  border-left: 4px solid var(--border);
 }
 
 .season-card.season-loss .season-record-display {
   color: var(--text-muted);
-}
-
-.season-card.season-even .season-record-display::before {
-  content: "◐";
-  margin-right: 0.5rem;
-  color: var(--navy-text);
-  font-size: 0.8rem;
 }
 
 @media (max-width: 480px) {
@@ -1660,6 +1813,8 @@ footer.site-footer p + p {
   .kickoff-countdown {
     order: 1;
     padding: 0.2rem 0.5rem;
+    /* The desktop breathing room would push the pill into the hamburger here. */
+    margin-left: 0;
   }
 
   .kickoff-label {

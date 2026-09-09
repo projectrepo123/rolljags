@@ -49,7 +49,11 @@ function renderYear(yearGroup, latestKey) {
 
     if (week.cover) {
       const img = document.createElement("img");
-      img.className = "cover";
+      // An upcoming week's cover is an opponent crest served from this site,
+      // not a photo off photos.rolljags.com. Cropping a logo to fill a 4:3 box
+      // slices it in half, so those get fitted instead — see .cover-logo.
+      const isLogo = week.cover.startsWith("/");
+      img.className = isLogo ? "cover cover-logo" : "cover";
       // The first cover is the largest thing above the fold, so let it load
       // right away instead of waiting on the lazy-loading pass.
       if (i === 0) {
