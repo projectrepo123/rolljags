@@ -25,7 +25,8 @@ const LEVEL_ORDER = ["varsity", "jv", "freshman", "instagram", "full"];
 const LEVEL_NOTES = {
   instagram:
     "These are edited and exported for Instagram, so they're cropped and " +
-    "sized for the feed. The other tabs have the full-resolution versions.",
+    "sized for the feed. The other tabs have the unedited, full-resolution " +
+    "originals straight off the camera.",
 };
 
 export function levelLabel(level) {

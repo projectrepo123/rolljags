@@ -1,3 +1,5 @@
+import { createLikeButton } from "./likes.js";
+
 let photos = [];
 let index = 0;
 let lastFocused = null;
@@ -6,7 +8,11 @@ let lastFocused = null;
 // caller that doesn't pass one.
 let describe = (i, total) => `Photo ${i + 1} of ${total}`;
 
-let overlay, imgEl, downloadLink, counterEl, closeBtn;
+let overlay, imgEl, downloadLink, counterEl, closeBtn, likeSlot;
+
+// The viewer reuses one DOM node for every photo, so the flame is rebuilt on
+// each render and its subscription torn down with it.
+let releaseLike = null;
 
 // Photos uploaded before the resized "view" variant existed only have a
 // full-resolution original, so fall back to it rather than 404ing.
@@ -30,6 +36,7 @@ function ensureBuilt() {
         <button class="lightbox-nav" data-dir="-1" aria-label="Previous photo">&#8249;</button>
         <span class="lightbox-counter"></span>
         <button class="lightbox-nav" data-dir="1" aria-label="Next photo">&#8250;</button>
+        <span class="lightbox-like"></span>
       </div>
       <a class="btn btn-gold lightbox-download" download>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -45,6 +52,7 @@ function ensureBuilt() {
   downloadLink = overlay.querySelector(".lightbox-download");
   counterEl = overlay.querySelector(".lightbox-counter");
   closeBtn = overlay.querySelector(".lightbox-close");
+  likeSlot = overlay.querySelector(".lightbox-like");
 
   closeBtn.addEventListener("click", close);
   overlay.addEventListener("click", (e) => {
@@ -116,6 +124,16 @@ function render() {
   downloadLink.href = photo.fullUrl;
   downloadLink.setAttribute("download", photo.name);
   counterEl.textContent = `${index + 1} / ${photos.length}`;
+
+  releaseLike?.();
+  releaseLike = null;
+  likeSlot.innerHTML = "";
+  if (photo.key) {
+    const { element, destroy } = createLikeButton(photo.key, { className: "like-btn-lightbox" });
+    likeSlot.appendChild(element);
+    releaseLike = destroy;
+  }
+
   preloadNeighbours();
 }
 
@@ -137,6 +155,8 @@ export function openLightbox(photoList, startIndex, describeFn) {
 }
 
 function close() {
+  releaseLike?.();
+  releaseLike = null;
   overlay.classList.remove("open");
   document.body.style.overflow = "";
   // Send focus back to the thumbnail that opened the viewer.

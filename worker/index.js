@@ -5,8 +5,9 @@ import { handleZip } from "./routes/zip.js";
 import { handleSchedule, scheduleGames } from "./routes/schedule.js";
 import { handleBanner } from "./routes/banner.js";
 import { handleSitemap } from "./routes/sitemap.js";
+import { handleGetLikes, handleLike } from "./routes/likes.js";
 import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta } from "./lib/meta.js";
-import { isValidYear, isValidWeekNum, isValidLevel } from "./lib/validate.js";
+import { isValidYear, isValidWeekNum, isValidLevel, isValidPhotoKey } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
 
 // The season /schedule shows when no ?year= is given. Matches DEFAULT_YEAR in
@@ -95,6 +96,39 @@ async function handle(request, env, ctx) {
       // GET /api/banner
       if (parts[1] === "banner" && parts.length === 2) {
         return withCache(request, ctx, () => handleBanner(env));
+      }
+
+      // GET /api/likes?year=&week=
+      if (parts[1] === "likes" && parts.length === 2) {
+        const year = url.searchParams.get("year");
+        const week = url.searchParams.get("week");
+        if (!isValidYear(year) || !isValidWeekNum(week)) {
+          return Response.json({ error: "Invalid week" }, { status: 400 });
+        }
+        // Not wrapped in withCache() on purpose — see handleGetLikes.
+        return handleGetLikes(env, year, week);
+      }
+
+      // POST /api/like  { key }
+      if (parts[1] === "like" && parts.length === 2) {
+        if (request.method !== "POST") {
+          return Response.json({ error: "Method not allowed" }, { status: 405 });
+        }
+
+        // Rate limited the same way /api/zip is: localStorage stops the honest
+        // double-tap, this stops someone who cleared it.
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const { success } = await env.LIKE_RATE_LIMITER.limit({ key: ip });
+        if (!success) {
+          return Response.json({ error: "Too many likes. Try again in a minute." }, { status: 429 });
+        }
+
+        const body = await request.json().catch(() => null);
+        if (!isValidPhotoKey(body?.key)) {
+          return Response.json({ error: "Invalid photo" }, { status: 400 });
+        }
+
+        return handleLike(env, body.key);
       }
 
       // GET /api/zip/:year/:week/:level

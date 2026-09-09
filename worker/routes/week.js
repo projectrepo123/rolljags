@@ -34,6 +34,9 @@ export async function getWeekData(env, year, weekNum) {
       const fileName = obj.key.split("/").pop();
       return {
         name: fileName,
+        // The object key doubles as the photo's like-counter ID. Exposed here
+        // so the client doesn't have to reassemble it out of the public URL.
+        key: obj.key,
         thumbUrl: publicUrl(`${levelPrefix}thumbs/${fileName}`),
         // Resized for on-screen display; the original stays behind Download.
         viewUrl: publicUrl(`${levelPrefix}view/${fileName}`),

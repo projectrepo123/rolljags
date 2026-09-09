@@ -21,11 +21,29 @@
       "bucket_name": "rolljags-photos"
     }
   ],
+  "kv_namespaces": [
+    {
+      "binding": "PHOTO_LIKES",
+      // Replace with the id printed by:
+      //   npx wrangler kv namespace create PHOTO_LIKES
+      // `wrangler dev` simulates KV locally and ignores this, so the app runs
+      // here before the namespace exists — but `deploy` will fail without it.
+      "id": "REPLACE_WITH_PHOTO_LIKES_NAMESPACE_ID"
+    }
+  ],
   "ratelimits": [
     {
       "name": "ZIP_RATE_LIMITER",
       "namespace_id": "1001",
       "simple": { "limit": 6, "period": 60 }
+    },
+    {
+      // Backstop for the localStorage check on the client, which anyone can
+      // clear. Generous enough that browsing a week and liking a run of
+      // photos never trips it.
+      "name": "LIKE_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 30, "period": 60 }
     }
   ],
   "routes": [
