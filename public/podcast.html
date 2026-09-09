@@ -15,7 +15,6 @@
   <script src="/js/theme.js"></script>
   <script src="/js/countdown.js" defer></script>
   <script src="/js/nav.js" defer></script>
-  <script src="/js/podcast.js" defer></script>
   <meta property="og:title" content="Seckman Jaguars Football Podcast | Imperial, MO" />
   <meta property="og:description" content="The Booster Club podcast for Seckman High School Jaguars football in Imperial, MO. Watch on YouTube, listen on Spotify, and follow along on Facebook." />
   <meta property="og:image" content="https://rolljags.com/logo.webp" />
@@ -63,24 +62,21 @@
 
       <section class="podcast-card">
         <h3 class="section-heading">Latest Episodes on YouTube</h3>
-        <!-- Click-to-play rather than a live iframe. At rest YouTube paints its
-             own title bar over a thumbnail that already has the episode title
-             burned into the artwork, so the two collide. This shows our own
-             poster until someone actually wants to watch — which also keeps the
-             page's heaviest embed off the initial load. -->
+        <!-- A live iframe, so the panel shows YouTube's real thumbnail for the
+             most recent upload. A click-to-play poster stood here briefly and
+             read as a broken embed: built from the logo and type, it looked
+             like a placeholder rather than a video. YouTube's own chrome
+             overlapping the episode title is the lesser problem. The playlist
+             is the channel's uploads feed, so this needs no maintenance as
+             episodes are published. -->
         <div class="embed-container">
-          <button
-            class="video-poster"
-            id="youtube-poster"
-            type="button"
-            data-embed="https://www.youtube.com/embed/videoseries?list=UUc4EJnrY7OlGxHyOHjcEmmw&autoplay=1"
-            aria-label="Play the latest Jaguar Football Podcast episode on YouTube"
-          >
-            <img class="video-poster-logo" src="/logo.webp" alt="" />
-            <span class="video-poster-title">Jaguar Football Podcast</span>
-            <span class="video-poster-sub">Latest episodes on YouTube</span>
-            <span class="video-poster-play" aria-hidden="true"></span>
-          </button>
+          <iframe
+            src="https://www.youtube.com/embed/videoseries?list=UUc4EJnrY7OlGxHyOHjcEmmw"
+            title="Jaguar Football Booster Club YouTube uploads"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
         </div>
       </section>
 

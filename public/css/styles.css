@@ -23,6 +23,9 @@
   --border: #e1e4e9;
   --win: #1a7f3d;
   --loss: #c41e3a;
+  /* Loss indicator on season cards: a muted blue-grey instead of red, so the
+     colour palette stays blue/gold and red doesn't appear elsewhere on the page. */
+  --season-loss-accent: #6b7a8f;
   --row-accent: rgba(27, 58, 107, 0.05);
   --focus-ring: #1b3a6b;
   --radius: 8px;
@@ -71,6 +74,7 @@
     --navy-text: #7fb2ff;
     --win: #4ade80;
     --loss: #fa8a8a;
+    --season-loss-accent: #8a9aaf;
     --row-accent: rgba(255, 255, 255, 0.06);
     --focus-ring: #ffc72c;
     --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
@@ -96,6 +100,7 @@
   --navy-text: #7fb2ff;
   --win: #4ade80;
   --loss: #fa8a8a;
+  --season-loss-accent: #8a9aaf;
   --row-accent: rgba(255, 255, 255, 0.06);
   --focus-ring: #ffc72c;
   --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
@@ -1801,89 +1806,6 @@ footer.site-footer p + p {
   box-shadow: var(--shadow-2);
 }
 
-/* Our own poster, shown until the visitor asks for the video. Built from the
-   site logo and type rather than a raster still, so there's no extra asset to
-   keep current and nothing to go stale as episodes are published. The header
-   navy is fixed in both themes, so this panel is deliberately theme-independent
-   — it's brand artwork, not chrome. */
-.video-poster {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  padding: 1.5rem;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-  background:
-    radial-gradient(circle at 50% 38%, rgba(43, 83, 145, 0.85) 0%, transparent 62%),
-    linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
-}
-
-.video-poster-logo {
-  width: clamp(52px, 12%, 84px);
-  height: auto;
-  margin-bottom: 0.35rem;
-}
-
-.video-poster-title {
-  color: #fff;
-  font-size: clamp(1rem, 2.6vw, 1.5rem);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-.video-poster-sub {
-  color: var(--gold);
-  font-size: clamp(0.72rem, 1.5vw, 0.85rem);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-}
-
-/* Gold pill with a border-drawn triangle inside it — no icon font and no inline
-   SVG. The triangle is a child rather than a negatively-stacked pseudo-element:
-   neither the poster nor .embed-container creates a stacking context, so a
-   z-index of -1 would have dropped the pill behind the poster's own background
-   and made it invisible. */
-.video-poster-play {
-  margin-top: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 62px;
-  height: 44px;
-  border-radius: 999px;
-  background: var(--gold);
-  box-shadow: var(--shadow-2);
-  transition: transform 0.18s ease, background-color 0.18s ease;
-}
-
-.video-poster-play::before {
-  content: "";
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 9px 0 9px 15px;
-  border-color: transparent transparent transparent var(--navy-dark);
-  /* A triangle's visual centre sits left of its bounding box. */
-  margin-left: 4px;
-}
-
-.video-poster:hover .video-poster-play,
-.video-poster:focus-visible .video-poster-play {
-  transform: scale(1.08);
-  background: var(--gold-hover);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .video-poster-play {
-    transition: none;
-  }
-}
 
 .embed-container iframe {
   position: absolute;
@@ -2013,34 +1935,51 @@ footer.site-footer p + p {
   }
 }
 
-/* Season win/loss indicators */
+/* Season win/loss indicators
 
-/* A winning or losing season should be readable at a glance across the whole
-   grid. The old ●/○ glyphs were 0.8rem and both drawn in --navy-text, so they
-   carried almost no signal. A left edge plus a wash of the same hue does, and
-   both --win and --loss already have light and dark values.
+   Gold for a winning season, muted blue-grey for a losing one — the site's own
+   palette rather than a stoplight. Red/green said "dashboard", and green in
+   particular appears nowhere else on the site.
+
+   The tint is a flat fill, not a directional wash. The old version faded left
+   to right across --surface, which fades top to bottom, and the two together
+   read as a generic corner-fade card effect. Yard lines carry the texture
+   instead, matching the header, the title bands and the footer.
 
    Colour isn't the only cue: the record itself ("8-3") is right there, and a
    losing season keeps its muted text. */
-.season-card.season-win {
-  border-left: 4px solid var(--win);
+.season-card {
+  --season-edge: var(--border);
+  --season-tint: transparent;
+  border-left: 4px solid var(--season-edge);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--win) 9%, transparent) 0%, transparent 45%),
+    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    linear-gradient(0deg, var(--season-tint), var(--season-tint)),
     var(--surface);
+}
+
+.season-card:hover {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    linear-gradient(0deg, var(--season-tint), var(--season-tint)),
+    var(--surface-hover);
+  /* .week-card:hover sets border-color outright, which would flip every card's
+     left edge to gold on hover and erase the distinction. */
+  border-left-color: var(--season-edge);
+}
+
+.season-card.season-win {
+  --season-edge: var(--gold);
+  --season-tint: color-mix(in srgb, var(--gold) 13%, transparent);
 }
 
 .season-card.season-loss {
-  border-left: 4px solid var(--loss);
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--loss) 9%, transparent) 0%, transparent 45%),
-    var(--surface);
+  --season-edge: var(--season-loss-accent);
+  --season-tint: color-mix(in srgb, var(--season-loss-accent) 12%, transparent);
 }
 
-/* A .500 season is neither, so it gets the edge without the wash rather than
-   being left with no marker at all. */
-.season-card.season-even {
-  border-left: 4px solid var(--border);
-}
+/* A .500 season is neither, so it keeps the default edge and no tint rather
+   than being left with no marker at all. */
 
 .season-card.season-loss .season-record-display {
   color: var(--text-muted);
