@@ -673,15 +673,7 @@ main h1 {
   gap: 0.5rem;
 }
 
-/* The tile wraps the thumbnail button and the flame, which have to be
-   siblings — a button can't be nested inside another button. */
-.photo-tile {
-  position: relative;
-}
-
-.photo-thumb {
-  display: block;
-  width: 100%;
+.photo-grid button {
   padding: 0;
   border: none;
   background: var(--border);
@@ -695,12 +687,12 @@ main h1 {
 
 /* Thumbnails rise slightly under the pointer so the grid feels tactile
    rather than like a contact sheet. */
-.photo-tile:hover .photo-thumb {
+.photo-grid button:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: var(--shadow-2);
 }
 
-.photo-thumb:active {
+.photo-grid button:active {
   transform: scale(0.99);
 }
 
@@ -713,41 +705,32 @@ main h1 {
 
 /* Likes
 
-   Deliberately quiet. A photo nobody has liked shows a dim flame and no
-   number at all, so an untouched gallery looks the way it did before this
-   existed. The count only appears once it means something. */
+   Only in the photo viewer, never on the thumbnails: a control on all 200
+   tiles pulled focus away from the photos, which are the point of the page.
+   Small and unaccented until it's actually been tapped. */
 
 .like-btn {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  /* Above the thumbnail, which lifts and scales on hover. */
-  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
-  /* Comfortably tappable without drawing a box around itself: the padding is
-     the touch target, the scrim behind it stays small. */
-  padding: 0.3rem 0.45rem;
+  padding: 0.25rem 0.4rem;
   border: none;
   border-radius: 999px;
-  background: rgba(10, 12, 16, 0.45);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: none;
   color: #fff;
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   line-height: 1;
   cursor: pointer;
-  opacity: 0.55;
-  transition: opacity 0.18s ease, background-color 0.18s ease;
+  opacity: 0.6;
+  transition: opacity 0.18s ease;
 }
 
 .like-flame {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   /* The emoji sits high in its box; nudge it onto the number's baseline. */
   line-height: 1;
-  filter: grayscale(1) opacity(0.85);
+  filter: grayscale(1) opacity(0.8);
   transition: filter 0.18s ease;
 }
 
@@ -760,20 +743,18 @@ main h1 {
   display: none;
 }
 
-.photo-tile:hover .like-btn,
+.like-btn:hover,
 .like-btn:focus-visible {
   opacity: 1;
 }
 
 /* Liked: the flame takes its real colour and the count goes gold. This is the
    only place the feature uses an accent, which is what keeps it from reading
-   as a social widget bolted onto a photo gallery. */
-.like-btn.liked,
-.like-btn[aria-disabled="true"] {
+   as a social widget bolted onto a photo gallery. Tapping again takes it back,
+   so it stays a button rather than becoming a one-way commitment. */
+.like-btn.liked {
   opacity: 1;
-  background: rgba(10, 12, 16, 0.6);
   color: var(--gold);
-  cursor: default;
 }
 
 .like-btn.liked .like-flame {
@@ -788,26 +769,13 @@ main h1 {
   50% { transform: scale(1.15); }
 }
 
-/* The flame in the viewer sits in the controls row rather than over the
-   photo, so it needs no scrim and no absolute positioning. */
-.like-btn-lightbox {
-  position: static;
-  opacity: 0.75;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.like-btn-lightbox:hover,
-.like-btn-lightbox.liked {
-  opacity: 1;
-}
-
 .lightbox-like {
   display: inline-flex;
   align-items: center;
   /* Set apart from the prev/next/counter group so it doesn't read as a
      fourth navigation control. */
-  margin-left: 0.75rem;
-  padding-left: 0.75rem;
+  margin-left: 0.6rem;
+  padding-left: 0.6rem;
   border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -1954,8 +1922,8 @@ footer.site-footer p + p {
      jumps. Color and shadow feedback still comes through. */
   .week-card:hover,
   .leaderboard-card:hover,
-  .photo-tile:hover .photo-thumb,
-  .photo-thumb:active,
+  .photo-grid button:hover,
+  .photo-grid button:active,
   .btn:hover,
   .btn:active {
     transform: none;

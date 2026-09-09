@@ -1,5 +1,5 @@
 import { openLightbox } from "./lightbox.js";
-import { createLikeButton, loadCounts } from "./likes.js";
+import { loadCounts } from "./likes.js";
 
 const params = new URLSearchParams(location.search);
 const year = params.get("year");
@@ -15,10 +15,6 @@ const statusEl = document.getElementById("week-status");
 
 let levels = [];
 let activeLevel = null;
-// Unsubscribe handles for the flames currently in the grid. Switching tabs
-// replaces the whole grid, and without these the discarded buttons would stay
-// subscribed and keep their detached DOM alive.
-let likeHandles = [];
 // Held at module scope so the photo grid can describe what it's showing; the
 // grid renders again on every tab switch, long after init() returns.
 let weekInfo = { label: "", opponent: null, homeAway: null };
@@ -143,19 +139,9 @@ function renderLevel() {
   zipLink.textContent = "Download all (.zip)";
   toolbarEl.appendChild(zipLink);
 
-  for (const release of likeHandles) release();
-  likeHandles = [];
-
   gridEl.innerHTML = "";
   lvl.photos.forEach((photo, i) => {
-    // The tile is a wrapper rather than the button itself: the flame is a
-    // second control sitting over the same thumbnail, and a button can't be
-    // nested inside another button.
-    const tile = document.createElement("div");
-    tile.className = "photo-tile";
-
     const btn = document.createElement("button");
-    btn.className = "photo-thumb";
 
     const img = document.createElement("img");
     img.src = photo.thumbUrl;
@@ -168,17 +154,7 @@ function renderLevel() {
 
     btn.appendChild(img);
     btn.addEventListener("click", () => openLightbox(lvl.photos, i, photoAlt));
-    tile.appendChild(btn);
-
-    // Older weeks predate the key field; skip the flame rather than wiring a
-    // control that can't identify its photo.
-    if (photo.key) {
-      const { element, destroy } = createLikeButton(photo.key);
-      tile.appendChild(element);
-      likeHandles.push(destroy);
-    }
-
-    gridEl.appendChild(tile);
+    gridEl.appendChild(btn);
   });
 }
 
@@ -237,8 +213,8 @@ async function init() {
     renderTabs();
     renderLevel();
 
-    // After the grid, not before: the counts only decorate tiles that already
-    // exist, and nothing should wait on them to draw the photos.
+    // Warms the counts for the whole week in one request, so the flame in the
+    // viewer already has its number the moment a photo is opened.
     loadCounts(year, week);
   } catch (err) {
     titleEl.textContent = "Couldn't load this week";

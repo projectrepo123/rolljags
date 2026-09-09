@@ -77,25 +77,26 @@ export async function loadCounts(year, week) {
 // Optimistic on purpose, not just for polish: KV is eventually consistent, so
 // the count read back straight after a write is often the pre-write value.
 // Waiting for the server would make the number appear to jump backwards.
-export async function like(key) {
-  if (liked.has(key)) return;
-
+export async function toggleLike(key) {
+  const wasLiked = liked.has(key);
   const previous = getCount(key);
-  counts.set(key, previous + 1);
-  liked.add(key);
+
+  counts.set(key, Math.max(0, previous + (wasLiked ? -1 : 1)));
+  if (wasLiked) liked.delete(key);
+  else liked.add(key);
   persistLiked();
   emit(key);
 
   try {
     const res = await fetch("/api/like", {
-      method: "POST",
+      method: wasLiked ? "DELETE" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key }),
     });
     if (!res.ok) throw new Error(String(res.status));
 
     // Trust the server's number once it answers — it accounts for everyone
-    // else's likes since the page loaded.
+    // else's taps since the page loaded.
     const data = await res.json();
     if (Number.isFinite(data.count)) {
       counts.set(key, data.count);
@@ -104,18 +105,20 @@ export async function like(key) {
   } catch {
     // Roll back so the tap can be retried rather than silently doing nothing.
     counts.set(key, previous);
-    liked.delete(key);
+    if (wasLiked) liked.add(key);
+    else liked.delete(key);
     persistLiked();
     emit(key);
   }
 }
 
-// Builds the flame control. Shared by the grid and the lightbox so the two
-// can't drift in markup, behaviour, or accessible naming.
-export function createLikeButton(key, { className = "" } = {}) {
+// Builds the flame control for the photo viewer. Lives here rather than in
+// lightbox.js so the state, the markup, and the accessible naming stay in one
+// place if it's ever shown somewhere else again.
+export function createLikeButton(key) {
   const btn = document.createElement("button");
   btn.type = "button";
-  btn.className = `like-btn${className ? ` ${className}` : ""}`;
+  btn.className = "like-btn";
 
   const flame = document.createElement("span");
   flame.className = "like-flame";
@@ -129,33 +132,32 @@ export function createLikeButton(key, { className = "" } = {}) {
 
   const unsubscribe = onChange(key, (count, isLiked) => {
     btn.classList.toggle("liked", isLiked);
-    // aria-disabled rather than the disabled property: a disabled button
-    // leaves the tab order, which would hide the count from keyboard and
-    // screen-reader users and punch a hole in the lightbox's focus trap
-    // (it collects "button, a[href]" and calls .focus() on the ends).
-    btn.setAttribute("aria-disabled", String(isLiked));
-    // Zero shows nothing — an untouched gallery looks exactly as it did
-    // before this feature existed.
+    // A toggle, so aria-pressed rather than a disabled state — the button
+    // stays focusable and screen readers announce both that it's on and how
+    // to turn it back off.
+    btn.setAttribute("aria-pressed", String(isLiked));
+    // Zero shows no number at all.
     countEl.textContent = count > 0 ? String(count) : "";
     btn.setAttribute(
       "aria-label",
-      isLiked
-        ? `Liked${count > 0 ? `, ${count} ${count === 1 ? "like" : "likes"}` : ""}`
+      count > 0
+        ? `Like this photo, ${count} ${count === 1 ? "like" : "likes"}`
         : "Like this photo",
     );
   });
 
   btn.addEventListener("click", (event) => {
-    // The grid tile behind this button opens the lightbox.
-    event.stopPropagation();
     event.preventDefault();
 
-    if (hasLiked(key)) return;
-    btn.classList.remove("pop");
-    // Forces a reflow so the animation restarts if it's mid-flight.
-    void btn.offsetWidth;
-    btn.classList.add("pop");
-    like(key);
+    // Only animate on the way in; popping while taking a like back reads as
+    // celebrating the wrong thing.
+    if (!hasLiked(key)) {
+      btn.classList.remove("pop");
+      // Forces a reflow so the animation restarts if it's mid-flight.
+      void btn.offsetWidth;
+      btn.classList.add("pop");
+    }
+    toggleLike(key);
   });
 
   btn.addEventListener("animationend", () => btn.classList.remove("pop"));

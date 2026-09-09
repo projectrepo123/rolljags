@@ -109,9 +109,10 @@ async function handle(request, env, ctx) {
         return handleGetLikes(env, year, week);
       }
 
-      // POST /api/like  { key }
+      // POST /api/like  { key }   — like
+      // DELETE /api/like  { key } — take it back
       if (parts[1] === "like" && parts.length === 2) {
-        if (request.method !== "POST") {
+        if (request.method !== "POST" && request.method !== "DELETE") {
           return Response.json({ error: "Method not allowed" }, { status: 405 });
         }
 
@@ -128,7 +129,7 @@ async function handle(request, env, ctx) {
           return Response.json({ error: "Invalid photo" }, { status: 400 });
         }
 
-        return handleLike(env, body.key);
+        return handleLike(env, body.key, request.method === "POST" ? 1 : -1);
       }
 
       // GET /api/zip/:year/:week/:level

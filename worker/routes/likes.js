@@ -41,17 +41,28 @@ export async function handleGetLikes(env, year, week) {
   );
 }
 
-export async function handleLike(env, key) {
+// `delta` is +1 for a like, -1 for taking one back.
+//
+// KV has no atomic increment, so this is a read-modify-write and two taps
+// landing in the same instant can collapse into one. Accepted: the count is a
+// bit of fun, not a tally anyone reconciles. See the note in likes.js on why
+// the client updates optimistically rather than trusting this response.
+export async function handleLike(env, key, delta) {
   const kvKey = KEY_PREFIX + key;
 
-  // KV has no atomic increment, so this is a read-modify-write and two likes
-  // landing in the same instant can collapse into one. Accepted: the count is
-  // a bit of fun, not a tally anyone reconciles. See the note in likes.js on
-  // why the client updates optimistically rather than trusting this response.
   const current = Number(await env.PHOTO_LIKES.get(kvKey));
-  const count = (Number.isFinite(current) && current >= 0 ? current : 0) + 1;
+  const safe = Number.isFinite(current) && current > 0 ? current : 0;
+  // Never below zero: someone who clears localStorage can otherwise send
+  // unlikes for photos they never liked and drive a count negative.
+  const count = Math.max(0, safe + delta);
 
-  await env.PHOTO_LIKES.put(kvKey, String(count), { metadata: { c: count } });
+  if (count === 0) {
+    // Drop the key rather than storing a zero, so list() stays proportional
+    // to the photos people actually liked.
+    await env.PHOTO_LIKES.delete(kvKey);
+  } else {
+    await env.PHOTO_LIKES.put(kvKey, String(count), { metadata: { c: count } });
+  }
 
   return Response.json({ key, count });
 }

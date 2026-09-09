@@ -129,7 +129,7 @@ function render() {
   releaseLike = null;
   likeSlot.innerHTML = "";
   if (photo.key) {
-    const { element, destroy } = createLikeButton(photo.key, { className: "like-btn-lightbox" });
+    const { element, destroy } = createLikeButton(photo.key);
     likeSlot.appendChild(element);
     releaseLike = destroy;
   }
