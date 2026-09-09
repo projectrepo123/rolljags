@@ -24,11 +24,10 @@
   "kv_namespaces": [
     {
       "binding": "PHOTO_LIKES",
-      // Replace with the id printed by:
-      //   npx wrangler kv namespace create PHOTO_LIKES
-      // `wrangler dev` simulates KV locally and ignores this, so the app runs
-      // here before the namespace exists — but `deploy` will fail without it.
-      "id": "REPLACE_WITH_PHOTO_LIKES_NAMESPACE_ID"
+      // Created with `wrangler kv namespace create PHOTO_LIKES`, in the same
+      // "Jaguar Football" account the account_id above pins. `wrangler dev`
+      // simulates KV locally and ignores this id.
+      "id": "44fe5b1668e84cca9842607e2a8d2bed"
     }
   ],
   "ratelimits": [
