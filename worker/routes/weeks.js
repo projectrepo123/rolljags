@@ -1,7 +1,8 @@
 import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, publicUrl } from "../lib/r2.js";
 import { SCHEDULE, scheduleCaption } from "../lib/schedule.js";
+import { todayKey, pickDaily } from "../lib/daily.js";
 
-async function loadRealWeeks(env, year, yearPrefix) {
+async function loadRealWeeks(env, year, yearPrefix, day) {
   const weekPrefixes = await listPrefixes(env.PHOTOS, yearPrefix);
   const weeks = new Map();
 
@@ -10,19 +11,31 @@ async function loadRealWeeks(env, year, yearPrefix) {
     const { weekNum, date } = parseWeekFolder(folderName);
 
     let totalCount = 0;
-    let cover = null;
+    // Every photo in the week, across all its groups, as a cover candidate.
+    // This used to keep only the first object of the first non-empty group,
+    // which froze each week's card on one shot for the rest of the season.
+    // Collecting the rest costs nothing: these listings are already being
+    // fetched to total the photo count.
+    const candidates = [];
 
     for (const level of await findWeekLevels(env.PHOTOS, weekPrefix)) {
       const levelPrefix = `${weekPrefix}${level}/`;
       const objects = await listObjects(env.PHOTOS, levelPrefix);
       totalCount += objects.length;
-      if (objects.length > 0 && !cover) {
-        const fileName = objects[0].key.split("/").pop();
-        cover = publicUrl(`${levelPrefix}thumbs/${fileName}`);
+      for (const obj of objects) {
+        const fileName = obj.key.split("/").pop();
+        // upload-week.mjs writes a thumbs/ sibling for every file it uploads,
+        // so any photo here is usable as a cover.
+        candidates.push(publicUrl(`${levelPrefix}thumbs/${fileName}`));
       }
     }
 
     if (totalCount === 0) continue;
+
+    // One photo per week per day. listObjects sorts by key and findWeekLevels
+    // returns a fixed order, so `candidates` is identical on every request —
+    // which is what makes the seeded index stable rather than random.
+    const cover = pickDaily(candidates, `${year}/${weekNum}/${day}`);
 
     const scheduledGame = (SCHEDULE[year.toString()] || []).find(g => g.week === weekNum);
     weeks.set(weekNum, {
@@ -60,10 +73,14 @@ export async function handleWeeks(env) {
   const yearPrefixes = await listPrefixes(env.PHOTOS, "");
   const years = new Map();
 
+  // Read once for the whole response, so a request that happens to straddle
+  // local midnight can't seed some weeks off yesterday and the rest off today.
+  const day = todayKey();
+
   for (const yearPrefix of yearPrefixes) {
     const year = lastSegment(yearPrefix);
     if (!/^\d{4}$/.test(year)) continue;
-    years.set(year, await loadRealWeeks(env, year, yearPrefix));
+    years.set(year, await loadRealWeeks(env, year, yearPrefix, day));
   }
 
   for (const [year, games] of Object.entries(SCHEDULE)) {

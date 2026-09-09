@@ -116,6 +116,11 @@ function renderYear(yearGroup, latestKey) {
       }
 
       if (latestKey && `${week.year}/${week.week}` === latestKey) {
+        // Also promotes the card itself to the hero treatment — a wider frame
+        // and the navy/gold block, so the newest week reads as the headline
+        // rather than as one more tile carrying a small tag.
+        card.classList.add("week-card-hero");
+
         const badge = document.createElement("span");
         badge.className = "badge-latest";
         badge.textContent = "Latest";

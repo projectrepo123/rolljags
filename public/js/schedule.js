@@ -55,7 +55,17 @@ function render(games) {
     tr.appendChild(opponentCell);
 
     const locationCell = document.createElement("td");
-    locationCell.textContent = game.homeAway ? (game.homeAway === "Home" ? "H" : "A") : "—";
+    if (game.homeAway) {
+      const isHome = game.homeAway === "Home";
+      const loc = document.createElement("span");
+      loc.className = `loc-badge ${isHome ? "loc-home" : "loc-away"}`;
+      loc.textContent = isHome ? "H" : "A";
+      // The cell shows a letter; the tooltip spells it out.
+      loc.title = game.homeAway;
+      locationCell.appendChild(loc);
+    } else {
+      locationCell.textContent = "—";
+    }
     tr.appendChild(locationCell);
 
     const notesCell = document.createElement("td");

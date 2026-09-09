@@ -279,7 +279,13 @@ function renderSeason(games) {
     tr.appendChild(opponentCell);
 
     const locationCell = document.createElement("td");
-    locationCell.textContent = game.homeAway === "Home" ? "H" : "A";
+    const isHome = game.homeAway === "Home";
+    const loc = document.createElement("span");
+    loc.className = `loc-badge ${isHome ? "loc-home" : "loc-away"}`;
+    loc.textContent = isHome ? "H" : "A";
+    // The cell shows a letter; the tooltip spells it out.
+    loc.title = isHome ? "Home" : "Away";
+    locationCell.appendChild(loc);
     tr.appendChild(locationCell);
 
     const resultCell = document.createElement("td");

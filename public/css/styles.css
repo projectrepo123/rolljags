@@ -1,3 +1,15 @@
+/* Oswald, latin subset, variable 400-700 (21KB). Self-hosted rather than pulled
+   from Google: the CSP is default-src 'self' with no font-src exception, so
+   fonts.gstatic.com would be blocked outright. The worker already caches
+   .woff2 for a week (see ASSET_CACHE_RULES), so serving it needs no changes. */
+@font-face {
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/oswald-variable-latin.woff2") format("woff2");
+}
+
 :root {
   --navy: #1b3a6b;
   --navy-dark: #142c52;
@@ -14,7 +26,28 @@
   --row-accent: rgba(27, 58, 107, 0.05);
   --focus-ring: #1b3a6b;
   --radius: 8px;
+  /* Badges and tags are hard-edged, not pills. Cards keep their own larger
+     radii — the contrast between the two is the point. */
+  --radius-badge: 2px;
   --container-width: 1100px;
+
+  /* Display face. Condensed and flat-sided, in the jersey/scoreboard register.
+     Only page titles, section headings, badges and stat figures use it; body
+     copy and table data stay on the system sans, which is what keeps a page
+     full of numbers readable. */
+  --font-display: "Oswald", "Arial Narrow", "Helvetica Neue Condensed", Arial, sans-serif;
+
+  /* Yard lines. One faint hairline every 40px, layered behind headers, the
+     page-title band and the footer. */
+  --yardline: rgba(27, 58, 107, 0.06);
+  /* The hairline that sits under a gold rule, making it read as a goal line
+     rather than a plain underline. --navy itself is too dark to see against
+     the dark theme's background, so this is its own token. */
+  --rule-navy: rgba(27, 58, 107, 0.55);
+  /* Background depth: a wash from the top, and darker edges beyond the
+     container (see the min-width guard on the vignette). */
+  --bg-glow: rgba(27, 58, 107, 0.05);
+  --bg-vignette: rgba(16, 24, 40, 0.05);
 
   /* Surface treatment. Panels get a soft top-to-bottom gradient plus a
      1px light catch along their top edge, so they read as lit from above
@@ -47,6 +80,10 @@
     --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
     --shadow-3: 0 16px 48px rgba(0, 0, 0, 0.6);
     --sheen: rgba(255, 255, 255, 0.14);
+    --yardline: rgba(255, 255, 255, 0.05);
+    --rule-navy: rgba(127, 178, 255, 0.4);
+    --bg-glow: rgba(127, 178, 255, 0.07);
+    --bg-vignette: rgba(0, 0, 0, 0.28);
   }
 }
 
@@ -68,6 +105,10 @@
   --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
   --shadow-3: 0 16px 48px rgba(0, 0, 0, 0.6);
   --sheen: rgba(255, 255, 255, 0.14);
+  --yardline: rgba(255, 255, 255, 0.05);
+  --rule-navy: rgba(127, 178, 255, 0.4);
+  --bg-glow: rgba(127, 178, 255, 0.07);
+  --bg-vignette: rgba(0, 0, 0, 0.28);
 }
 
 /* The UA default focus ring is nearly invisible on the navy header and inside
@@ -101,9 +142,29 @@ body {
   flex-direction: column;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: var(--bg);
   color: var(--text);
   line-height: 1.4;
+  /* Depth rather than one flat fill: a wash spilling down from behind the
+     masthead, over the flat base colour. Sized in px and pinned to the top so
+     it stays a header glow on a long page instead of stretching to fit it —
+     which is also why there's no background-attachment: fixed, that repaints
+     the whole viewport on every scroll frame on iOS. */
+  background-color: var(--bg);
+  background-image: radial-gradient(120% 520px at 50% 0%, var(--bg-glow) 0%, transparent 68%);
+  background-repeat: no-repeat;
+  background-size: 100% 720px;
+}
+
+/* Darker edges, but only once the viewport is wider than the 1100px container
+   plus its gutters — past that the vignette falls entirely in dead margin. At
+   phone widths the same band would sit underneath the text. */
+@media (min-width: 1240px) {
+  body {
+    background-image:
+      radial-gradient(120% 520px at 50% 0%, var(--bg-glow) 0%, transparent 68%),
+      linear-gradient(90deg, var(--bg-vignette) 0%, transparent 15%, transparent 85%, var(--bg-vignette) 100%);
+    background-size: 100% 720px, 100% 100%;
+  }
 }
 
 a {
@@ -120,9 +181,17 @@ a {
 
 /* Frosted bar that stays with you as you scroll. The translucent navy plus
    backdrop blur lets page content tint it slightly as it passes underneath,
-   and the ::after line is a specular highlight along the bottom edge. */
+   and the ::after line is a specular highlight along the bottom edge.
+
+   The yard lines and the gold wedge are background layers, not pseudo-elements:
+   clipping a ::before to the bar would need overflow: hidden here, which would
+   also clip the mobile nav dropdown, which is absolutely positioned at
+   top: 100% inside this element. */
 header.site-header {
-  background: linear-gradient(180deg, rgba(35, 72, 130, 0.88) 0%, rgba(20, 44, 82, 0.92) 100%);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px),
+    linear-gradient(115deg, transparent 60%, rgba(255, 199, 44, 0.13) 78%, transparent 93%),
+    linear-gradient(180deg, rgba(35, 72, 130, 0.88) 0%, rgba(20, 44, 82, 0.92) 100%);
   -webkit-backdrop-filter: saturate(180%) blur(16px);
   backdrop-filter: saturate(180%) blur(16px);
   color: #fff;
@@ -140,7 +209,10 @@ header.site-header {
    washed-out translucent bar. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   header.site-header {
-    background: linear-gradient(180deg, #234882 0%, #142c52 100%);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px),
+      linear-gradient(115deg, transparent 60%, rgba(255, 199, 44, 0.13) 78%, transparent 93%),
+      linear-gradient(180deg, #234882 0%, #142c52 100%);
   }
 }
 
@@ -177,8 +249,12 @@ header.site-header .site-logo {
    <h1> did. */
 header.site-header .brand-name {
   margin: 0;
-  font-size: 1.2rem;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  /* Oswald is condensed, so it sets visibly smaller than the system sans at the
+     same size. The bump keeps the lockup the weight it was. */
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
   /* Was an <h1>, which the browser bolds for free. A <span> doesn't, so this
      has to be stated or the masthead thins out on every page. */
   font-weight: 700;
@@ -268,7 +344,10 @@ header.site-header .site-nav {
   border: 1px solid rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.14);
   padding: 0.3rem 0.7rem;
-  border-radius: 7px;
+  /* Sharpened to match the badges. The recessed-well treatment stays: it's
+     what makes this read as a readout set into the bar rather than a button
+     printed on it, and flattening it would undo that. */
+  border-radius: var(--radius-badge);
   white-space: nowrap;
   /* Set apart from the links, which sit 0.85rem from each other — at that same
      spacing the countdown read as one more nav item rather than its own
@@ -280,7 +359,8 @@ header.site-header .site-nav {
 
 .kickoff-label {
   color: rgba(255, 255, 255, 0.72);
-  font-size: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.09em;
@@ -355,24 +435,48 @@ main {
    <h1> now so each page has its own heading, and this pins them to the old <h2>
    metrics so nothing moves. Pages with a class on the heading (.week-title,
    .season-title) win on specificity and keep their own sizing. */
+/* Every page title sits in a banded plate: yard lines behind it, a navy edge
+   down the left, and a goal-line rule under it. The band stays inside
+   .container rather than bleeding full-width — a full-bleed version needs
+   calc(50% - 50vw), and 100vw includes the scrollbar, which introduces a
+   horizontal scroll on desktop. */
 main h1 {
-  font-size: 1.5em;
-  margin: 0.83em 0;
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  margin: 0.4rem 0 1.35rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  line-height: 1.15;
+  padding: 0.65rem 0.9rem 0.7rem;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    linear-gradient(90deg, var(--row-accent) 0%, transparent 55%);
+  border-left: 4px solid var(--navy-text);
+  border-bottom: 3px solid var(--gold);
+  /* The hairline under the gold is what makes it a goal line rather than an
+     underline. */
+  box-shadow: 0 1px 0 var(--rule-navy);
 }
 
 .year-section {
   margin-bottom: 2rem;
 }
 
+/* Section rules are a goal line, not a hairline: 3px of gold with a navy
+   hairline under it. Shared by .section-heading and .season-leaders-heading. */
 .year-section h2 {
   display: inline-block;
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
   color: var(--text);
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin: 0 0 0.9rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.3rem;
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 1px 0 var(--rule-navy);
 }
 
 .week-grid {
@@ -427,6 +531,56 @@ main h1 {
   transform: none;
 }
 
+/* The newest set of photos is what most people came for, so it stops being one
+   more identical tile: wider frame, a cinematic crop, and the navy/gold block
+   under it. The body is navy in both themes on purpose — like the podcast
+   poster, it's brand artwork rather than page chrome. */
+.week-card.week-card-hero {
+  border-top: 4px solid var(--gold);
+}
+
+/* Only once there are at least two columns to span. auto-fill would otherwise
+   create an implicit second column on a phone and push the card off-screen. */
+@media (min-width: 560px) {
+  .week-card.week-card-hero {
+    grid-column: span 2;
+  }
+
+  .week-card.week-card-hero .cover {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.week-card.week-card-hero .card-body {
+  padding: 1rem 1.1rem;
+  color: #fff;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px),
+    linear-gradient(100deg, #234882 0%, var(--navy-dark) 60%, #0f2140 100%);
+}
+
+.week-card.week-card-hero .card-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.15rem;
+}
+
+.week-card.week-card-hero .card-opponent,
+.week-card.week-card-hero .card-count {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.week-card.week-card-hero .badge-latest {
+  font-size: 0.85rem;
+  padding: 0.22rem 0.6rem;
+  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  color: var(--navy-dark);
+  border-left-color: #fff;
+}
+
 .week-card .card-body {
   padding: 0.75rem 0.9rem;
 }
@@ -451,17 +605,21 @@ main h1 {
   margin: 0.25rem 0 0.5rem;
 }
 
+/* Hard-edged block with a bold left rule, in the register of a broadcast
+   lower-third — not a pill. Every tag on the site is built this way. */
 .badge-coming-soon {
   display: inline-block;
   background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   color: var(--navy-dark);
-  font-size: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-badge);
+  border-left: 3px solid var(--navy-dark);
 }
 
 .empty-state {
@@ -481,9 +639,11 @@ main h1 {
 
 /* Week gallery page */
 
+/* Inherits the page-title band from main h1; only the metrics differ, because
+   a week heading carries an opponent and a date and runs long. */
 .week-title {
-  margin: 0 0 1rem;
-  font-size: 1.3rem;
+  margin: 0.4rem 0 1.1rem;
+  font-size: 1.55rem;
 }
 
 .week-caption {
@@ -738,7 +898,7 @@ main h1 {
   gap: 0.2rem;
   padding: 0.25rem 0.4rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-badge);
   background: none;
   color: #fff;
   font: inherit;
@@ -906,14 +1066,27 @@ main h1 {
   flex-shrink: 0;
 }
 
+/* Bookends the masthead: the header closes with a gold rule, the footer opens
+   with one, and the yard lines run through both. */
 footer.site-footer {
   flex-shrink: 0;
-  border-top: 1px solid var(--border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 100%);
+  border-top: 3px solid var(--gold);
+  box-shadow: inset 0 1px 0 var(--rule-navy);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 100%);
   color: var(--text-muted);
   font-size: 0.85rem;
   padding: 1.5rem 0;
+}
+
+footer.site-footer p:first-child {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
 }
 
 footer.site-footer p {
@@ -953,21 +1126,29 @@ footer.site-footer p + p {
 }
 
 .season-year {
-  font-size: 1.25rem;
-  margin: 0 0 0.5rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  margin: 0 0 0.35rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
+/* The record is the headline on a season card; the year is the label above it.
+   They used to be near enough the same size to read as a pair of equals. */
 .season-record-display {
-  font-size: 1.5rem;
+  font-family: var(--font-display);
+  font-size: 2.15rem;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
   color: var(--navy-text);
 }
 
 .season-title {
-  margin: 0 0 1rem;
-  font-size: 1.3rem;
+  margin: 0.4rem 0 1.1rem;
+  font-size: 1.55rem;
 }
 
 .season-record {
@@ -993,18 +1174,36 @@ footer.site-footer p + p {
 
 .stat-tile-label {
   margin: 0 0 0.3rem;
-  font-size: 0.8rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .stat-tile-value {
   margin: 0;
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: var(--navy-text);
+}
+
+/* The first two highlights are the season's two defining games — Biggest Win
+   and Toughest Loss — so they get a gold edge and a larger figure while the
+   rest of the grid stays reference data. renderStatTile skips stats with no
+   value, so -n+2 means "the first two actually rendered". */
+.season-stats .stat-tile:nth-child(-n + 2) {
+  border-left: 4px solid var(--gold);
+  padding: 1rem 1.15rem;
+}
+
+.season-stats .stat-tile:nth-child(-n + 2) .stat-tile-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .season-table {
@@ -1047,19 +1246,64 @@ footer.site-footer p + p {
   background-color: var(--bg);
 }
 
+/* A hard accent bar down the left of the cell, so a column of results reads as
+   a win/loss pattern at a glance rather than as text you have to parse one row
+   at a time. Drawn as an inset shadow rather than a border so it doesn't shift
+   the cell's box against its neighbours. */
 .season-table .result-cell {
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  padding-left: 1.1rem;
 }
 
 .season-table .game-win .result-cell {
   color: var(--win);
+  box-shadow: inset 3px 0 0 var(--win);
 }
 
 .season-table .game-loss .result-cell {
   color: var(--loss);
+  box-shadow: inset 3px 0 0 var(--loss);
 }
 
 .season-table .game-tie .result-cell {
+  color: var(--text-muted);
+  box-shadow: inset 3px 0 0 var(--text-muted);
+}
+
+/* H/A in the schedule and boxscore tables. These were bare characters in a
+   cell with no styling at all; as hard blocks they read down the column, and
+   the two states differ by fill as well as by letter. Both carry the same
+   1px border (transparent on the home variant) so the boxes measure the
+   same width and the column stays aligned. */
+.loc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.7rem;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid transparent;
+  border-left-width: 3px;
+  border-radius: var(--radius-badge);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.05em;
+}
+
+.loc-badge.loc-home {
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  border-left-color: var(--gold);
+  color: #fff;
+}
+
+.loc-badge.loc-away {
+  border-color: var(--border);
+  border-left-color: var(--text-muted);
   color: var(--text-muted);
 }
 
@@ -1092,13 +1336,15 @@ footer.site-footer p + p {
   left: 1rem;
   z-index: 3;
   color: var(--gold);
+  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   background: rgba(20, 44, 82, 0.55);
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-badge);
+  border-left: 3px solid var(--gold);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   pointer-events: none;
@@ -1337,11 +1583,12 @@ footer.site-footer p + p {
 
 .leaderboard-card h3 {
   margin: 0 0 1rem;
-  font-size: 0.95rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--navy-text);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
 }
 
 .leaderboard-list {
@@ -1371,8 +1618,28 @@ footer.site-footer p + p {
 
 .leaderboard-item .value {
   color: var(--navy-text);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
   margin-left: 0.5rem;
+}
+
+/* Row one is the record holder, not just the first of five. Placed after the
+   :last-child rule above so a single-entry list still gets the gold rule
+   rather than having it stripped. */
+.leaderboard-item:first-child {
+  padding: 0.15rem 0 0.6rem;
+  border-bottom: 2px solid var(--gold);
+}
+
+.leaderboard-item:first-child .player {
+  font-weight: 700;
+}
+
+.leaderboard-item:first-child .value {
+  font-size: 1.8rem;
 }
 
 .leaderboard-link {
@@ -1399,12 +1666,16 @@ footer.site-footer p + p {
 
 .section-heading {
   display: inline-block;
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
   color: var(--text);
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin: 0 0 0.9rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.3rem;
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 1px 0 var(--rule-navy);
 }
 
 /* A section heading with a link pushed to the trailing edge, e.g.
@@ -1477,10 +1748,14 @@ footer.site-footer p + p {
 
 .season-leaders-heading {
   margin: 2rem 0 1rem;
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
   font-weight: 700;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-bottom: 0.45rem;
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 1px 0 var(--rule-navy);
 }
 
 .season-subsection {
@@ -1684,8 +1959,11 @@ footer.site-footer p + p {
 
 .records-modal-title {
   margin: 0 0 1.25rem;
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   color: var(--navy-text);
 }
 
@@ -1868,7 +2146,18 @@ footer.site-footer p + p {
   }
 
   header.site-header .brand-name {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+  }
+
+  /* The title band keeps its rules and yard lines, just at phone metrics. */
+  main h1 {
+    font-size: 1.5rem;
+    padding: 0.55rem 0.7rem 0.6rem;
+  }
+
+  .week-title,
+  .season-title {
+    font-size: 1.3rem;
   }
 
   /* The fixed 75vh figure leaves little vertical room for the controls
@@ -1992,21 +2281,24 @@ footer.site-footer p + p {
 .badge-more-coming {
   display: inline-block;
   flex: none;
-  font-size: 0.7rem;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
   font-weight: 700;
-  /* Fixed so both pills stand the same height whatever their label. */
+  /* Fixed so both badges stand the same height whatever their label. */
   line-height: 1.4;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-badge);
+  border-left: 3px solid transparent;
 }
 
 /* Marks the newest set of photos in the grid. */
 .badge-latest {
   background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
   color: #fff;
+  border-left-color: var(--gold);
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
@@ -2016,6 +2308,7 @@ footer.site-footer p + p {
 .badge-more-coming {
   background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
   color: var(--navy-dark);
+  border-left-color: var(--navy-dark);
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
