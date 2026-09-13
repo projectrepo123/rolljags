@@ -28,7 +28,7 @@ export const SCHEDULE = {
     { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
     { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home", cover: "/npgrizzlies.webp" },
     { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away", cover: "/LindberghFlyers.webp" },
-    { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away" },
+    { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away", cover: "/pattonvillepirates.webp" },
     { week: "05", date: "2026-09-25", opponent: "Fox", homeAway: "Home" },
     { week: "06", date: "2026-10-02", opponent: "Hazelwood Central", homeAway: "Home", notes: "Homecoming" },
     { week: "07", date: "2026-10-08", opponent: "Hazelwood East", homeAway: "Away" },
