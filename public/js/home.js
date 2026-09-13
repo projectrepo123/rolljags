@@ -81,7 +81,8 @@ function renderYear(yearGroup, latestKey) {
     if (week.opponent) {
       const opponent = document.createElement("p");
       opponent.className = "card-opponent";
-      opponent.textContent = `${week.homeAway === "Home" ? "Home" : "Away"} vs. ${week.opponent}`;
+      const result = week.result ? ` · ${week.result} ${week.pointsFor}-${week.pointsAgainst}` : "";
+      opponent.textContent = `${week.homeAway === "Home" ? "Home" : "Away"} vs. ${week.opponent}${result}`;
       body.appendChild(opponent);
     }
 

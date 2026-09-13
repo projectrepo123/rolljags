@@ -18,6 +18,11 @@
 // puts a "More coming" badge on that week's card and a note on the week page,
 // so visitors know to check back rather than taking a partial set as the whole
 // gallery. Nothing infers it — clear the flag once the last batch is up.
+//
+// `result`/`pointsFor`/`pointsAgainst` record a finished game's outcome for
+// the /schedule page, in the same "W"/"L"/"T" + score shape history.json uses
+// for past seasons (see season.js's resultDisplay). Add them once the score
+// is known; a game with none shows no result yet.
 export const SCHEDULE = {
   "2026": [
     { week: "00", date: "2026-08-15", label: "Blue & Gold Scrimmage" },
@@ -27,7 +32,16 @@ export const SCHEDULE = {
     { week: "90", date: "2026-08-21", label: "Festus Jamboree" },
     { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
     { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home", cover: "/npgrizzlies.webp" },
-    { week: "03", date: "2026-09-11", opponent: "Lindbergh", homeAway: "Away", cover: "/LindberghFlyers.webp" },
+    {
+      week: "03",
+      date: "2026-09-11",
+      opponent: "Lindbergh",
+      homeAway: "Away",
+      cover: "/LindberghFlyers.webp",
+      result: "W",
+      pointsFor: 21,
+      pointsAgainst: 14,
+    },
     { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away", cover: "/pattonvillepirates.webp" },
     { week: "05", date: "2026-09-25", opponent: "Fox", homeAway: "Home" },
     { week: "06", date: "2026-10-02", opponent: "Hazelwood Central", homeAway: "Home", notes: "Homecoming" },

@@ -10,6 +10,9 @@ export function scheduleGames(year) {
     homeAway: game.homeAway || null,
     label: game.label || null,
     notes: game.notes || null,
+    result: game.result || null,
+    pointsFor: game.pointsFor ?? null,
+    pointsAgainst: game.pointsAgainst ?? null,
     // Structured data wants a real instant, not a bare date. The client
     // ignores this field.
     kickoff: kickoffInstant(game),

@@ -58,6 +58,10 @@ function render(games) {
     locationCell.textContent = game.homeAway ? (game.homeAway === "Home" ? "H" : "A") : "—";
     tr.appendChild(locationCell);
 
+    const resultCell = document.createElement("td");
+    resultCell.textContent = game.result ? `${game.result} ${game.pointsFor}-${game.pointsAgainst}` : "—";
+    tr.appendChild(resultCell);
+
     const notesCell = document.createElement("td");
     notesCell.textContent = game.notes || "";
     tr.appendChild(notesCell);

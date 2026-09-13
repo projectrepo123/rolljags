@@ -19,6 +19,9 @@ export async function getWeekData(env, year, weekNum) {
         date: scheduledGame.date,
         ...(scheduledGame.opponent ? { opponent: scheduledGame.opponent } : {}),
         ...(scheduledGame.homeAway ? { homeAway: scheduledGame.homeAway } : {}),
+        ...(scheduledGame.result
+          ? { result: scheduledGame.result, pointsFor: scheduledGame.pointsFor, pointsAgainst: scheduledGame.pointsAgainst }
+          : {}),
       };
     }
     return null;
@@ -64,6 +67,9 @@ export async function getWeekData(env, year, weekNum) {
     ...(scheduledGame?.homeAway ? { homeAway: scheduledGame.homeAway } : {}),
     ...(caption ? { caption } : {}),
     ...(scheduledGame?.moreToCome ? { moreToCome: true } : {}),
+    ...(scheduledGame?.result
+      ? { result: scheduledGame.result, pointsFor: scheduledGame.pointsFor, pointsAgainst: scheduledGame.pointsAgainst }
+      : {}),
   };
 }
 
