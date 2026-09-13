@@ -1,4 +1,5 @@
 import { openLightbox } from "./lightbox.js";
+import { loadCounts } from "./likes.js";
 
 const params = new URLSearchParams(location.search);
 const year = params.get("year");
@@ -211,6 +212,10 @@ async function init() {
 
     renderTabs();
     renderLevel();
+
+    // Warms the counts for the whole week in one request, so the flame in the
+    // viewer already has its number the moment a photo is opened.
+    loadCounts(year, week);
   } catch (err) {
     titleEl.textContent = "Couldn't load this week";
     gridEl.innerHTML = "";

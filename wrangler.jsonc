@@ -21,11 +21,28 @@
       "bucket_name": "rolljags-photos"
     }
   ],
+  "kv_namespaces": [
+    {
+      "binding": "PHOTO_LIKES",
+      // Created with `wrangler kv namespace create PHOTO_LIKES`, in the same
+      // "Jaguar Football" account the account_id above pins. `wrangler dev`
+      // simulates KV locally and ignores this id.
+      "id": "44fe5b1668e84cca9842607e2a8d2bed"
+    }
+  ],
   "ratelimits": [
     {
       "name": "ZIP_RATE_LIMITER",
       "namespace_id": "1001",
       "simple": { "limit": 6, "period": 60 }
+    },
+    {
+      // Backstop for the localStorage check on the client, which anyone can
+      // clear. Generous enough that browsing a week and liking a run of
+      // photos never trips it.
+      "name": "LIKE_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 30, "period": 60 }
     }
   ],
   "routes": [

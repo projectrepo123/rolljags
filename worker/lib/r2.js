@@ -16,7 +16,10 @@ const LEVEL_LABELS = {
 
 // Known groups display in this order; an unrecognized folder name sorts
 // after them, alphabetically.
-const LEVEL_ORDER = ["varsity", "jv", "freshman", "instagram", "full"];
+// A week leads with its own photos and ends with the social edits, whichever
+// groups it happens to have — so "full" sorts ahead of "instagram" rather than
+// after it, and a week with only those two opens on the full gallery.
+const LEVEL_ORDER = ["varsity", "jv", "freshman", "full", "instagram"];
 
 // Optional explanation for a group whose contents aren't what the rest of the
 // site trains people to expect. Surfaced as an (i) next to the photo count, so
@@ -25,7 +28,8 @@ const LEVEL_ORDER = ["varsity", "jv", "freshman", "instagram", "full"];
 const LEVEL_NOTES = {
   instagram:
     "These are edited and exported for Instagram, so they're cropped and " +
-    "sized for the feed. The other tabs have the full-resolution versions.",
+    "sized for the feed. The other tabs have the unedited, full-resolution " +
+    "originals straight off the camera.",
 };
 
 export function levelLabel(level) {
