@@ -132,8 +132,7 @@ function renderLevel() {
 
   if (lvl.score) {
     const score = document.createElement("span");
-    const outcome = lvl.score.result === "W" ? "win" : lvl.score.result === "L" ? "loss" : "tie";
-    score.className = `level-score level-score-${outcome}`;
+    score.className = "level-score";
     score.textContent = `${lvl.score.result} ${lvl.score.pointsFor}-${lvl.score.pointsAgainst}`;
     countGroup.appendChild(score);
   }

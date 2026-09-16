@@ -707,33 +707,21 @@ main h1 {
 }
 
 /* The final score for this level's game, e.g. "W 30-8" next to its photo
-   count. Colored the same as the season table's result column so a win reads
-   green and a loss red at a glance. */
+   count. One neutral color for every outcome, matching the surrounding
+   toolbar text rather than flagging wins/losses like the season table does. */
 .level-score {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
 }
 
 .level-score::before {
   content: "\00b7";
   margin-right: 0.45rem;
-  color: var(--text-muted);
   font-weight: 400;
-}
-
-.level-score-win {
-  color: var(--win);
-}
-
-.level-score-loss {
-  color: var(--loss);
-}
-
-.level-score-tie {
-  color: var(--text-muted);
 }
 
 /* Anchor for the popover, which is positioned against this. */
