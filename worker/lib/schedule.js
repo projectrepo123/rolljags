@@ -22,7 +22,13 @@
 // `result`/`pointsFor`/`pointsAgainst` record a finished game's outcome for
 // the /schedule page, in the same "W"/"L"/"T" + score shape history.json uses
 // for past seasons (see season.js's resultDisplay). Add them once the score
-// is known; a game with none shows no result yet.
+// is known; a game with none shows no result yet. These are the varsity
+// score specifically — they're what feeds the season win/loss record.
+//
+// `levelResults` holds the same "W"/"L"/"T" + score shape for the other
+// roster levels (jv/freshman) that played the same week. Purely for display
+// next to that tab's photo count on the week page (see week.js/gallery.js) —
+// unlike `result` above, these never feed the season record.
 export const SCHEDULE = {
   "2026": [
     { week: "00", date: "2026-08-15", label: "Blue & Gold Scrimmage" },
@@ -41,6 +47,10 @@ export const SCHEDULE = {
       result: "W",
       pointsFor: 21,
       pointsAgainst: 14,
+      levelResults: {
+        jv: { result: "W", pointsFor: 30, pointsAgainst: 8 },
+        freshman: { result: "L", pointsFor: 0, pointsAgainst: 32 },
+      },
     },
     { week: "04", date: "2026-09-18", opponent: "Pattonville", homeAway: "Away", cover: "/pattonvillepirates.webp" },
     { week: "05", date: "2026-09-25", opponent: "Fox", homeAway: "Home" },

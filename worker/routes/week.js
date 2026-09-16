@@ -48,7 +48,17 @@ export async function getWeekData(env, year, weekNum) {
     });
 
     const note = levelNote(level);
-    levels.push({ level, label: levelLabel(level), photos, ...(note ? { note } : {}) });
+    // The varsity score lives in the game's own result/pointsFor/pointsAgainst
+    // (it's also the one that feeds the season record); jv/freshman scores
+    // live in levelResults since they don't. Either way this is purely for
+    // display next to the tab's photo count, not reused for any record-keeping.
+    const score =
+      level === "varsity"
+        ? scheduledGame?.result
+          ? { result: scheduledGame.result, pointsFor: scheduledGame.pointsFor, pointsAgainst: scheduledGame.pointsAgainst }
+          : null
+        : scheduledGame?.levelResults?.[level] || null;
+    levels.push({ level, label: levelLabel(level), photos, ...(note ? { note } : {}), ...(score ? { score } : {}) });
   }
 
   const realCaption = await getCaption(env.PHOTOS, found.weekPrefix);

@@ -130,6 +130,14 @@ function renderLevel() {
   count.textContent = `${lvl.photos.length} photo${lvl.photos.length === 1 ? "" : "s"}`;
   countGroup.appendChild(count);
 
+  if (lvl.score) {
+    const score = document.createElement("span");
+    const outcome = lvl.score.result === "W" ? "win" : lvl.score.result === "L" ? "loss" : "tie";
+    score.className = `level-score level-score-${outcome}`;
+    score.textContent = `${lvl.score.result} ${lvl.score.pointsFor}-${lvl.score.pointsAgainst}`;
+    countGroup.appendChild(score);
+  }
+
   if (lvl.note) countGroup.appendChild(buildLevelNote(lvl.note));
   toolbarEl.appendChild(countGroup);
 

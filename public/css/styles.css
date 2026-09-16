@@ -706,6 +706,36 @@ main h1 {
   gap: 0.45rem;
 }
 
+/* The final score for this level's game, e.g. "W 30-8" next to its photo
+   count. Colored the same as the season table's result column so a win reads
+   green and a loss red at a glance. */
+.level-score {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.level-score::before {
+  content: "\00b7";
+  margin-right: 0.45rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.level-score-win {
+  color: var(--win);
+}
+
+.level-score-loss {
+  color: var(--loss);
+}
+
+.level-score-tie {
+  color: var(--text-muted);
+}
+
 /* Anchor for the popover, which is positioned against this. */
 .info-wrap {
   position: relative;

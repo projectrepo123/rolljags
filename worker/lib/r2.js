@@ -25,7 +25,15 @@ const LEVEL_ORDER = ["varsity", "jv", "freshman", "full", "instagram"];
 // site trains people to expect. Surfaced as an (i) next to the photo count, so
 // nobody downloads a cropped social edit thinking it's the full-size frame.
 // A level with no entry here simply gets no (i).
+const ROSTER_LEVEL_NOTE =
+  "These are full-size, unedited exports straight off the camera. If " +
+  "you'd like a picture edited for Instagram, send me the picture number " +
+  "on Instagram at @seckmanfootball.";
+
 const LEVEL_NOTES = {
+  varsity: ROSTER_LEVEL_NOTE,
+  jv: ROSTER_LEVEL_NOTE,
+  freshman: ROSTER_LEVEL_NOTE,
   instagram:
     "These are edited and exported for Instagram, so they're cropped and " +
     "sized for the feed. The other tabs have the unedited, full-resolution " +
