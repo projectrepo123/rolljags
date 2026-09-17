@@ -82,14 +82,6 @@ function renderYear(yearGroup, latestKey) {
     title.textContent = week.label;
     body.appendChild(title);
 
-    if (week.opponent) {
-      const opponent = document.createElement("p");
-      opponent.className = "card-opponent";
-      const result = week.result ? ` · ${week.result} ${week.pointsFor}-${week.pointsAgainst}` : "";
-      opponent.textContent = `${week.homeAway === "Home" ? "Home" : "Away"} vs. ${week.opponent}${result}`;
-      body.appendChild(opponent);
-    }
-
     if (week.status === "coming-soon") {
       const badge = document.createElement("span");
       badge.className = "badge-coming-soon";

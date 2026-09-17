@@ -573,7 +573,6 @@ main h1 {
   margin-bottom: 0.15rem;
 }
 
-.week-card.week-card-hero .card-opponent,
 .week-card.week-card-hero .card-count {
   color: rgba(255, 255, 255, 0.78);
 }
@@ -602,12 +601,6 @@ main h1 {
   /* "30 photos" is one label, so let the badges beside it wrap away
      instead of breaking it across two lines. */
   white-space: nowrap;
-}
-
-.week-card .card-opponent {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin: 0.25rem 0 0.5rem;
 }
 
 /* Hard-edged block with a bold left rule, in the register of a broadcast
