@@ -9,6 +9,7 @@
     links.classList.toggle("open", open);
     toggle.setAttribute("aria-expanded", String(open));
     toggle.classList.toggle("open", open);
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Menu");
   }
 
   function isOpen() {
@@ -17,7 +18,11 @@
 
   toggle.addEventListener("click", (e) => {
     e.stopPropagation();
-    setOpen(!isOpen());
+    const open = !isOpen();
+    setOpen(open);
+    // The links sit before the toggle in the DOM, so tabbing on from the
+    // hamburger would walk straight past the menu it just opened.
+    if (open) links.querySelector("a")?.focus();
   });
 
   // Tapping anywhere else on the page dismisses the menu.
@@ -40,7 +45,8 @@
 
   // If the viewport grows past the mobile breakpoint the links are visible
   // again via CSS, so drop the open state to keep aria-expanded honest.
-  const wide = window.matchMedia("(min-width: 481px)");
+  // Mirrors the 860px nav breakpoint in styles.css.
+  const wide = window.matchMedia("(min-width: 861px)");
   wide.addEventListener("change", (e) => {
     if (e.matches) setOpen(false);
   });

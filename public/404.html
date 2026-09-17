@@ -10,6 +10,9 @@
        visibly reflows. crossorigin is required even same-origin for fonts. -->
   <link rel="preload" href="/fonts/oswald-variable-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/theme.js"></script>
+  <script src="/js/countdown.js" defer></script>
+  <script src="/js/nav.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -18,6 +21,24 @@
         <img class="site-logo" src="/logo.webp" alt="Jaguar Football logo" />
         <span class="brand-name">Jaguar Football</span>
       </a>
+      <nav class="site-nav">
+        <div class="nav-links" id="nav-links">
+          <a href="/">Photos</a>
+          <a href="/schedule">Schedule</a>
+          <a href="/history">History</a>
+          <a href="/records">Records</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+        <span class="kickoff-countdown" id="kickoff-countdown" hidden>
+          <span class="kickoff-label" id="kickoff-label">Kickoff</span>
+          <span class="kickoff-clock" id="kickoff-clock"></span>
+        </span>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+      </nav>
     </div>
   </header>
 

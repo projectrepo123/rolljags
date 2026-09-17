@@ -263,6 +263,11 @@ header.site-header .brand-name {
   /* Was an <h1>, which the browser bolds for free. A <span> doesn't, so this
      has to be stated or the masthead thins out on every page. */
   font-weight: 700;
+  /* Narrow phones can't fit the wordmark and the kickoff pill both. The brand
+     is the flex item that gives, so it has to be able to clip itself — with
+     nowrap alone it silently ran out over the pill. */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 header.site-header a {
@@ -411,15 +416,20 @@ header.site-header .site-nav a {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 0.8rem;
   border-radius: 8px;
   transition: color 0.15s ease, background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-header.site-header .site-nav a:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+/* Guarded: on a touch screen the hover fill sticks after a tap, leaving a
+   second link looking as current as the real one — they share this exact fill. */
+@media (hover: hover) {
+  header.site-header .site-nav a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* Muted box, gold text — the gold is what says "you are here", not the fill.
@@ -503,10 +513,12 @@ main h1 {
 }
 
 /* Lifts toward the pointer, the way a physical card would catch the light. */
-.week-card:hover {
-  border-color: var(--gold);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-2), var(--surface-highlight);
+@media (hover: hover) {
+  .week-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-2), var(--surface-highlight);
+  }
 }
 
 .week-card .cover {
@@ -518,8 +530,10 @@ main h1 {
   transition: transform 0.35s ease;
 }
 
-.week-card:hover .cover {
-  transform: scale(1.04);
+@media (hover: hover) {
+  .week-card:hover .cover {
+    transform: scale(1.04);
+  }
 }
 
 /* An opponent crest, not a photo. `cover` would crop it to a fragment, so fit
@@ -882,13 +896,16 @@ main h1 {
   aspect-ratio: 1 / 1;
   box-shadow: var(--shadow-1);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Thumbnails rise slightly under the pointer so the grid feels tactile
    rather than like a contact sheet. */
-.photo-grid button:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--shadow-2);
+@media (hover: hover) {
+  .photo-grid button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--shadow-2);
+  }
 }
 
 .photo-grid button:active {
@@ -909,6 +926,7 @@ main h1 {
    Small and unaccented until it's actually been tapped. */
 
 .like-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
@@ -942,9 +960,23 @@ main h1 {
   display: none;
 }
 
-.like-btn:hover,
+/* Same trick as .info-btn: the flame stays small and unaccented, but a ~22px
+   control sitting next to the next-photo arrow invites mis-taps on a phone.
+   Extends the hit area to 44px without moving anything around it. */
+.like-btn::after {
+  content: "";
+  position: absolute;
+  inset: -11px;
+}
+
 .like-btn:focus-visible {
   opacity: 1;
+}
+
+@media (hover: hover) {
+  .like-btn:hover {
+    opacity: 1;
+  }
 }
 
 /* Liked: the flame takes its real colour and the count goes gold. This is the
@@ -969,6 +1001,7 @@ main h1 {
 }
 
 .lightbox-like {
+  grid-area: like;
   display: inline-flex;
   align-items: center;
   /* Set apart from the prev/next/counter group so it doesn't read as a
@@ -999,45 +1032,118 @@ main h1 {
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   backdrop-filter: blur(20px) saturate(140%);
   display: none;
-  align-items: center;
-  justify-content: center;
   z-index: 50;
   padding: 1rem;
+  /* Faded out as a swipe-down dismissal progresses, so the chrome gets out of
+     the way of the photo being flicked off screen. Set from lightbox.js. */
+  --lb-chrome: 1;
 }
 
+/* Every control is a direct child of the overlay and placed by area, which is
+   what lets the phone layout put the counter up top and the arrows on the
+   image edges without a second copy of the chrome in the DOM. The 1fr side
+   columns centre the control row while the figure still spans edge to edge. */
 .lightbox.open {
-  display: flex;
-}
-
-.lightbox-content {
-  max-width: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto auto 1fr;
+  grid-template-areas:
+    "fig  fig  fig   fig  fig  fig"
+    ".    prev count next like ."
+    "dl   dl   dl    dl   dl   dl";
+  align-content: center;
+  row-gap: 0.75rem;
+  column-gap: 1rem;
 }
 
 /* Reserves the display area so swapping photos doesn't shift the controls
    below it while the next image decodes. */
 .lightbox-figure {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  grid-area: fig;
+  position: relative;
+  overflow: hidden;
   width: 100%;
   height: 75vh;
+  min-height: 0;
+  /* pan-y keeps the page's own gestures alive and pinch-zoom stays on the
+     photo; the horizontal axis is ours. Never `none` here - that would kill
+     pinch-to-zoom, which is how people read jersey numbers. */
+  touch-action: pan-y pinch-zoom;
 }
 
-.lightbox img {
-  max-width: 100%;
-  max-height: 75vh;
-  border-radius: 4px;
+.lightbox-track {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 
-.lightbox-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+/* Three slides recycled forever: a week can run to 400 photos, so the track
+   holds prev/current/next and the one leaving the far edge is re-pointed at a
+   new photo off screen. Nothing focusable may live in here - lightbox.js's
+   focus trap counts on the chrome being the whole tab order. */
+.lb-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  transition: none;
+}
+
+/* Both layers take the full slide box and letterbox inside it, rather than
+   sizing to their own pixels. The thumb is 640px wide and the display copy
+   1600px, so intrinsic sizing would have left the blurred stand-in visibly
+   smaller than the photo that lands on top of it. */
+.lb-slide img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The grid already downloaded every thumbnail, so this is a free instant
+   stand-in while the display copy decodes. Both variants are resized by width
+   alone (see upload-week.mjs), so they letterbox identically. */
+.lb-thumb {
+  filter: blur(10px);
+  transform: scale(1.03);
+}
+
+.lb-full {
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+.lb-slide.is-loaded .lb-full {
+  opacity: 1;
+}
+
+/* Only after 300ms, so a cached photo never flashes a spinner at anyone. */
+.lb-spinner {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.lb-slide.is-slow:not(.is-loaded) .lb-spinner {
+  opacity: 1;
+  animation: lb-spin 0.7s linear infinite;
+}
+
+@keyframes lb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Springing back from an abandoned drag, and the flick away on dismissal. */
+.lightbox-figure.is-settling {
+  transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
 .lightbox-nav {
@@ -1049,6 +1155,19 @@ main h1 {
   height: 44px;
   font-size: 1.2rem;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lightbox-nav[data-dir="-1"] {
+  grid-area: prev;
+}
+
+.lightbox-nav[data-dir="1"] {
+  grid-area: next;
+}
+
+.lightbox-counter {
+  grid-area: count;
 }
 
 .lightbox-close {
@@ -1062,6 +1181,7 @@ main h1 {
   padding: 0.75rem;
   cursor: pointer;
   line-height: 1;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* A gold ambient glow around the glass pane, so it reads as a raised control
@@ -1070,6 +1190,8 @@ main h1 {
    sharing lightbox-content's 0.75rem flex gap with the arrows above it,
    which read as one crowded cluster instead of two distinct controls. */
 .lightbox-download {
+  grid-area: dl;
+  justify-self: center;
   margin-top: 1.25rem;
   box-shadow: 0 4px 18px rgba(255, 199, 44, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
@@ -1080,6 +1202,97 @@ main h1 {
 
 .lightbox-download svg {
   flex-shrink: 0;
+}
+
+/* Phone viewer. The height half of the query catches landscape phones, which
+   are wide enough to miss a max-width test but only ~390px tall - exactly
+   where a fixed-height figure hurts most.
+
+   The old layout reserved 60vh for the figure while the image was still
+   capped at 75vh, so a landscape shot filled about a quarter of the screen
+   and a portrait one overflowed into the controls. Here the figure takes
+   whatever the chrome doesn't, and the photo fills it. */
+@media (max-width: 767px), (max-height: 540px) {
+  .lightbox {
+    padding: max(0.5rem, env(safe-area-inset-top)) 0.5rem
+      max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .lightbox.open {
+    /* dvh so the photo isn't sized against a URL bar that isn't there. */
+    height: 100vh;
+    height: 100dvh;
+    grid-template-columns: auto 1fr auto;
+    /* minmax(0, 1fr) rather than 1fr: the figure has to be allowed to shrink
+       below its content, or a tall photo pushes the controls off screen. */
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "count .   close"
+      "fig   fig fig"
+      "like  dl  dl";
+    align-content: stretch;
+    row-gap: 0.5rem;
+  }
+
+  .lightbox-figure {
+    height: auto;
+  }
+
+  /* Out of the flow and into the top row, beside the counter. */
+  .lightbox-close {
+    position: static;
+    grid-area: close;
+    justify-self: end;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Overlaid on the photo's edges, where a thumb actually rests. Swipe is the
+     primary gesture now, but tapping still has to work. */
+  .lightbox-nav[data-dir="-1"],
+  .lightbox-nav[data-dir="1"] {
+    grid-area: fig;
+    align-self: center;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.38);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  .lightbox-nav[data-dir="-1"] {
+    justify-self: start;
+  }
+
+  .lightbox-nav[data-dir="1"] {
+    justify-self: end;
+  }
+
+  /* The divider only made sense next to the prev/next group. */
+  .lightbox-like {
+    margin: 0;
+    padding: 0;
+    border-left: none;
+    align-self: center;
+  }
+
+  .lightbox-download {
+    margin-top: 0;
+    justify-self: end;
+  }
+
+  .lightbox-counter {
+    align-self: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* Everything but the photo fades out as it's flicked away. */
+  .lightbox-nav,
+  .lightbox-counter,
+  .lightbox-close,
+  .lightbox-like,
+  .lightbox-download {
+    opacity: var(--lb-chrome);
+  }
 }
 
 /* Bookends the masthead: the header closes with a gold rule, the footer opens
@@ -1128,8 +1341,10 @@ footer.site-footer p + p {
   min-height: 120px;
 }
 
-.season-card:hover {
-  background: var(--surface-hover);
+@media (hover: hover) {
+  .season-card:hover {
+    background: var(--surface-hover);
+  }
 }
 
 .season-card .card-body {
@@ -1591,10 +1806,12 @@ footer.site-footer p + p {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.leaderboard-card:hover {
-  border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-2), var(--surface-highlight);
+@media (hover: hover) {
+  .leaderboard-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2), var(--surface-highlight);
+  }
 }
 
 .leaderboard-card h3 {
@@ -1969,14 +2186,16 @@ footer.site-footer p + p {
     var(--surface);
 }
 
-.season-card:hover {
-  background:
-    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
-    linear-gradient(0deg, var(--season-tint), var(--season-tint)),
-    var(--surface-hover);
-  /* .week-card:hover sets border-color outright, which would flip every card's
-     left edge to gold on hover and erase the distinction. */
-  border-left-color: var(--season-edge);
+@media (hover: hover) {
+  .season-card:hover {
+    background:
+      repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+      linear-gradient(0deg, var(--season-tint), var(--season-tint)),
+      var(--surface-hover);
+    /* .week-card:hover sets border-color outright, which would flip every card's
+       left edge to gold on hover and erase the distinction. */
+    border-left-color: var(--season-edge);
+  }
 }
 
 .season-card.season-win {
@@ -1996,19 +2215,14 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
-@media (max-width: 480px) {
-  main {
-    padding: 1rem 0;
-  }
-
-  .container {
-    padding: 0 1rem;
-  }
-
-  .photo-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-
+/* The nav collapses far earlier than the rest of the layout does. Laid out
+   inline the bar needs about 860px — brand, five link pills, the hairline and
+   the kickoff pill — and below that the pills wrap onto a second line and the
+   bar goes ragged. That covers every phone in landscape and every tablet in
+   portrait, which is why this is its own breakpoint rather than sharing the
+   480px one below: at 480px those widths were getting the squeezed desktop bar.
+   Structure only here; the phone-sized metrics live in the 480px block. */
+@media (max-width: 860px) {
   /* Brand left, countdown and hamburger right, all on one row. */
   header.site-header .header-inner {
     flex-wrap: nowrap;
@@ -2024,8 +2238,8 @@ footer.site-footer p + p {
     white-space: nowrap;
   }
 
-  /* Links and the theme toggle move behind the hamburger; the countdown
-     stays in the bar so kickoff is glanceable without opening anything. */
+  /* Links move behind the hamburger; the countdown stays in the bar so
+     kickoff is glanceable without opening anything. */
   header.site-header .site-nav {
     gap: 0.5rem;
     margin-left: auto;
@@ -2040,17 +2254,8 @@ footer.site-footer p + p {
 
   .kickoff-countdown {
     order: 1;
-    padding: 0.2rem 0.5rem;
     /* The desktop breathing room would push the pill into the hamburger here. */
     margin-left: 0;
-  }
-
-  .kickoff-label {
-    font-size: 0.55rem;
-  }
-
-  .kickoff-clock {
-    font-size: 0.8rem;
   }
 
   .nav-links {
@@ -2071,8 +2276,11 @@ footer.site-footer p + p {
     padding: 0.5rem 1rem;
   }
 
+  /* Opens under the bar rather than appearing in place, so the panel and the
+     hamburger's X animation read as one movement. */
   .nav-links.open {
     display: flex;
+    animation: nav-drop 0.18s ease-out;
   }
 
   /* The hairline separates a horizontal row; in the stacked menu it would
@@ -2089,6 +2297,39 @@ footer.site-footer p + p {
 
   header.site-header .site-nav .nav-links a.active {
     background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@keyframes nav-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 1rem 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .kickoff-countdown {
+    padding: 0.2rem 0.5rem;
+  }
+
+  .kickoff-label {
+    font-size: 0.55rem;
+  }
+
+  .kickoff-clock {
+    font-size: 0.8rem;
   }
 
   header.site-header .site-logo {
@@ -2108,12 +2349,6 @@ footer.site-footer p + p {
   .week-title,
   .season-title {
     font-size: 1.3rem;
-  }
-
-  /* The fixed 75vh figure leaves little vertical room for the controls
-     below it to breathe on a short phone screen. */
-  .lightbox-figure {
-    height: 60vh;
   }
 }
 

@@ -22,14 +22,29 @@
 
   const pad = (n) => String(n).padStart(2, "0");
 
+  // On a phone the bar has to fit the wordmark, this pill and the hamburger in
+  // about 360px. The full form runs to "12d 20:14:33" and takes roughly 100px,
+  // which is what used to push the brand name out over the pill — and it also
+  // changed width by ~30px across the week as the day segment came and went.
+  // Read live rather than cached: update() runs every second anyway, so a
+  // rotation into landscape picks up the wider form on the next tick.
+  const narrow = window.matchMedia("(max-width: 480px)");
+
   // Digital-clock style: "9d 20:14:33", dropping the day segment once
-  // there's less than a day to go.
+  // there's less than a day to go. On a phone the seconds only appear once
+  // they're worth watching, so the pill stays about 55px wide all week.
   function clockFace(msRemaining) {
     const totalSeconds = Math.floor(msRemaining / 1000);
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
+
+    if (narrow.matches) {
+      if (days > 0) return `${days}d ${hours}h`;
+      if (hours > 0) return `${hours}:${pad(minutes)}:${pad(seconds)}`;
+      return `${minutes}:${pad(seconds)}`;
+    }
 
     const clock = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     return days > 0 ? `${days}d ${clock}` : clock;
