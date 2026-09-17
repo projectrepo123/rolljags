@@ -36,8 +36,26 @@ export const SCHEDULE = {
     // the SCHEDULE export). Keep this array in date order — /schedule renders
     // it as-is and picks its "next game" highlight by scanning it.
     { week: "90", date: "2026-08-21", label: "Festus Jamboree" },
-    { week: "01", date: "2026-08-28", opponent: "Oakville", homeAway: "Home", cover: "/oakvillelogoWeek12026.avif" },
-    { week: "02", date: "2026-09-04", opponent: "North Point", homeAway: "Home", cover: "/npgrizzlies.webp" },
+    {
+      week: "01",
+      date: "2026-08-28",
+      opponent: "Oakville",
+      homeAway: "Home",
+      cover: "/oakvillelogoWeek12026.avif",
+      result: "W",
+      pointsFor: 33,
+      pointsAgainst: 14,
+    },
+    {
+      week: "02",
+      date: "2026-09-04",
+      opponent: "North Point",
+      homeAway: "Home",
+      cover: "/npgrizzlies.webp",
+      result: "W",
+      pointsFor: 71,
+      pointsAgainst: 35,
+    },
     {
       week: "03",
       date: "2026-09-11",
