@@ -18,7 +18,14 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     // fetched to total the photo count.
     const candidates = [];
 
-    for (const level of await findWeekLevels(env.PHOTOS, weekPrefix)) {
+    // The season grid is meant to showcase the roster-level shots and the
+    // curated social edits, not the full/JV/freshman takes — those stay
+    // reachable from the week page itself.
+    const levels = (await findWeekLevels(env.PHOTOS, weekPrefix)).filter((level) =>
+      level === "varsity" || level === "instagram"
+    );
+
+    for (const level of levels) {
       const levelPrefix = `${weekPrefix}${level}/`;
       const objects = await listObjects(env.PHOTOS, levelPrefix);
       totalCount += objects.length;
