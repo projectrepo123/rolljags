@@ -1331,6 +1331,15 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
+.footer-support {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.footer-support a {
+  color: inherit;
+}
+
 /* Team History */
 
 .season-card {
