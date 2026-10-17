@@ -129,7 +129,7 @@ export const SCHEDULE = {
       pointsFor: 26,
       pointsAgainst: 0,
     },
-    { week: "09", date: "2026-10-23", opponent: "Parkway North", homeAway: "Away" },
+    { week: "09", date: "2026-10-23", opponent: "Parkway North", homeAway: "Away", cover: "/logos/pkwynorth.webp" },
   ],
 };
 
