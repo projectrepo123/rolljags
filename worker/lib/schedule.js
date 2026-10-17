@@ -35,6 +35,22 @@
 // roster levels (jv/freshman) that played the same week. Purely for display
 // next to that tab's photo count on the week page (see week.js/gallery.js) —
 // unlike `result` above, these never feed the season record.
+//
+// Template for a new game. `week` is a two-digit string ("09", not 9),
+// `date` is YYYY-MM-DD, `homeAway` is exactly "Home" or "Away", and `cover`
+// starts with /logos/ and matches the file's name and case exactly. Add the
+// result fields once the game is over, then deploy.
+//
+//   {
+//     week: "10",
+//     date: "2026-10-30",
+//     opponent: "Opponent Name",
+//     homeAway: "Home",
+//     cover: "/logos/opponent.webp",
+//     result: "W",
+//     pointsFor: 21,
+//     pointsAgainst: 14,
+//   },
 export const SCHEDULE = {
   "2026": [
     { week: "00", date: "2026-08-15", label: "Blue & Gold Scrimmage" },

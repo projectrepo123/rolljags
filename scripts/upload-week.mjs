@@ -11,6 +11,10 @@
 // --dry-run to print the resulting order and exit without uploading or
 // needing credentials — worth doing before a long run.
 //
+// It refuses to upload into a tab that already has photos. Pass --append to
+// add a second batch (numbering continues after the last photo) or --replace
+// to redo the tab from 0001.
+//
 // --level is usually a roster level (varsity/jv/freshman), but it's really
 // just the folder name the site groups these photos under and shows as a
 // tab — for a week that isn't split by roster level, e.g. a scrimmage, use
@@ -27,7 +31,7 @@ import path from "node:path";
 import "dotenv/config";
 import sharp from "sharp";
 import exifReader from "exif-reader";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 // Not a fixed enum — see the --level note above. This just keeps the value
 // safe to drop into an R2 key and a URL segment, matching the server's
@@ -136,8 +140,15 @@ const { values } = parseArgs({
     caption: { type: "string" },
     "dry-run": { type: "boolean" },
     reverse: { type: "boolean" },
+    append: { type: "boolean" },
+    replace: { type: "boolean" },
   },
 });
+
+if (values.append && values.replace) {
+  console.error("Pass --append or --replace, not both.");
+  process.exit(1);
+}
 
 for (const key of ["year", "week", "date", "level", "dir"]) {
   if (!values[key]) {
@@ -166,18 +177,17 @@ const weekFolder = `week-${weekNum}_${date}`;
 const weekRootPrefix = `${year}/${weekFolder}/`;
 const prefix = `${weekRootPrefix}${level}/`;
 
-// A dry run only reads local files, so don't make it wait on credentials.
-if (!values["dry-run"]) {
-  const required = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
-  for (const key of required) {
-    if (!process.env[key]) {
-      console.error(`Missing ${key} in scripts/.env — copy .env.example and fill it in.`);
-      process.exit(1);
-    }
-  }
+// A dry run doesn't need credentials, but uses them when they're there to
+// check what's already uploaded.
+const required = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
+const haveCredentials = required.every((key) => process.env[key]);
+if (!values["dry-run"] && !haveCredentials) {
+  const missing = required.find((key) => !process.env[key]);
+  console.error(`Missing ${missing} in scripts/.env — copy .env.example and fill it in.`);
+  process.exit(1);
 }
 
-const s3 = values["dry-run"]
+const s3 = !haveCredentials
   ? null
   : new S3Client({
       region: "auto",
@@ -187,6 +197,56 @@ const s3 = values["dry-run"]
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
       },
     });
+
+// The originals already in this tab (not their thumbs/ and view/ copies).
+async function existingPhotoNames() {
+  const names = [];
+  let ContinuationToken;
+  do {
+    const page = await s3.send(
+      new ListObjectsV2Command({ Bucket: process.env.R2_BUCKET, Prefix: prefix, Delimiter: "/", ContinuationToken })
+    );
+    for (const obj of page.Contents ?? []) names.push(obj.Key.slice(prefix.length));
+    ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
+  } while (ContinuationToken);
+  return names;
+}
+
+// Where numbering starts. Every key is cached as immutable for a year, so
+// uploading a second batch from 0001_ again would put new photos under old
+// keys that browsers and the CDN keep serving as the old frames.
+async function startingOrdinal() {
+  if (!s3) {
+    console.log("No R2 credentials, so this dry run can't check for photos already in this tab.");
+    return 0;
+  }
+
+  const existing = await existingPhotoNames();
+  if (existing.length === 0) return 0;
+
+  if (values.append) {
+    const highest = Math.max(0, ...existing.map((name) => Number.parseInt(name, 10) || 0));
+    console.log(`${prefix} already has ${existing.length} photos. --append: numbering continues at ${highest + 1}.`);
+    return highest;
+  }
+
+  if (values.replace) {
+    console.warn(
+      `${prefix} already has ${existing.length} photos. --replace: keys that match get overwritten, but ` +
+        "visitors may keep seeing the old frames for a while because those keys are cached as immutable. " +
+        "Old photos beyond the new count are left in place."
+    );
+    return 0;
+  }
+
+  console.error(
+    `${prefix} already has ${existing.length} photos.\n` +
+      "  Adding more to this tab?   re-run with --append (numbering continues after the last one)\n" +
+      "  Redoing the whole tab?     re-run with --replace\n" +
+      "  Different tab?             check --level"
+  );
+  process.exit(1);
+}
 
 async function main() {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -237,11 +297,13 @@ async function main() {
     }
   }
 
+  const start = await startingOrdinal();
+
   if (values["dry-run"]) {
     console.log(`\nOrder that would be uploaded to ${prefix}:\n`);
     for (const [i, entry] of ordered.entries()) {
       const when = entry.time === null ? "no EXIF time" : new Date(entry.time).toISOString().slice(0, 23).replace("T", " ");
-      console.log(`  ${storedName(entry, i)}  (${when})`);
+      console.log(`  ${storedName(entry, start + i)}  (${when})`);
     }
     console.log(`\nDry run — nothing was uploaded.`);
     return;
@@ -252,7 +314,7 @@ async function main() {
   let done = 0;
   for (const [i, entry] of ordered.entries()) {
     const { fileName } = entry;
-    const uploadName = storedName(entry, i);
+    const uploadName = storedName(entry, start + i);
     const filePath = path.join(dir, fileName);
     const buffer = await readFile(filePath);
 
@@ -328,7 +390,7 @@ async function main() {
     console.log(`Caption set: "${values.caption}"`);
   }
 
-  console.log(`\nDone. ${prefix} now has ${files.length} photos.`);
+  console.log(`\nDone. ${prefix} got ${files.length} photos (numbered from ${start + 1}).`);
 }
 
 main().catch((err) => {

@@ -9,12 +9,14 @@ site reads directly from R2.
 Photos live in R2 under:
 
 ```
-{year}/week-{NN}_{yyyy-mm-dd}/{level}/IMG_0001.jpg
-{year}/week-{NN}_{yyyy-mm-dd}/{level}/thumbs/IMG_0001.jpg
+{year}/week-{NN}_{yyyy-mm-dd}/{level}/0001_IMG_0412.jpg         original (Download)
+{year}/week-{NN}_{yyyy-mm-dd}/{level}/view/0001_IMG_0412.jpg    1600px, lightbox
+{year}/week-{NN}_{yyyy-mm-dd}/{level}/thumbs/0001_IMG_0412.jpg  640px, grid
 {year}/week-{NN}_{yyyy-mm-dd}/caption.txt   (optional)
 ```
 
-`level` is `varsity`, `jv`, or `freshman`. There's no separate config file for
+`level` is usually `varsity`, `jv`, or `freshman` (see "Photo groups" below
+for the others). There's no separate config file for
 weeks that already have photos. The site parses everything it needs (year,
 week number, date, team level, photo count) straight from the folder names,
 so uploading a new week's photos with the right folder name is the entire
@@ -22,20 +24,15 @@ so uploading a new week's photos with the right folder name is the entire
 
 ### Showing a week before photos exist ("Coming soon")
 
-To have a week appear on the site (as "Coming soon") before you've uploaded
-anything, e.g. the day of a game, before you've had a chance to upload,
-add its week number to `worker/lib/schedule.js`:
-
-```js
-export const SCHEDULE = {
-  "2026": ["01", "02"],
-};
-```
+Every game lives in `SCHEDULE` in `worker/lib/schedule.js`, which also drives
+the /schedule page, the scores, and the nav countdown. A game with no photos
+yet shows on the home page as "Coming soon" with its opponent logo. The header
+comment in that file explains each field and has a copy-paste template.
 
 Once you run `upload-week.mjs` for that week, real data (date, photo count,
-cover thumbnail) automatically takes over and the "Coming soon" badge goes
-away. No need to remove the entry from the schedule. To start a new season,
-add a new year key the same way.
+cover photo) automatically takes over and the "Coming soon" badge goes away.
+No need to remove the entry from the schedule. Changes to `schedule.js` only
+go live after `npm run deploy`.
 
 ### Week numbering
 
@@ -61,8 +58,14 @@ instagram   the curated set posted to Instagram  -> "Instagram Pics" tab
 full        everything from that day             -> "Full Gallery" tab
 ```
 
-Tabs are ordered `varsity, jv, freshman, instagram, full`, then anything else
-alphabetically, so the first one uploaded isn't necessarily the default tab.
+Tabs are ordered `varsity, jv, freshman, full, instagram`, then anything else
+alphabetically (e.g. `senior-night`), so the first one uploaded isn't
+necessarily the default tab.
+
+Every tab counts toward a week's photo total on the home page, but only
+`varsity` and `instagram` (or `full`, when a week has neither) are used for
+the home page cover and link previews. Any other tab, like `senior-night`,
+only ever shows on that week's own page.
 
 ### Per-week caption
 
@@ -159,6 +162,51 @@ enabled for the zone. The Worker also sends a `Strict-Transport-Security`
 header as a backstop, but this dashboard setting is what actually redirects
 stray HTTP requests.
 
+## Weekly routine
+
+**Post a final score** (1 file, then deploy)
+
+1. In `worker/lib/schedule.js`, find the game and add
+   `result: "W"` (or `"L"`/`"T"`), `pointsFor: 26`, `pointsAgainst: 0`.
+   Scores are plain numbers, no quotes. JV/freshman scores go in
+   `levelResults` (see the header comment).
+2. `npm run deploy`, and note the "Current Version ID" it prints in case you
+   need to roll back.
+
+**Post a week's photos** (no files, no deploy)
+
+1. `cd scripts`
+2. Run `upload-week.mjs` once per tab with `--dry-run` first, then for real.
+   `--date` must match the game date in `schedule.js` exactly, or the week
+   ends up split across two folders.
+3. Pass `--caption "vs. Ritenour, W 26-0"` on one of the runs if you want a
+   caption.
+4. Posting in stages? The second run needs `--append`.
+5. If the game was never shot, set `noPhotos: true` on it instead and deploy.
+
+**Add the next opponent's logo** (2 files, then deploy)
+
+1. Save it to `public/logos/`, about 474px wide, as `.webp`.
+2. Set `cover: "/logos/<file>.webp"` on that game in `schedule.js`. The path
+   is case-sensitive and nothing checks it, so copy the file name exactly.
+3. `npm run deploy`. Replacing a logo under the same name can take up to a
+   week to show for returning visitors, so use a new file name instead.
+
+The home page and week pages can take up to 5 minutes to show any of this.
+
+## New season checklist
+
+The year is hard-coded in four places:
+
+1. `worker/lib/schedule.js`: add a new `"2027": [...]` key.
+2. `worker/index.js`: `DEFAULT_SCHEDULE_YEAR`.
+3. `public/js/schedule.js`: `DEFAULT_YEAR`.
+4. `public/schedule.html`: "2026" in the meta description, `og:description`
+   and the intro paragraph.
+
+Add the finished season to `public/data/history.json` so it gets its own
+/season page.
+
 ## Uploading a new week
 
 Run once per team level that has photos that week (skip levels with nothing
@@ -184,8 +232,9 @@ node upload-week.mjs --year 2026 --week 3 --date 2026-09-11 \
   re-encoded through `sharp` on the way up, which strips all EXIF metadata,
   including GPS location, from the originals automatically.
 - `--dry-run` prints the order the photos would be stored in and exits without
-  uploading anything. It reads only local files, so it doesn't need R2
-  credentials. Worth running first on a big folder — see below for why.
+  uploading anything. It doesn't need R2 credentials, but when they're in
+  `scripts/.env` it also checks whether the tab already has photos. Worth
+  running first on a big folder — see below for why.
 - `--reverse` flips the filename order, for exports whose numbering runs
   backwards against the game. Only needed when the export stripped EXIF — see
   "Photo order" below.
@@ -245,13 +294,16 @@ lowest. `--dry-run` plus a look at the actual frames is the way to tell —
 light level across a Friday night game is a reliable clue, but note that the
 night frames are the *larger* files, since high-ISO noise doesn't compress.
 
-**Re-running the same folder is safe** — the numbering is derived from the
-photos themselves, so a repeat run produces identical keys and overwrites
-cleanly. But
-uploading a *second, different* batch into a level that already has photos
-restarts the count at `0001`, and those keys sort ahead of the existing ones
-(digits before letters). For a week you're posting in stages, either re-run
-with one combined folder or give the second batch its own `--level`.
+**The script refuses to upload into a tab that already has photos.** Every
+key is cached as immutable for a year, so a second batch numbered from `0001`
+again would put new photos under old keys that browsers keep serving as the
+old frames. Pick one:
+
+- `--append` adds a second batch: numbering continues after the last photo
+  already in the tab. This is the one for a week posted in stages.
+- `--replace` redoes the tab from `0001`. Visitors may see old frames for a
+  while, and old photos beyond the new count are left in place, so it's best
+  for re-running the exact same folder.
 
 ### Storage and encoder settings
 
@@ -275,8 +327,8 @@ the next lever is capping the original's long edge — 4000px is still a 13-inch
 print at 300dpi — which would cut storage by more than half again, at the cost
 of what people receive when they hit Download.
 
-That's it, no redeploy needed. The site lists whatever's in R2, live, with
-a short cache (~5 minutes) on the home page listing.
+Photo uploads need no redeploy. The site lists whatever's in R2, live, with
+a short cache (about 5 minutes) on the home page listing and week pages.
 
 ## The homepage photo banner
 
@@ -323,7 +375,8 @@ npx wrangler r2 object put rolljags-photos/2026/week-01_2026-09-06/varsity/IMG_0
 ## Notes
 
 - The "Download all (.zip)" response streams directly from R2 rather than being built in memory, so it scales to 100+ photos without issue. Because it's streamed, browsers won't show a file size or an accurate progress bar during download (the file itself is complete and valid, this is just a missing size hint).
-- Week pages (`/week.html?year=&week=`) get their Open Graph preview tags (title, description, image) injected server-side by the Worker based on that week's real data, so links shared in group chats show the week's cover photo. The homepage and 404 page use static tags with the site logo.
+- Week pages (`/week.html?year=&week=`) get their Open Graph preview tags (title, description, image) injected server-side by the Worker based on that week's real data, so links shared in group chats show a photo from that week. The other pages use static tags with `public/og-default.jpg` (1200×630).
+- The site header, nav and footer are written once, in `worker/lib/chrome.js`. Each page in `public/` has an empty `<header class="site-header">` and `<footer class="site-footer">` that the Worker fills in, marking the current tab. To add a nav link or change the footer, edit that one file and deploy. A new page needs those two empty tags and an entry in `SECTION_BY_PAGE` there.
 - `public/404.html` is served automatically for any unmatched path, configured via `not_found_handling` in `wrangler.jsonc`.
 - The Worker validates `year`/`week`/`level` before touching R2 (rejects malformed requests with 400), rate-limits the zip endpoint per IP (429 once tripped), and sets security headers (CSP, HSTS, etc.) on every response. `/api/week/:year/:week` and `/week.html` share the same 5-minute cache as `/api/weeks`, so repeat visits to the same week don't re-list R2 each time.
 
