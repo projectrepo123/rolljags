@@ -1,4 +1,4 @@
-import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, publicUrl } from "../lib/r2.js";
+import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, coverLevels, publicUrl } from "../lib/r2.js";
 import { SCHEDULE, scheduleCaption } from "../lib/schedule.js";
 import { todayKey, pickDaily } from "../lib/daily.js";
 
@@ -11,24 +11,21 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     const { weekNum, date } = parseWeekFolder(folderName);
 
     let totalCount = 0;
-    // Every photo in the week, across all its groups, as a cover candidate.
-    // This used to keep only the first object of the first non-empty group,
-    // which froze each week's card on one shot for the rest of the season.
-    // Collecting the rest costs nothing: these listings are already being
-    // fetched to total the photo count.
+    // Every cover-eligible photo in the week, as a cover candidate. Collecting
+    // them all costs nothing: these listings are already being fetched to
+    // total the photo count.
     const candidates = [];
 
-    // The season grid is meant to showcase the roster-level shots and the
-    // curated social edits, not the full/JV/freshman takes — those stay
-    // reachable from the week page itself.
-    const levels = (await findWeekLevels(env.PHOTOS, weekPrefix)).filter((level) =>
-      level === "varsity" || level === "instagram"
-    );
+    // Every tab counts toward the photo total and toward the week being live;
+    // only the cover-eligible ones (see coverLevels) can supply the card image.
+    const levels = await findWeekLevels(env.PHOTOS, weekPrefix);
+    const coverEligible = new Set(coverLevels(levels));
 
     for (const level of levels) {
       const levelPrefix = `${weekPrefix}${level}/`;
       const objects = await listObjects(env.PHOTOS, levelPrefix);
       totalCount += objects.length;
+      if (!coverEligible.has(level)) continue;
       for (const obj of objects) {
         const fileName = obj.key.split("/").pop();
         // upload-week.mjs writes a thumbs/ sibling for every file it uploads,
@@ -42,9 +39,8 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     // One photo per week per day. listObjects sorts by key and findWeekLevels
     // returns a fixed order, so `candidates` is identical on every request —
     // which is what makes the seeded index stable rather than random.
-    const cover = pickDaily(candidates, `${year}/${weekNum}/${day}`);
-
     const scheduledGame = (SCHEDULE[year.toString()] || []).find(g => g.week === weekNum);
+    const cover = pickDaily(candidates, `${year}/${weekNum}/${day}`) || scheduledGame?.cover || null;
     weeks.set(weekNum, {
       year,
       week: weekNum,

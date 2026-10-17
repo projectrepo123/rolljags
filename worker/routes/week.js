@@ -1,4 +1,4 @@
-import { levelLabel, levelNote, listObjects, findWeekFolder, findWeekLevels, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
+import { levelLabel, levelNote, coverLevels, listObjects, findWeekFolder, findWeekLevels, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
 import { findScheduledGame, scheduleCaption } from "../lib/schedule.js";
 
 // Looks up a week's data. Returns null if the week doesn't exist and isn't
@@ -64,6 +64,10 @@ export async function getWeekData(env, year, weekNum) {
   const realCaption = await getCaption(env.PHOTOS, found.weekPrefix);
   const caption = realCaption || (scheduledGame ? scheduleCaption(scheduledGame) : null);
   const cover = levels[0]?.photos[0]?.thumbUrl || null;
+  // Link previews render around 1200px wide, so they get the 1600w view copy
+  // rather than the 640w thumb, from the same tabs the home cards draw on.
+  const [shareLevel] = coverLevels(levels.map((l) => l.level));
+  const shareImage = levels.find((l) => l.level === shareLevel)?.photos[0]?.viewUrl || null;
 
   return {
     year,
@@ -72,6 +76,7 @@ export async function getWeekData(env, year, weekNum) {
     status: levels.length > 0 ? "live" : "coming-soon",
     levels,
     cover,
+    ...(shareImage ? { shareImage } : {}),
     // The opponent drives photo alt text and the page heading. /api/weeks has
     // exposed these all along; this endpoint was the odd one out, which left
     // the client parsing them back out of the caption string.

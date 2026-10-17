@@ -25,7 +25,7 @@ function jsonLd(payload) {
 // "Home vs. Oakville" reads as "vs. Oakville"; an away game reads "at
 // Lindbergh". Returns "" when the week has no single opponent (a scrimmage or
 // jamboree carries a label instead).
-function opponentPhrase(opponent, homeAway) {
+export function opponentPhrase(opponent, homeAway) {
   if (!opponent) return "";
   return homeAway === "Away" ? `at ${opponent}` : `vs. ${opponent}`;
 }
@@ -114,7 +114,7 @@ export function injectWeekMeta(assetResponse, data, url) {
       description =
         data.caption ||
         `${data.label} photos of ${SCHOOL_NAME} Jaguars football in ${LOCALITY}. Browse and download the full set.`;
-      image = data.cover || fallbackImage;
+      image = data.shareImage || data.cover || fallbackImage;
 
       const photoCount = data.levels.reduce((sum, lvl) => sum + lvl.photos.length, 0);
       structured = jsonLd({
@@ -123,7 +123,7 @@ export function injectWeekMeta(assetResponse, data, url) {
         name: heading,
         description,
         url: pageUrl,
-        ...(image ? { thumbnailUrl: image } : {}),
+        ...(data.cover ? { thumbnailUrl: data.cover } : {}),
         ...(photoCount ? { numberOfItems: photoCount } : {}),
         about: { "@type": "SportsTeam", "@id": `${SITE_ORIGIN}/#team`, name: TEAM_NAME },
       });

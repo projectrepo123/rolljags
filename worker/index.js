@@ -6,7 +6,7 @@ import { handleSchedule, scheduleGames } from "./routes/schedule.js";
 import { handleBanner } from "./routes/banner.js";
 import { handleSitemap } from "./routes/sitemap.js";
 import { handleGetLikes, handleLike } from "./routes/likes.js";
-import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta } from "./lib/meta.js";
+import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, opponentPhrase } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum, isValidLevel, isValidPhotoKey } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
 
@@ -53,7 +53,7 @@ function injectKickoff(response) {
   const { game, at } = upcoming;
   const meta =
     `<meta name="next-kickoff" content="${at.toISOString()}">` +
-    `<meta name="next-opponent" content="${escapeAttr(game.homeAway)} vs. ${escapeAttr(game.opponent)}">`;
+    `<meta name="next-opponent" content="${escapeAttr(opponentPhrase(game.opponent, game.homeAway))}">`;
 
   return new HTMLRewriter()
     .on("head", { element: (el) => el.append(meta, { html: true }) })
@@ -288,12 +288,21 @@ function cacheKeyFor(request, varyParams, canonicalPath) {
   return new Request(url.toString(), { method: "GET" });
 }
 
+const EDGE_CACHE_CONTROL = "public, max-age=300";
+
 async function withCache(request, ctx, handler, varyParams = [], canonicalPath = null) {
   const cache = caches.default;
   const key = cacheKeyFor(request, varyParams, canonicalPath);
 
+  // A hit comes back with the zone's Browser Cache TTL (4h) in place of the
+  // max-age it was stored with, which kept returning visitors on a stale home
+  // page long after a score or upload. Restate it on the way out.
   const cached = await cache.match(key);
-  if (cached) return cached;
+  if (cached) {
+    const hit = new Response(cached.body, cached);
+    hit.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
+    return hit;
+  }
 
   const response = await handler();
 
@@ -302,7 +311,7 @@ async function withCache(request, ctx, handler, varyParams = [], canonicalPath =
   if (!response.ok) return response;
 
   const cacheable = new Response(response.body, response);
-  cacheable.headers.set("Cache-Control", "public, max-age=300");
+  cacheable.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
   ctx.waitUntil(cache.put(key, cacheable.clone()));
   return cacheable;
 }

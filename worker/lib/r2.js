@@ -40,6 +40,18 @@ const LEVEL_NOTES = {
     "originals straight off the camera.",
 };
 
+// Which tabs may supply a week's home-page cover and share image: the roster
+// shots and the curated social edits, falling back to the full take only when
+// a week has neither. Anything else (senior-night, jv, freshman) never does.
+const COVER_LEVELS = ["varsity", "instagram"];
+const COVER_FALLBACK_LEVEL = "full";
+
+export function coverLevels(levels) {
+  const preferred = levels.filter((level) => COVER_LEVELS.includes(level));
+  if (preferred.length > 0) return preferred;
+  return levels.includes(COVER_FALLBACK_LEVEL) ? [COVER_FALLBACK_LEVEL] : [];
+}
+
 export function levelLabel(level) {
   return LEVEL_LABELS[level] || level.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
