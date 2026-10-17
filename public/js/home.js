@@ -68,6 +68,13 @@ function renderYear(yearGroup, latestKey) {
         ? `Seckman Jaguars football ${week.homeAway === "Away" ? "at" : "vs."} ${week.opponent}, ${week.label}`
         : `Seckman Jaguars football, ${week.label}`;
       img.src = week.cover;
+      // The Latest card spans two columns, wider than the 640w thumb, so let
+      // high-density screens pull the 1600w view copy instead.
+      const isHero = latestKey && `${week.year}/${week.week}` === latestKey;
+      if (isHero && !isLogo && week.cover.includes("/thumbs/")) {
+        img.srcset = `${week.cover} 640w, ${week.cover.replace("/thumbs/", "/view/")} 1600w`;
+        img.sizes = "(min-width: 1140px) 740px, (min-width: 560px) 66vw, 100vw";
+      }
       card.appendChild(img);
     } else {
       const placeholder = document.createElement("div");

@@ -107,6 +107,7 @@ function renderCareerScoring(list) {
   const headerRow = document.createElement("tr");
   for (const col of ["Name", "TD", "FG", "2Pt", "1Pt", "Sft", "Pts"]) {
     const th = document.createElement("th");
+    th.scope = "col";
     th.textContent = col;
     headerRow.appendChild(th);
   }
@@ -153,6 +154,7 @@ function renderSeasonScoring(list) {
   const headerRow = document.createElement("tr");
   for (const col of ["Player", "Year", "TDs"]) {
     const th = document.createElement("th");
+    th.scope = "col";
     th.textContent = col;
     headerRow.appendChild(th);
   }
@@ -195,6 +197,7 @@ function renderGameTouchdowns(list) {
   const headerRow = document.createElement("tr");
   for (const col of ["Year", "Opponent", "Player", "TDs"]) {
     const th = document.createElement("th");
+    th.scope = "col";
     th.textContent = col;
     headerRow.appendChild(th);
   }
@@ -271,6 +274,7 @@ function renderTeamSeasonStats(list, programTotals, category = null) {
   const headerRow = document.createElement("tr");
   for (const col of columns) {
     const th = document.createElement("th");
+    th.scope = "col";
     th.textContent = col.label;
     headerRow.appendChild(th);
   }
@@ -442,6 +446,7 @@ function renderHeadToHead(data) {
   const headerRow = document.createElement("tr");
   for (const col of ["Opponent", "Record", "PF", "PA"]) {
     const th = document.createElement("th");
+    th.scope = "col";
     th.textContent = col;
     headerRow.appendChild(th);
   }

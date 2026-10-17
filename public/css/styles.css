@@ -15,7 +15,10 @@
   --navy-dark: #142c52;
   --navy-text: var(--navy);
   --gold: #ffc72c;
-  --gold-hover: #f0b800;
+  --navy-light: #2b5391;
+  --grad-navy: linear-gradient(180deg, var(--navy-light) 0%, var(--navy) 100%);
+  --grad-gold: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  --yardlines-on-navy: repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px);
   --bg: #f7f8fa;
   --card-bg: #ffffff;
   --text: #1c1e21;
@@ -43,6 +46,7 @@
   /* Yard lines. One faint hairline every 40px, layered behind headers, the
      page-title band and the footer. */
   --yardline: rgba(27, 58, 107, 0.06);
+  --yardlines: repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px);
   /* The hairline that sits under a gold rule, making it read as a goal line
      rather than a plain underline. --navy itself is too dark to see against
      the dark theme's background, so this is its own token. */
@@ -194,7 +198,7 @@ a {
    top: 100% inside this element. */
 header.site-header {
   background:
-    repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px),
+    var(--yardlines-on-navy),
     linear-gradient(115deg, transparent 60%, rgba(255, 199, 44, 0.13) 78%, transparent 93%),
     linear-gradient(180deg, rgba(35, 72, 130, 0.88) 0%, rgba(20, 44, 82, 0.92) 100%);
   -webkit-backdrop-filter: saturate(180%) blur(16px);
@@ -215,7 +219,7 @@ header.site-header {
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   header.site-header {
     background:
-      repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px),
+      var(--yardlines-on-navy),
       linear-gradient(115deg, transparent 60%, rgba(255, 199, 44, 0.13) 78%, transparent 93%),
       linear-gradient(180deg, #234882 0%, #142c52 100%);
   }
@@ -465,7 +469,7 @@ main h1 {
   line-height: 1.15;
   padding: 0.65rem 0.9rem 0.7rem;
   background:
-    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    var(--yardlines),
     linear-gradient(90deg, var(--row-accent) 0%, transparent 55%);
   border-left: 4px solid var(--navy-text);
   border-bottom: 3px solid var(--gold);
@@ -574,7 +578,7 @@ main h1 {
   padding: 1rem 1.1rem;
   color: #fff;
   background:
-    repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px),
+    var(--yardlines-on-navy),
     linear-gradient(100deg, #234882 0%, var(--navy-dark) 60%, #0f2140 100%);
 }
 
@@ -594,7 +598,7 @@ main h1 {
 .week-card.week-card-hero .badge-latest {
   font-size: 0.85rem;
   padding: 0.22rem 0.6rem;
-  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  background: var(--grad-gold);
   color: var(--navy-dark);
   border-left-color: #fff;
 }
@@ -621,7 +625,7 @@ main h1 {
    lower-third — not a pill. Every tag on the site is built this way. */
 .badge-coming-soon {
   display: inline-block;
-  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  background: var(--grad-gold);
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   color: var(--navy-dark);
   font-family: var(--font-display);
@@ -828,7 +832,7 @@ main h1 {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  background: var(--grad-navy);
   color: #fff;
   border: none;
   border-radius: var(--radius);
@@ -1309,7 +1313,7 @@ footer.site-footer {
   border-top: 3px solid var(--gold);
   box-shadow: inset 0 1px 0 var(--rule-navy);
   background:
-    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    var(--yardlines),
     linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 100%);
   color: var(--text-muted);
   font-size: 0.85rem;
@@ -1353,14 +1357,7 @@ footer.site-footer p + p {
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: auto;
   min-height: 120px;
-}
-
-@media (hover: hover) {
-  .season-card:hover {
-    background: var(--surface-hover);
-  }
 }
 
 .season-card .card-body {
@@ -1463,7 +1460,7 @@ footer.site-footer p + p {
 }
 
 .season-table thead {
-  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  background: var(--grad-navy);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   color: #fff;
 }
@@ -1543,7 +1540,7 @@ footer.site-footer p + p {
 }
 
 .loc-badge.loc-home {
-  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  background: var(--grad-navy);
   border-left-color: var(--gold);
   color: #fff;
 }
@@ -1678,7 +1675,7 @@ footer.site-footer p + p {
 }
 
 .records-table thead {
-  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  background: var(--grad-navy);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   color: #fff;
 }
@@ -1797,7 +1794,7 @@ footer.site-footer p + p {
   margin-bottom: 2.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .leaderboards-container {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2168,7 +2165,7 @@ footer.site-footer p + p {
   /* The header's own gradient has to win over the cell background above,
      otherwise the corner cell breaks the navy bar. */
   .records-modal .records-table thead th:first-child {
-    background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+    background: var(--grad-navy);
   }
 
   /* Tighter cells fit more columns before any scrolling is needed at all. */
@@ -2197,7 +2194,7 @@ footer.site-footer p + p {
   --season-tint: transparent;
   border-left: 4px solid var(--season-edge);
   background:
-    repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+    var(--yardlines),
     linear-gradient(0deg, var(--season-tint), var(--season-tint)),
     var(--surface);
 }
@@ -2205,7 +2202,7 @@ footer.site-footer p + p {
 @media (hover: hover) {
   .season-card:hover {
     background:
-      repeating-linear-gradient(90deg, transparent 0 39px, var(--yardline) 39px 40px),
+      var(--yardlines),
       linear-gradient(0deg, var(--season-tint), var(--season-tint)),
       var(--surface-hover);
     /* .week-card:hover sets border-color outright, which would flip every card's
@@ -2515,7 +2512,7 @@ header.site-header .skip-link:focus {
 
 /* Marks the newest set of photos in the grid. */
 .badge-latest {
-  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 100%);
+  background: var(--grad-navy);
   color: #fff;
   border-left-color: var(--gold);
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -2525,7 +2522,7 @@ header.site-header .skip-link:focus {
    They never appear together — a coming-soon week renders that badge instead
    of the whole meta row. */
 .badge-more-coming {
-  background: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  background: var(--grad-gold);
   color: var(--navy-dark);
   border-left-color: var(--navy-dark);
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.5);

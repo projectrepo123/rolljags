@@ -102,7 +102,7 @@ function subsection(title, content) {
   const section = document.createElement("div");
   section.className = "season-subsection";
 
-  const heading = document.createElement("h4");
+  const heading = document.createElement("h3");
   heading.className = "subsection-title";
   heading.textContent = title;
   section.appendChild(heading);
@@ -237,7 +237,7 @@ function renderSeasonLeaders(records, seasonRecords, games) {
 
   leadersEl.innerHTML = "";
 
-  const heading = document.createElement("h3");
+  const heading = document.createElement("h2");
   heading.className = "season-leaders-heading";
   heading.textContent = `${year} Season Leaders`;
   leadersEl.appendChild(heading);

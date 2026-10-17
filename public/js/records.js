@@ -245,7 +245,7 @@ function renderScope(scope, data) {
     const section = document.createElement("section");
     section.className = "record-group";
 
-    const heading = document.createElement("h3");
+    const heading = document.createElement("h2");
     heading.className = "section-heading";
     heading.textContent = group.name;
     section.appendChild(heading);
