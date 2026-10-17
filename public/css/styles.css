@@ -2382,6 +2382,24 @@ footer.site-footer p + p {
   border: 0;
 }
 
+/* Off-screen until a keyboard user tabs to it, then pinned over the header. */
+header.site-header .skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 60;
+  padding: 0.5rem 0.9rem;
+  background: var(--gold);
+  color: #142c52;
+  font-weight: 700;
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+
+header.site-header .skip-link:focus {
+  top: 0.5rem;
+}
+
 /* Loading placeholders. These sit in the HTML so something paints before the
    API responds, and each page's script replaces them with real content. */
 .skeleton {

@@ -9,6 +9,7 @@ import { handleGetLikes, handleLike } from "./routes/likes.js";
 import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, opponentPhrase } from "./lib/meta.js";
 import { isValidYear, isValidWeekNum, isValidLevel, isValidPhotoKey } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
+import { headerHtml, FOOTER_HTML } from "./lib/chrome.js";
 
 // The season /schedule shows when no ?year= is given. Matches DEFAULT_YEAR in
 // public/js/schedule.js, so the structured data describes the season the page
@@ -37,27 +38,32 @@ const SECURITY_HEADERS = {
 export default {
   async fetch(request, env, ctx) {
     const response = await handle(request, env, ctx);
-    return withSecurityHeaders(injectKickoff(response));
+    return withSecurityHeaders(decorateHtml(response, new URL(request.url)));
   },
 };
 
-// Stamps the next kickoff into every HTML page so the nav countdown can run
-// without each page fetching the schedule separately. The schedule lives in
-// one place (lib/schedule.js) and the client just reads the result.
-function injectKickoff(response) {
+// Runs on every HTML page after caching, so cached pages still pick up the
+// current header and kickoff. Fills in the shared header and footer (see
+// lib/chrome.js), and stamps the next kickoff into the head so the nav
+// countdown can run without each page fetching the schedule.
+function decorateHtml(response, url) {
   if (!response.headers.get("content-type")?.includes("text/html")) return response;
 
+  const header = headerHtml(url.pathname);
+  let rewriter = new HTMLRewriter()
+    .on("header.site-header", { element: (el) => el.setInnerContent(header, { html: true }) })
+    .on("footer.site-footer", { element: (el) => el.setInnerContent(FOOTER_HTML, { html: true }) });
+
   const upcoming = nextGame();
-  if (!upcoming) return response;
+  if (upcoming) {
+    const { game, at } = upcoming;
+    const meta =
+      `<meta name="next-kickoff" content="${at.toISOString()}">` +
+      `<meta name="next-opponent" content="${escapeAttr(opponentPhrase(game.opponent, game.homeAway))}">`;
+    rewriter = rewriter.on("head", { element: (el) => el.append(meta, { html: true }) });
+  }
 
-  const { game, at } = upcoming;
-  const meta =
-    `<meta name="next-kickoff" content="${at.toISOString()}">` +
-    `<meta name="next-opponent" content="${escapeAttr(opponentPhrase(game.opponent, game.homeAway))}">`;
-
-  return new HTMLRewriter()
-    .on("head", { element: (el) => el.append(meta, { html: true }) })
-    .transform(response);
+  return rewriter.transform(response);
 }
 
 function escapeAttr(str) {

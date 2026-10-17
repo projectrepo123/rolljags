@@ -4,7 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Page not found | Seckman Jaguars Football</title>
-  <link rel="icon" href="/logo.webp" type="image/webp" />
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#142c52" />
   <!-- @font-face lives inside the render-blocking stylesheet, so without this
        the font request cannot start until the CSS has parsed and the masthead
        visibly reflows. crossorigin is required even same-origin for fonts. -->
@@ -15,34 +17,9 @@
   <script src="/js/nav.js" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="/">
-        <img class="site-logo" src="/logo.webp" alt="Jaguar Football logo" />
-        <span class="brand-name">Jaguar Football</span>
-      </a>
-      <nav class="site-nav">
-        <div class="nav-links" id="nav-links">
-          <a href="/">Photos</a>
-          <a href="/schedule">Schedule</a>
-          <a href="/history">History</a>
-          <a href="/records">Records</a>
-          <a href="/podcast">Podcast</a>
-        </div>
-        <span class="kickoff-countdown" id="kickoff-countdown" hidden>
-          <span class="kickoff-label" id="kickoff-label">Kickoff</span>
-          <span class="kickoff-clock" id="kickoff-clock"></span>
-        </span>
-        <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-        </button>
-      </nav>
-    </div>
-  </header>
+  <header class="site-header"></header>
 
-  <main>
+  <main id="main">
     <div class="container">
       <!-- Visually hidden: the page reads fine without a heading, but the
            brand is a <span> now, so without this the page would have none. -->
@@ -51,14 +28,6 @@
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>Jaguar Football</p>
-      <p class="footer-credit">Photos and Website by <a href="https://jbwebco.com">Jon Baer</a></p>
-      <p class="footer-support">
-        <a href="https://venmo.com/u/jonlol" title="Helps cover camera gear & hosting — totally optional, not affiliated with the school">Thanks for the memories</a>
-      </p>
-    </div>
-  </footer>
+  <footer class="site-footer"></footer>
 </body>
 </html>

@@ -38,12 +38,22 @@ export function weekHeading(label, opponent, homeAway) {
   return phrase ? `${SITE_NAME} ${phrase}, ${label}` : `${SITE_NAME}, ${label}`;
 }
 
+// 1200x630, the size link previews are drawn at. Gallery photos vary in
+// shape, so only this one states its dimensions.
+const DEFAULT_SHARE_IMAGE = "/og-default.jpg";
+
 function buildMeta(title, description, image, pageUrl) {
+  const imageSize = image.endsWith(DEFAULT_SHARE_IMAGE)
+    ? `
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">`
+    : "";
   return `
     <link rel="canonical" href="${escapeAttr(pageUrl)}">
+    <meta property="og:site_name" content="${SITE_NAME}">
     <meta property="og:title" content="${escapeAttr(title)}">
     <meta property="og:description" content="${escapeAttr(description)}">
-    <meta property="og:image" content="${escapeAttr(image)}">
+    <meta property="og:image" content="${escapeAttr(image)}">${imageSize}
     <meta property="og:url" content="${escapeAttr(pageUrl)}">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -84,7 +94,7 @@ function injectMeta(assetResponse, title, metaHtml, headingSelector, heading) {
 // a blank one. `data` is the result of getWeekData(), or null when the
 // query params are missing or don't resolve to a known week.
 export function injectWeekMeta(assetResponse, data, url) {
-  const fallbackImage = `${url.origin}/logo.webp`;
+  const fallbackImage = `${url.origin}${DEFAULT_SHARE_IMAGE}`;
 
   // Both "/week.html?..." and "/week?..." serve this page, and links shared
   // around usually pick up tracking params. Point canonical/og:url at one
@@ -148,7 +158,7 @@ export function injectWeekMeta(assetResponse, data, url) {
 // is the result of getSeasonSummary(), or null when the year is missing
 // or not present in history.json.
 export function injectSeasonMeta(assetResponse, summary, url) {
-  const fallbackImage = `${url.origin}/logo.webp`;
+  const fallbackImage = `${url.origin}${DEFAULT_SHARE_IMAGE}`;
 
   // Same normalization as injectWeekMeta: strip tracking params so shared
   // links with different query junk all canonicalize to one URL per year.
