@@ -634,6 +634,13 @@ main h1 {
   border-left: 3px solid var(--navy-dark);
 }
 
+/* Same block, muted: the game is over and nothing more is coming. */
+.badge-no-photos {
+  background: var(--surface);
+  color: var(--text-muted);
+  border-left-color: var(--border);
+}
+
 .empty-state {
   color: var(--text-muted);
   padding: 2rem 0;

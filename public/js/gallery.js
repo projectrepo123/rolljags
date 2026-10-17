@@ -172,6 +172,14 @@ function showComingSoon() {
   statusEl.innerHTML = '<p class="coming-soon-banner">Photos haven\'t been posted yet. Check back after the game.</p>';
 }
 
+// A game that was played but not shot (noPhotos in lib/schedule.js).
+function showNoPhotos() {
+  tabsEl.innerHTML = "";
+  toolbarEl.innerHTML = "";
+  gridEl.innerHTML = "";
+  statusEl.innerHTML = '<p class="coming-soon-banner">There are no photos from this game.</p>';
+}
+
 async function init() {
   // The grid ships with placeholder tiles so the page isn't blank while the
   // photo list loads; every exit path below has to clear them.
@@ -211,6 +219,11 @@ async function init() {
 
     if (data.status === "coming-soon") {
       showComingSoon();
+      return;
+    }
+
+    if (data.status === "no-photos") {
+      showNoPhotos();
       return;
     }
 

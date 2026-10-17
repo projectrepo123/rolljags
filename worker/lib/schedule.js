@@ -19,6 +19,12 @@
 // so visitors know to check back rather than taking a partial set as the whole
 // gallery. Nothing infers it — clear the flag once the last batch is up.
 //
+// `noPhotos: true` marks a game that was played but never shot. Instead of
+// sitting at "Coming soon" forever (and holding the home page's next-game
+// teaser on a game that's already over), the week shows as "No photos" with
+// its opponent logo as the cover. Only applies while R2 has nothing for that
+// week; real uploads still take over.
+//
 // `result`/`pointsFor`/`pointsAgainst` record a finished game's outcome for
 // the /schedule page, in the same "W"/"L"/"T" + score shape history.json uses
 // for past seasons (see season.js's resultDisplay). Add them once the score
@@ -97,9 +103,32 @@ export const SCHEDULE = {
       homeAway: "Home",
       notes: "Homecoming",
       cover: "/logos/HazlewoodCentralHawks.webp",
+      result: "W",
+      pointsFor: 28,
+      pointsAgainst: 0,
     },
-    { week: "07", date: "2026-10-08", opponent: "Hazelwood East", homeAway: "Away" },
-    { week: "08", date: "2026-10-16", opponent: "Ritenour", homeAway: "Home", notes: "Senior Night" },
+    {
+      week: "07",
+      date: "2026-10-08",
+      opponent: "Hazelwood East",
+      homeAway: "Away",
+      cover: "/logos/HazlewoodEast.webp",
+      noPhotos: true,
+      result: "W",
+      pointsFor: 40,
+      pointsAgainst: 7,
+    },
+    {
+      week: "08",
+      date: "2026-10-16",
+      opponent: "Ritenour",
+      homeAway: "Home",
+      notes: "Senior Night",
+      cover: "/logos/ritenourhuskies.webp",
+      result: "W",
+      pointsFor: 26,
+      pointsAgainst: 0,
+    },
     { week: "09", date: "2026-10-23", opponent: "Parkway North", homeAway: "Away" },
   ],
 };

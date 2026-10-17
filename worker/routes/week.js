@@ -13,7 +13,7 @@ export async function getWeekData(env, year, weekNum) {
         year,
         week: weekNum,
         label: formatWeekLabel(weekNum, scheduledGame.date, scheduledGame.label),
-        status: "coming-soon",
+        status: scheduledGame.noPhotos ? "no-photos" : "coming-soon",
         levels: [],
         caption: scheduleCaption(scheduledGame),
         date: scheduledGame.date,

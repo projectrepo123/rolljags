@@ -107,9 +107,12 @@ export async function handleWeeks(env) {
         caption: scheduleCaption(game),
         photoCount: 0,
         cover: game.cover || null,
-        status: "coming-soon",
+        status: game.noPhotos ? "no-photos" : "coming-soon",
         opponent: game.opponent,
         homeAway: game.homeAway,
+        ...(game.result
+          ? { result: game.result, pointsFor: game.pointsFor, pointsAgainst: game.pointsAgainst }
+          : {}),
       });
     }
   }

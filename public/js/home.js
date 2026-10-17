@@ -13,7 +13,7 @@ function weekUrl(year, week) {
 // newest set. Years arrive newest-first from the API.
 function findLatestWeek(years) {
   for (const yearGroup of years) {
-    const live = yearGroup.weeks.filter((w) => w.status !== "coming-soon");
+    const live = yearGroup.weeks.filter((w) => w.status === "live");
     if (live.length > 0) {
       const newest = live[live.length - 1];
       return `${newest.year}/${newest.week}`;
@@ -35,6 +35,7 @@ function renderYear(yearGroup, latestKey) {
 
   // Weeks that actually have photos, plus the next game as a teaser. Future
   // weeks beyond that stay hidden so the grid doesn't fill with empty cards.
+  // A "no-photos" week was played, so it counts as played and shows in order.
   const played = yearGroup.weeks.filter((w) => w.status !== "coming-soon");
   const nextUp = yearGroup.weeks.find((w) => w.status === "coming-soon");
   const visibleWeeks = nextUp ? [...played, nextUp] : played;
@@ -86,6 +87,11 @@ function renderYear(yearGroup, latestKey) {
       const badge = document.createElement("span");
       badge.className = "badge-coming-soon";
       badge.textContent = "Coming soon";
+      body.appendChild(badge);
+    } else if (week.status === "no-photos") {
+      const badge = document.createElement("span");
+      badge.className = "badge-coming-soon badge-no-photos";
+      badge.textContent = "No photos";
       body.appendChild(badge);
     } else {
       const meta = document.createElement("div");

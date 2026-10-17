@@ -127,6 +127,8 @@ export function injectWeekMeta(assetResponse, data, url) {
         ...(photoCount ? { numberOfItems: photoCount } : {}),
         about: { "@type": "SportsTeam", "@id": `${SITE_ORIGIN}/#team`, name: TEAM_NAME },
       });
+    } else if (data.status === "no-photos") {
+      description = "There are no photos from this game.";
     } else {
       description = "Photos haven't been posted yet. Check back after the game.";
     }
