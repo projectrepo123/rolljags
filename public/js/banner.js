@@ -16,7 +16,10 @@ export async function initPhotoBanner() {
     if (!res.ok) throw new Error(`banner ${res.status}`);
     const data = await res.json();
     const images = data.images || [];
-    if (images.length === 0) return;
+    if (images.length === 0) {
+      bannerEl.hidden = true;
+      return;
+    }
 
     // The banner only has one size per photo (no separate view/thumb the way
     // week photos do), so the same URL serves as both the on-screen display
@@ -54,6 +57,7 @@ export async function initPhotoBanner() {
 
     bannerEl.hidden = false;
   } catch (err) {
-    // Decorative only — leave it hidden on failure rather than showing an error.
+    // Decorative only, so hide it on failure rather than showing an error.
+    bannerEl.hidden = true;
   }
 }

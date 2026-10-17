@@ -144,13 +144,37 @@ export function injectWeekMeta(assetResponse, data, url) {
     }
   }
 
-  return injectMeta(
+  const withMeta = injectMeta(
     assetResponse,
     title,
     buildMeta(title, description, image, pageUrl) + structured,
     "#week-title",
     heading
   );
+  return data ? prefillWeek(withMeta, data) : withMeta;
+}
+
+// Server-renders what gallery.js would otherwise add after the photo list
+// loads, so nothing above the grid appears late and pushes it down. The
+// caption rule matches gallery.js: skip it when it only repeats the title.
+function prefillWeek(response, data) {
+  const titleWithoutDate = data.label.replace(/\s*\([^)]*\)\s*$/, "").trim();
+  const caption = data.caption && data.caption !== titleWithoutDate ? data.caption : "";
+  const live = data.status === "live";
+
+  return new HTMLRewriter()
+    .on("#week-caption", { element: (el) => el.setInnerContent(caption) })
+    .on("#week-more-coming", {
+      element: (el) => {
+        if (data.moreToCome) el.removeAttribute("hidden");
+      },
+    })
+    .on("#level-tabs, #level-toolbar", {
+      element: (el) => {
+        if (live) el.setAttribute("class", `${el.getAttribute("class")} reserve`);
+      },
+    })
+    .transform(response);
 }
 
 // Same idea as injectWeekMeta, but for season.html: reflects the season's

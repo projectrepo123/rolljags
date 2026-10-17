@@ -445,9 +445,13 @@ header.site-header .site-nav a.active {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
+/* At least a screen tall, so the footer starts below the fold instead of
+   being pushed down (a layout shift) when a page's tables or photos load. */
 main {
   flex: 1 0 auto;
   padding: 1.5rem 0;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 /* Page headings used to be <h2> (the brand in the header was the <h1>). They're
@@ -711,6 +715,13 @@ main h1 {
   margin-bottom: 1rem;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+/* The worker adds .reserve on a week that has photos, so the row is held
+   open before gallery.js fills it and the grid below doesn't jump. */
+.level-tabs.reserve:empty,
+.level-toolbar.reserve:empty {
+  min-height: 47px;
 }
 
 .level-toolbar .photo-count {
