@@ -1,10 +1,11 @@
-// Looks up a season's win/loss record for meta-tag purposes. Returns null
-// if the year isn't present in history.json (invalid or not-yet-played).
-export async function getSeasonSummary(env, origin, year) {
-  const res = await env.ASSETS.fetch(new Request(`${origin}/data/history.json`));
-  if (!res.ok) return null;
+import { loadHistory } from "../lib/history.js";
 
-  const data = await res.json();
+// Looks up a season's win/loss record for meta-tag purposes. Returns null
+// if the year has no played games (invalid or not started yet).
+export async function getSeasonSummary(env, origin, year) {
+  const data = await loadHistory(env, origin);
+  if (!data) return null;
+
   const games = data[year];
   if (!games) return null;
 

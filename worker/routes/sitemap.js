@@ -1,3 +1,4 @@
+import { loadHistory } from "../lib/history.js";
 import { listPrefixes, lastSegment, parseWeekFolder } from "../lib/r2.js";
 
 // The static pages, with how often they actually change.
@@ -56,12 +57,12 @@ async function uploadedWeeks(bucket) {
 
 // Every season with a results table behind it. These pages long predate the
 // photo galleries (1999 onwards), so they can't be derived from R2 — only
-// history.json knows about them. Read the same way getSeasonSummary does.
+// history.json (plus the season in progress) knows about them.
 async function seasonYears(env, origin) {
   try {
-    const res = await env.ASSETS.fetch(new Request(`${origin}/data/history.json`));
-    if (!res.ok) return [];
-    return Object.keys(await res.json()).filter((year) => /^\d{4}$/.test(year));
+    const data = await loadHistory(env, origin);
+    if (!data) return [];
+    return Object.keys(data).filter((year) => /^\d{4}$/.test(year));
   } catch {
     return [];
   }

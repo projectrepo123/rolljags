@@ -323,8 +323,8 @@ async function init() {
   let games = null;
 
   try {
-    const res = await fetch("/data/history.json");
-    if (!res.ok) throw new Error(`history.json ${res.status}`);
+    const res = await fetch("/api/history");
+    if (!res.ok) throw new Error(`history ${res.status}`);
     const data = await res.json();
 
     if (!data[year]) {

@@ -294,15 +294,14 @@ export function renderLeaderboardCard(title, items, buildFullView, options = {})
   card.appendChild(listEl);
 
   if (buildFullView) {
-    const link = document.createElement("a");
-    link.className = "leaderboard-link";
-    link.href = "#";
-    link.textContent = "View all";
-    link.onclick = (e) => {
-      e.preventDefault();
-      openRecordsModal(title, buildFullView());
-    };
-    card.appendChild(link);
+    // It opens a dialog rather than going anywhere, so it's a button.
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "leaderboard-link";
+    button.textContent = "View all";
+    button.setAttribute("aria-haspopup", "dialog");
+    button.addEventListener("click", () => openRecordsModal(title, buildFullView()));
+    card.appendChild(button);
   }
 
   return card;

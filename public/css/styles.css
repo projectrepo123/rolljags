@@ -1829,7 +1829,12 @@ footer.site-footer p + p {
   font-weight: 600;
   transition: color 0.15s ease;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding: 0.5rem 0 0;
+  align-self: flex-start;
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 /* Gold on white is only ~1.6:1, so keep the hover cue on the underline

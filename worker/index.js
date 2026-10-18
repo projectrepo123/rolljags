@@ -10,6 +10,7 @@ import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, opponentPhrase } 
 import { isValidYear, isValidWeekNum, isValidLevel, isValidPhotoKey } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
 import { headerHtml, FOOTER_HTML } from "./lib/chrome.js";
+import { loadHistory } from "./lib/history.js";
 
 // The season /schedule shows when no ?year= is given. Matches DEFAULT_YEAR in
 // public/js/schedule.js, so the structured data describes the season the page
@@ -97,6 +98,14 @@ async function handle(request, env, ctx) {
           return Response.json({ error: "Invalid year" }, { status: 400 });
         }
         return handleSchedule(year);
+      }
+
+      // GET /api/history: history.json plus the season in progress
+      if (parts[1] === "history" && parts.length === 2) {
+        return withCache(request, ctx, async () => {
+          const data = await loadHistory(env, url.origin);
+          return data ? Response.json(data) : Response.json({ error: "History unavailable" }, { status: 502 });
+        });
       }
 
       // GET /api/banner
