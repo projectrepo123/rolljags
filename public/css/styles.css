@@ -160,7 +160,7 @@
 :focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-badge);
 }
 
 /* The header stays navy in both themes, and the lightbox is always dark, so
@@ -348,7 +348,7 @@ header.site-header .site-nav {
   width: 22px;
   height: 2px;
   background: #fff;
-  border-radius: 2px;
+  border-radius: var(--radius-badge);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -415,12 +415,12 @@ header.site-header .site-nav {
 
 /* While a game is in progress the readout turns green and pulses. */
 .kickoff-countdown.is-live .kickoff-clock {
-  color: #4ade80;
-  text-shadow: 0 0 12px rgba(74, 222, 128, 0.5);
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(255, 199, 44, 0.5);
 }
 
 .kickoff-countdown.is-live .kickoff-label {
-  color: #4ade80;
+  color: var(--gold);
   animation: kickoff-pulse 2s ease-in-out infinite;
 }
 
@@ -444,7 +444,7 @@ header.site-header .site-nav a {
   align-items: center;
   min-height: 44px;
   padding: 0 0.8rem;
-  border-radius: 8px;
+  border-radius: var(--radius);
   transition: color 0.15s ease, background-color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -534,7 +534,7 @@ main h1 {
   display: block;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   text-decoration: none;
   color: var(--text);
@@ -617,7 +617,7 @@ main h1 {
   background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--gold);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
   color: var(--text-muted);
   box-shadow: var(--shadow-1), var(--surface-highlight);
@@ -871,7 +871,7 @@ main h1 {
   padding: 0;
   border: none;
   background: var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
   aspect-ratio: 1 / 1;
@@ -1381,7 +1381,7 @@ footer.site-footer p + p {
 .stat-tile {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   padding: 0.85rem 1rem;
   box-shadow: var(--shadow-1), var(--surface-highlight);
 }
@@ -1545,7 +1545,7 @@ footer.site-footer p + p {
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--navy-dark);
 }
 
@@ -1650,7 +1650,7 @@ footer.site-footer p + p {
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   /* Shadows pinned to the scroll edges fade away once you reach either end,
      so it's obvious when a wide table continues off-screen. */
   background:
@@ -1744,7 +1744,7 @@ footer.site-footer p + p {
   flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   box-shadow: var(--shadow-1), var(--surface-highlight);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
@@ -1912,7 +1912,7 @@ footer.site-footer p + p {
   padding: 0.7rem 0.75rem;
   min-height: 44px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg);
   color: var(--text);
   /* 16px minimum, otherwise iOS zooms the page in when the field is focused. */
@@ -1960,7 +1960,7 @@ footer.site-footer p + p {
 .podcast-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow-1), var(--surface-highlight);
@@ -2030,7 +2030,7 @@ footer.site-footer p + p {
   flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-3), var(--surface-highlight);
 }
@@ -2339,7 +2339,7 @@ header.site-header .skip-link:focus {
   position: relative;
   overflow: hidden;
   background: var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .skeleton::after {
@@ -2360,7 +2360,7 @@ header.site-header .skip-link:focus {
 .skeleton-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-1), var(--surface-highlight);
 }
@@ -2386,7 +2386,7 @@ header.site-header .skip-link:focus {
 
 .skeleton-season {
   min-height: 120px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 
 .skeleton-thumb {
@@ -2769,7 +2769,7 @@ header.site-header .skip-link:focus {
   max-height: 66%;
   padding: 0.6rem;
   background: #fff;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
@@ -3305,5 +3305,641 @@ header.site-header .skip-link:focus {
 
   .home-hero-team {
     display: block;
+  }
+}
+
+/* ===================================================================
+   Design pass 2: page titles, schedule, history/records, small fixes
+   =================================================================== */
+
+/* ---- Page titles: the school name rides above a short title ----
+   The full "Seckman Jaguars Football …" stays inside the <h1> for search, but
+   reads as a kicker line, so the visible title fits one line on a phone. */
+.h1-kicker {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-muted);
+}
+
+/* ---- Home: season record beside the hero button ---- */
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.home-hero-record {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(255, 199, 44, 0.6);
+  border-radius: var(--radius-sm);
+  background: rgba(11, 22, 40, 0.55);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.home-outro {
+  margin-top: var(--space-6);
+  font-size: var(--step--1);
+}
+
+/* ---- Schedule: logos, the next game, and kickoff times ---- */
+.opponent-cell {
+  position: relative;
+}
+
+.opp-logo {
+  width: 24px;
+  height: 24px;
+  margin-right: var(--space-2);
+  vertical-align: middle;
+  object-fit: contain;
+}
+
+/* The whole opponent cell is the link's tap target, not just the name. */
+.opponent-cell a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.next-chip {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--gold);
+  color: var(--navy-dark);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.season-table .result-upcoming {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: var(--step--1);
+  white-space: nowrap;
+}
+
+.season-table .schedule-next {
+  box-shadow: inset 4px 0 0 var(--gold);
+}
+
+@media (max-width: 480px) {
+  .opp-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+  }
+
+  .next-chip {
+    font-size: var(--step--2);
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+/* ---- Tabs that scroll sideways show a shadow where more is hidden ----
+   Same local/scroll background trick as .table-scroll: the covers move with
+   the content and uncover the shadow only while there's more to scroll to. */
+.level-tabs {
+  background:
+    linear-gradient(to right, var(--bg) 30%, transparent) left center,
+    linear-gradient(to left, var(--bg) 30%, transparent) right center,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.14), transparent) left center,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.14), transparent) right center;
+  background-repeat: no-repeat;
+  background-size: 32px 100%, 32px 100%, 12px 100%, 12px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* ---- Leader cards: tighter on phones, View all as a real button ---- */
+.leaderboard-link {
+  align-self: stretch;
+  justify-content: center;
+  margin-top: auto;
+  padding: 0.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+}
+
+.leaderboard-link:hover {
+  border-color: var(--gold);
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .leaderboard-card {
+    padding: var(--space-4);
+  }
+
+  .leaderboard-card h3 {
+    margin-bottom: var(--space-3);
+  }
+
+  .leaderboard-list {
+    margin-bottom: var(--space-3);
+  }
+}
+
+/* ---- Season page: small headings match the site's eyebrow style ---- */
+.subsection-title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Highlight tiles: the last row stretches to fill, so an odd count never
+   leaves one narrow tile on its own. */
+.season-stats {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.season-stats > * {
+  flex: 1 1 160px;
+}
+
+.season-stats > :nth-child(-n + 2) {
+  flex-basis: 260px;
+}
+
+/* ---- Expandable sections (head-to-head, full tables) read as cards ---- */
+.records-section {
+  padding: 0;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+}
+
+.records-section summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding: var(--space-3) var(--space-4);
+}
+
+.records-section summary strong {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+}
+
+/* The chevron moves to the right edge, in a round navy button. */
+.records-section summary::before {
+  content: none;
+}
+
+.records-section summary::after {
+  content: "";
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-left: auto;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffc72c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / 16px no-repeat,
+    var(--navy);
+  transition: transform var(--dur) var(--ease);
+}
+
+.records-section[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.records-section > :not(summary) {
+  margin-left: var(--space-4);
+  margin-right: var(--space-4);
+}
+
+.records-section[open] {
+  padding-bottom: var(--space-4);
+}
+
+/* ---- Header: the wordmark drops "Football" on the narrowest phones ---- */
+@media (max-width: 340px) {
+  header.site-header .brand-tail {
+    display: none;
+  }
+}
+
+/* ===================================================================
+   Game cards and the latest-game hero: photo-first, cut corner, gold bar,
+   outlined jersey-style week number, scoreboard score on a slanted slab.
+   =================================================================== */
+
+/* ---- Grid ---- */
+#weeks .week-grid {
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 18px;
+}
+
+/* The anchor is clipped (its corner is cut), which would clip its shadow too,
+   so the lift and the shadow live on the cell around it. */
+.week-cell {
+  filter: drop-shadow(0 6px 12px rgba(8, 16, 30, 0.28));
+  transition: transform var(--dur) var(--ease), filter var(--dur) var(--ease);
+}
+
+@media (hover: hover) {
+  .week-cell:hover,
+  .week-cell:focus-within {
+    transform: translateY(-6px);
+    filter: drop-shadow(0 14px 22px rgba(8, 16, 30, 0.4));
+  }
+}
+
+.week-grid .week-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: var(--navy-dark);
+  box-shadow: none;
+  color: #fff;
+  clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 0 100%);
+}
+
+@media (hover: hover) {
+  .week-grid .week-card:hover {
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.week-grid .week-card:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: -3px;
+}
+
+/* Thick gold bar down the left edge. */
+.week-grid .week-card::before {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: var(--gold);
+}
+
+/* ---- Photo ---- */
+.wc-media {
+  position: absolute;
+  inset: 0;
+}
+
+.week-card .wc-media .cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease);
+}
+
+@media (hover: hover) {
+  .week-card:hover .wc-media .cover {
+    transform: scale(1.07);
+  }
+}
+
+/* A week with no photos shows the opponent's crest on the navy tile. */
+.wc-media.cover-logo-tile {
+  display: grid;
+  place-items: center;
+  padding-bottom: 56%;
+  background: var(--yardlines-on-navy), var(--grad-navy);
+}
+
+.wc-media .logo-badge {
+  width: 44%;
+  max-width: 44%;
+  max-height: 34%;
+  object-fit: contain;
+  border-radius: 0;
+}
+
+.wc-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(8, 16, 30, 0) 30%, rgba(8, 16, 30, 0.55) 58%, rgba(8, 16, 30, 0.95) 100%);
+}
+
+/* ---- Large low-opacity week number behind the text ---- */
+.wc-ghost,
+.home-hero-ghost {
+  position: absolute;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.78;
+  color: #fff;
+  opacity: 0.15;
+  pointer-events: none;
+  user-select: none;
+}
+
+.wc-ghost {
+  right: -4px;
+  top: 10px;
+  font-size: 9.5rem;
+}
+
+/* ---- Text ---- */
+.wc-info {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18px 18px 18px 28px;
+}
+
+.wc-kick {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.wc-opp {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* Gold underline that draws in on hover and keyboard focus. */
+.wc-opp span {
+  padding-bottom: 3px;
+  background: linear-gradient(var(--gold), var(--gold)) 0 100% / 0 3px no-repeat;
+  transition: background-size 0.3s var(--ease);
+}
+
+.week-card:hover .wc-opp span,
+.week-card:focus-visible .wc-opp span {
+  background-size: 100% 3px;
+}
+
+/* Scoreboard score: gold for a win, muted for a loss or tie. */
+.wc-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: #9fb0c8;
+  font-family: var(--font-display);
+  font-size: 2.9rem;
+  font-weight: 700;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.wc-score .dash {
+  flex: none;
+  width: 14px;
+  height: 5px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.wc-score .res {
+  margin-left: 6px;
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.week-card.win .wc-score .us,
+.week-card.win .wc-score .res {
+  color: var(--gold);
+}
+
+.week-card.win .wc-score .them {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.wc-meta {
+  margin-top: 10px;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Placeholder cards hold the same shape while the list loads. */
+#weeks .skeleton-card {
+  aspect-ratio: 4 / 5;
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 0 100%);
+}
+
+#weeks .skeleton-cover {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+#weeks .skeleton-body {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  #weeks .week-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .week-grid .week-card,
+  #weeks .skeleton-card {
+    aspect-ratio: 4 / 3;
+  }
+
+  .wc-media.cover-logo-tile {
+    padding-bottom: 36%;
+  }
+
+  .wc-ghost {
+    font-size: 8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .week-cell,
+  .week-card .wc-media .cover,
+  .wc-opp span {
+    transition: none;
+  }
+
+  .week-cell:hover,
+  .week-cell:focus-within {
+    transform: none;
+  }
+
+  .week-card:hover .wc-media .cover {
+    transform: none;
+  }
+}
+
+/* ---- Latest-game hero, same language ---- */
+.home-hero {
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: polygon(0 0, calc(100% - 44px) 0, 100% 44px, 100% 100%, 0 100%);
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: var(--gold);
+}
+
+.home-hero-body {
+  padding-left: calc(var(--space-5) + 10px);
+}
+
+.home-tag {
+  position: absolute;
+  z-index: 4;
+  top: 18px;
+  left: 10px;
+  padding: 5px 26px 5px 16px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  background: var(--gold);
+  color: var(--navy-950);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-hero-ghost {
+  right: 52px;
+  top: 18px;
+  font-size: clamp(9rem, 22vw, 20rem);
+}
+
+@media (max-width: 600px) {
+  .home-hero {
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+  }
+
+  .home-hero-body {
+    padding-left: calc(var(--space-4) + 8px);
+  }
+
+  .home-hero::before {
+    width: 8px;
+  }
+
+  .home-hero-ghost {
+    right: 18px;
+    top: 56px;
+    font-size: 8rem;
+  }
+}
+
+/* ---- Cards: B's lettering and panels on top of the A card ----
+   Outlined jersey-style week number, a navy chip behind AT/VS, and the score
+   on a slanted slab (gold for a win, slate for a loss or tie). The hero keeps
+   the plain faint number. */
+.wc-ghost {
+  left: 26px;
+  right: auto;
+  top: 12px;
+  color: transparent;
+  opacity: 1;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.55);
+}
+
+.wc-kick {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 3px 10px;
+  background: var(--navy);
+}
+
+.wc-score {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 6px 18px 6px 14px;
+  transform: skewX(-9deg);
+  background: #3a465c;
+  color: #dfe6f1;
+  font-size: 2.6rem;
+}
+
+.wc-score > * {
+  transform: skewX(9deg);
+}
+
+.week-card.win .wc-score {
+  background: var(--gold);
+  color: var(--navy-950);
+}
+
+.week-card.win .wc-score .us,
+.week-card.win .wc-score .res {
+  color: var(--navy-950);
+}
+
+.week-card.win .wc-score .them {
+  color: var(--navy-950);
+  opacity: 0.72;
+}
+
+@media (max-width: 560px) {
+  .wc-ghost {
+    font-size: 8rem;
+  }
+}
+
+/* The latest-game hero gets the same outlined number as the cards. */
+.home-hero-ghost {
+  color: transparent;
+  opacity: 1;
+  -webkit-text-stroke: 3px rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 600px) {
+  .home-hero-ghost {
+    -webkit-text-stroke-width: 2px;
   }
 }

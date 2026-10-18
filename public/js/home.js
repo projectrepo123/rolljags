@@ -43,12 +43,11 @@ function photoAlt(week) {
     : `Seckman Jaguars football, ${week.label}`;
 }
 
-function resultChip(week) {
-  const chip = document.createElement("span");
-  const kind = { W: "win", L: "loss", T: "tie" }[week.result] || "tie";
-  chip.className = `result-chip ${kind}`;
-  chip.textContent = `${week.result} ${week.pointsFor}-${week.pointsAgainst}`;
-  return chip;
+// The large faint number behind a card. Only regular-season weeks have one:
+// a scrimmage is week 0 and a jamboree sits in the 90s (see lib/schedule.js).
+function weekNumber(week) {
+  const n = parseInt(week.week, 10);
+  return week.opponent && n >= 1 && n < 30 ? String(n) : "";
 }
 
 function el(tag, className, text) {
@@ -72,7 +71,16 @@ function logoTile(src, className) {
 
 // The newest week with photos: the photo itself, the final score over it, and
 // a way into the gallery.
-function renderHero(week) {
+// "7-1" (or "7-1-1") from every game in that season with a result, whether or
+// not it has photos.
+function seasonRecord(weeks) {
+  const count = (r) => weeks.filter((w) => w.result === r).length;
+  const [w, l, t] = [count("W"), count("L"), count("T")];
+  if (w + l + t === 0) return "";
+  return t ? `${w}-${l}-${t}` : `${w}-${l}`;
+}
+
+function renderHero(week, record = "") {
   heroEl.href = weekUrl(week.year, week.week);
   heroEl.setAttribute("aria-label", `Latest game: ${photoAlt(week)}, ${week.photoCount} photos`);
 
@@ -86,22 +94,26 @@ function renderHero(week) {
     // The 1080w WebP sits between the two JPEGs when this week has one.
     const view = photo.replace("/thumbs/", "/view/");
     img.srcset = [`${photo} 640w`, week.heroMid && `${week.heroMid} 1080w`, `${view} 1600w`].filter(Boolean).join(", ");
-    img.sizes = "(min-width: 1100px) 1052px, 100vw";
+    // Wide screens always get the 1600w original size: the 1080w WebP is soft
+    // when stretched across a 1050px hero. Must match preloadHomeHero in
+    // worker/index.js.
+    img.sizes = "(min-width: 700px) 1600px, 100vw";
     img.fetchPriority = "high";
     img.alt = "";
     heroEl.appendChild(img);
   }
 
+  heroEl.appendChild(el("span", "home-tag", "Latest"));
+  const ghost = weekNumber(week);
+  if (ghost) {
+    const g = el("span", "home-hero-ghost", ghost);
+    g.setAttribute("aria-hidden", "true");
+    heroEl.appendChild(g);
+  }
+
   const body = el("div", "home-hero-body");
-  // The tag and the details are separate so a phone can stack them as two
-  // clean lines instead of wrapping one long spaced-out line mid-phrase.
-  const eyebrow = el("p", "home-hero-eyebrow");
-  eyebrow.append(
-    el("span", "home-hero-tag", week.result ? "Latest result" : "Latest photos"),
-    el("span", "home-hero-sep", " · "),
-    el("span", "", [cardEyebrow(week), week.notes].filter(Boolean).join(" · "))
-  );
-  body.appendChild(eyebrow);
+  // Week, date and occasion. The "Latest" tag sits on the photo's corner.
+  body.appendChild(el("p", "home-hero-eyebrow", [cardEyebrow(week), week.notes].filter(Boolean).join(" · ")));
 
   if (week.result && week.opponent) {
     const score = el("p", "home-hero-score");
@@ -124,7 +136,10 @@ function renderHero(week) {
     body.appendChild(el("p", "home-hero-score", cardTitle(week)));
   }
 
-  body.appendChild(el("span", "btn btn-gold", `See all ${week.photoCount} photos`));
+  const actions = el("div", "home-hero-actions");
+  actions.appendChild(el("span", "btn btn-gold", `See all ${week.photoCount} photos`));
+  if (record) actions.appendChild(el("span", "home-hero-record", `${record} this season`));
+  body.appendChild(actions);
   heroEl.appendChild(body);
   heroEl.classList.add("ready");
 }
@@ -154,51 +169,76 @@ function renderNextUp(week) {
   nextUpEl.classList.add("ready");
 }
 
+// A card is the photo with the text over a bottom gradient: AT/VS above the
+// opponent, a scoreboard score, then week, date and photo count. The anchor is
+// wrapped in a cell so the lift and drop shadow can sit outside its cut corner.
 function renderCard(week, i) {
-  const card = el("a", "week-card");
+  const cell = el("div", "week-cell");
+  const kind = { W: "win", L: "loss", T: "tie" }[week.result] || "plain";
+  const card = el("a", `week-card ${kind}`);
   card.href = weekUrl(week.year, week.week);
   // Drives the staggered entrance; capped so a long list doesn't leave the
   // last cards waiting noticeably.
   card.style.setProperty("--enter-delay", `${Math.min(i, 7) * 60}ms`);
 
   if (week.cover && week.cover.startsWith("/")) {
-    card.appendChild(logoTile(week.cover, "cover cover-logo-tile"));
+    card.appendChild(logoTile(week.cover, "wc-media cover-logo-tile"));
   } else if (week.cover) {
+    const media = el("div", "wc-media");
     const img = el("img", "cover");
     img.loading = "lazy";
     // Names the team and opponent rather than just "Week 2 (Sep 4)", so the
     // cover shots mean something in image search.
     img.alt = photoAlt(week);
+    img.width = 640;
+    img.height = 427;
     img.src = week.cover;
-    card.appendChild(img);
-  } else {
-    card.appendChild(el("div", "cover"));
-  }
-
-  const body = el("div", "card-body");
-  body.appendChild(el("p", "card-eyebrow", cardEyebrow(week)));
-  body.appendChild(el("p", "card-title", cardTitle(week)));
-
-  if (week.status === "no-photos") {
-    const meta = el("div", "card-meta");
-    if (week.result) meta.appendChild(resultChip(week));
-    meta.appendChild(el("span", "badge-coming-soon badge-no-photos", "No photos"));
-    body.appendChild(meta);
-  } else {
-    const meta = el("div", "card-meta");
-    if (week.result) meta.appendChild(resultChip(week));
-    meta.appendChild(el("p", "card-count", `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`));
-
-    if (week.moreToCome) {
-      const badges = el("div", "card-badges");
-      badges.appendChild(el("span", "badge-more-coming", "More coming"));
-      meta.appendChild(badges);
+    // 640w for normal screens, 1080w WebP (where this week has one) for
+    // high-density ones, since the card crops the photo taller than it is wide.
+    if (week.coverMid) {
+      img.srcset = `${week.cover} 640w, ${week.coverMid} 1080w`;
+      img.sizes = "(max-width: 560px) 100vw, 480px";
     }
-    body.appendChild(meta);
+    media.appendChild(img);
+    card.appendChild(media);
+  } else {
+    card.appendChild(el("div", "wc-media"));
   }
 
-  card.appendChild(body);
-  return card;
+  card.appendChild(el("div", "wc-shade"));
+  const ghost = weekNumber(week);
+  if (ghost) {
+    const g = el("span", "wc-ghost", ghost);
+    g.setAttribute("aria-hidden", "true");
+    card.appendChild(g);
+  }
+
+  const info = el("div", "wc-info");
+  if (week.opponent) info.appendChild(el("span", "wc-kick", week.homeAway === "Away" ? "At" : "Vs"));
+  const title = el("h3", "wc-opp");
+  title.appendChild(el("span", "", week.opponent || labelWithoutDate(week.label)));
+  info.appendChild(title);
+
+  if (week.result) {
+    const score = el("div", "wc-score");
+    score.setAttribute("aria-label", `${{ W: "Win", L: "Loss", T: "Tie" }[week.result] || week.result} ${week.pointsFor} to ${week.pointsAgainst}`);
+    score.append(
+      el("b", "us", String(week.pointsFor)),
+      el("i", "dash"),
+      el("b", "them", String(week.pointsAgainst)),
+      el("span", "res", { W: "Win", L: "Loss", T: "Tie" }[week.result] || week.result)
+    );
+    info.appendChild(score);
+  }
+
+  const count = week.status === "no-photos" ? "No photos" : `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
+  info.appendChild(
+    el("div", "wc-meta", [cardEyebrow(week), week.opponent ? week.notes : null, count, week.moreToCome ? "More coming" : null].filter(Boolean).join(" · "))
+  );
+  card.appendChild(info);
+
+  cell.appendChild(card);
+  return cell;
 }
 
 // Played weeks, newest first. Upcoming games live in the "Next up" strip
@@ -236,7 +276,8 @@ async function init() {
       .find(Boolean);
     const nextUp = data.years[0].weeks.find((w) => w.status === "coming-soon");
 
-    if (latest) renderHero(latest);
+    const latestYear = latest && data.years.find((y) => y.weeks.includes(latest));
+    if (latest) renderHero(latest, seasonRecord(latestYear.weeks));
     else heroEl.remove();
 
     if (nextUp) renderNextUp(nextUp);

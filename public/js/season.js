@@ -250,7 +250,12 @@ function renderSeason(games) {
 
   // Matches the heading the Worker server-renders in injectSeasonMeta, so the
   // text doesn't change under the reader once this fetch lands.
-  titleEl.textContent = `${year} Seckman Jaguars Football Season`;
+  // Must match injectSeasonMeta in worker/lib/meta.js, which server-renders it.
+  titleEl.innerHTML = "";
+  const kicker = document.createElement("span");
+  kicker.className = "h1-kicker";
+  kicker.textContent = "Seckman Jaguars Football";
+  titleEl.append(kicker, ` ${year} Season`);
   document.title = `${year} Seckman Jaguars Football Season (${recordString(record)}) | Imperial, MO`;
 
   // This page is one HTML file serving every season, so point the canonical

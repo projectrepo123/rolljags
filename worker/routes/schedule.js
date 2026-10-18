@@ -13,6 +13,8 @@ export function scheduleGames(year) {
     result: game.result || null,
     pointsFor: game.pointsFor ?? null,
     pointsAgainst: game.pointsAgainst ?? null,
+    // The opponent's logo when the schedule has one (a site path, not a photo).
+    logo: game.cover?.startsWith("/") ? game.cover : null,
     // Structured data wants a real instant, not a bare date. The client
     // ignores this field.
     kickoff: kickoffInstant(game),

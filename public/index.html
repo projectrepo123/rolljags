@@ -99,16 +99,14 @@
     <div class="container">
       <!-- The heading and intro sit outside #weeks on purpose: home.js clears
            that container's innerHTML once the week list loads, and this copy is
-           the only thing a crawler without JS ever sees. -->
-      <h1>Seckman Jaguars Football</h1>
+           the only thing a crawler without JS ever sees. The heading is
+           visually hidden: the header already shows the name, and the hero
+           photo should be the first thing on screen. -->
+      <h1 class="sr-only">Seckman Jaguars Football</h1>
       <!-- Filled by home.js. Both hold their final size from the first paint so
            nothing below them jumps when the week list lands. -->
       <a class="home-hero" id="home-hero" aria-label="Latest game"></a>
       <a class="next-up" id="next-up" href="/schedule" aria-label="Next game"></a>
-      <p class="page-intro">
-        Game photos for Seckman Jaguars football in Imperial, MO, posted week by week
-        all season. Browse by game and grab the full-resolution photos for free.
-      </p>
       <div id="weeks">
         <p class="sr-only" role="status">Loading photos</p>
         <div class="week-grid" aria-hidden="true">
@@ -150,6 +148,12 @@
           </button>
         </div>
       </section>
+      <!-- Below the photos rather than above them, so the page reads game to
+           game; the text is still here for search engines. -->
+      <p class="page-intro home-outro">
+        Game photos for Seckman Jaguars football in Imperial, MO, posted week by week
+        all season. Browse by game and grab the full-resolution photos for free.
+      </p>
     </div>
   </main>
 

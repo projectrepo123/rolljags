@@ -32,9 +32,7 @@
 
   <main id="main">
     <div class="container">
-      <h1>Seckman Jaguars Football History</h1>
-      <section id="leaderboards"></section>
-      <section id="headToHead"></section>
+      <h1><span class="h1-kicker">Seckman Jaguars Football</span> History</h1>
       <div id="seasons">
         <p class="sr-only" role="status">Loading seasons</p>
         <div class="week-grid" aria-hidden="true">
@@ -45,6 +43,10 @@
         </div>
         <noscript><p class="empty-state">Season history needs JavaScript enabled to load.</p></noscript>
       </div>
+      <!-- Seasons first: they're what this page is for, and on a phone the
+           leader cards used to push them about 3,000px down. -->
+      <section id="headToHead"></section>
+      <section id="leaderboards"></section>
     </div>
   </main>
 

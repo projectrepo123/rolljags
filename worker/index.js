@@ -97,7 +97,7 @@ async function preloadHomeHero(asset, url, env, ctx) {
     const link =
       `<link rel="preload" as="image" fetchpriority="high" href="${escapeAttr(view)}" ` +
       `imagesrcset="${[`${escapeAttr(cover)} 640w`, latest.heroMid && `${escapeAttr(latest.heroMid)} 1080w`, `${escapeAttr(view)} 1600w`].filter(Boolean).join(", ")}" ` +
-      `imagesizes="(min-width: 1100px) 1052px, 100vw">`;
+      `imagesizes="(min-width: 700px) 1600px, 100vw">`;
     return new HTMLRewriter()
       .on("head", { element: (el) => el.append(link, { html: true }) })
       .transform(asset);

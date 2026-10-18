@@ -27,7 +27,7 @@ function render(games) {
   // request for a different year needs the year spelled out. Rewriting it
   // unconditionally would strip the team name back out of the page's one <h1>.
   if (year !== DEFAULT_YEAR) {
-    titleEl.textContent = `${year} Seckman Jaguars Football Schedule`;
+    titleEl.lastChild.textContent = ` ${year} Schedule`;
     document.title = `${year} Seckman Jaguars Football Schedule | Imperial, MO`;
   }
 
@@ -54,6 +54,17 @@ function render(games) {
     tr.appendChild(dateCell);
 
     const opponentCell = document.createElement("td");
+    opponentCell.className = "opponent-cell";
+    if (game.logo) {
+      const logo = document.createElement("img");
+      logo.className = "opp-logo";
+      logo.src = game.logo;
+      logo.width = 24;
+      logo.height = 24;
+      logo.alt = "";
+      logo.loading = "lazy";
+      opponentCell.appendChild(logo);
+    }
     const link = document.createElement("a");
     link.href = weekUrl(game.week);
     link.textContent = game.opponent || game.label || "TBD";
@@ -81,7 +92,25 @@ function render(games) {
 
     const resultCell = document.createElement("td");
     resultCell.className = "result-cell";
-    resultCell.textContent = game.result ? `${game.result} ${game.pointsFor}-${game.pointsAgainst}` : "";
+    if (game.result) {
+      resultCell.textContent = `${game.result} ${game.pointsFor}-${game.pointsAgainst}`;
+    } else if (gameDate >= today && game.kickoff) {
+      // Upcoming games show their kickoff, and the next one says so.
+      const time = new Date(game.kickoff).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        timeZone: "America/Chicago",
+      });
+      if (i === nextIndex) {
+        const chip = document.createElement("span");
+        chip.className = "next-chip";
+        chip.textContent = `Next · ${time}`;
+        resultCell.appendChild(chip);
+      } else {
+        resultCell.textContent = time;
+        resultCell.classList.add("result-upcoming");
+      }
+    }
     tr.appendChild(resultCell);
 
     const notesCell = document.createElement("td");

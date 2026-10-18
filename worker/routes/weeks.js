@@ -47,6 +47,12 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     const heroCover = pickDailyOther(candidates, seed);
     // The 1080w WebP the hero offers phones; weeks uploaded before it existed
     // simply don't get one. Its name is derived from the thumb's key.
+    // Same for the card photo, which high-density screens upgrade to 1080w.
+    let coverMid = null;
+    if (cover && cover.includes("/thumbs/")) {
+      const key = decodeURIComponent(new URL(cover).pathname.slice(1)).replace("/thumbs/", "/view/").replace(/\.jpe?g$/i, ".1080.webp");
+      if (await env.PHOTOS.head(key)) coverMid = publicUrl(key);
+    }
     let heroMid = null;
     if (heroCover) {
       const key = decodeURIComponent(new URL(heroCover).pathname.slice(1)).replace("/thumbs/", "/view/").replace(/\.jpe?g$/i, ".1080.webp");
@@ -62,6 +68,7 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
       cover,
       ...(heroCover ? { heroCover } : {}),
       ...(heroMid ? { heroMid } : {}),
+      ...(coverMid ? { coverMid } : {}),
       status: "live",
       opponent: scheduledGame?.opponent,
       homeAway: scheduledGame?.homeAway,

@@ -92,7 +92,10 @@ function injectMeta(assetResponse, title, metaHtml, headingSelector, heading) {
   if (headingSelector && heading) {
     rewriter = rewriter.on(headingSelector, {
       element(el) {
-        el.setInnerContent(heading);
+        // A heading object carries markup (the season page's kicker line);
+        // a plain string is text and gets escaped.
+        if (typeof heading === "string") el.setInnerContent(heading);
+        else el.setInnerContent(heading.html, { html: true });
       },
     });
   }
@@ -265,7 +268,9 @@ export function injectSeasonMeta(assetResponse, summary, url) {
   if (summary) {
     title = `${summary.year} ${SITE_NAME} Season (${summary.record}) | ${LOCALITY}`;
     description = `Game-by-game results for the ${summary.year} ${SCHOOL_NAME} Jaguars football season (${summary.record}) in ${LOCALITY}.`;
-    heading = `${summary.year} ${SITE_NAME} Season`;
+    heading = {
+      html: `<span class="h1-kicker">${SITE_NAME}</span> ${escapeAttr(summary.year)} Season`,
+    };
   }
 
   return injectMeta(

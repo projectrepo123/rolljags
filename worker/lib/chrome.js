@@ -45,7 +45,7 @@ export function headerHtml(pathname) {
     <div class="container header-inner">
       <a class="brand" href="/">
         <img class="site-logo" src="/logo.webp" width="512" height="409" alt="Jaguar Football logo" />
-        <span class="brand-name">Jaguar Football</span>
+        <span class="brand-name">Jaguar<span class="brand-tail"> Football</span></span>
       </a>
       <nav class="site-nav" aria-label="Main">
         <div class="nav-links" id="nav-links">
