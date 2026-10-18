@@ -12,6 +12,8 @@ Photos live in R2 under:
 {year}/week-{NN}_{yyyy-mm-dd}/{level}/0001_IMG_0412.jpg         original (Download)
 {year}/week-{NN}_{yyyy-mm-dd}/{level}/view/0001_IMG_0412.jpg    1600px, lightbox
 {year}/week-{NN}_{yyyy-mm-dd}/{level}/thumbs/0001_IMG_0412.jpg  640px, grid
+{year}/week-{NN}_{yyyy-mm-dd}/{level}/thumbs/0001_IMG_0412.400.webp  and .640.webp, grid srcset
+{year}/week-{NN}_{yyyy-mm-dd}/{level}/view/0001_IMG_0412.1080.webp  phone-size lightbox
 {year}/week-{NN}_{yyyy-mm-dd}/caption.txt   (optional)
 ```
 
@@ -388,3 +390,20 @@ worker/            Worker: serves public/ and handles /api/*
 scripts/           Local upload script (run from your own machine)
 wrangler.jsonc     Worker + R2 binding + custom domain config
 ```
+
+## Smaller photo sizes (WebP)
+
+`upload-week.mjs` also writes the `.400.webp`, `.640.webp` and `.1080.webp`
+copies above, and the site only offers them where they exist. A week uploaded
+before they existed keeps working with the JPEGs. To add them to an older
+week, build them from its existing `view/` copies (the originals aren't read):
+
+```
+cd scripts
+node backfill-tiers.mjs --year 2026 --dry-run
+node backfill-tiers.mjs --year 2026
+```
+
+The archive strip on the home page loads small tiles from
+`site/schedule-banner/thumbs/`; `upload-banner.mjs` writes them, and
+`make-banner-thumbs.mjs` builds them for photos uploaded earlier.

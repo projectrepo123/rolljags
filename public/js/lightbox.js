@@ -47,6 +47,19 @@ function displayUrl(photo) {
   return photo.viewUrl || photo.fullUrl;
 }
 
+// Points an <img> at a photo's display size. Where a 1080w WebP exists the
+// browser chooses it for phone screens and the 1600w JPEG for large ones.
+function setDisplay(img, photo) {
+  if (photo.midUrl) {
+    img.sizes = "100vw";
+    img.srcset = `${photo.midUrl} 1080w, ${displayUrl(photo)} 1600w`;
+  } else {
+    img.removeAttribute("srcset");
+    img.removeAttribute("sizes");
+  }
+  img.src = displayUrl(photo);
+}
+
 function wrap(i) {
   return (i + photos.length) % photos.length;
 }
@@ -105,6 +118,7 @@ function ensureBuilt() {
   liveEl = overlay.querySelector("[aria-live]");
 
   closeBtn.addEventListener("click", close);
+  downloadLink.addEventListener("click", shareToPhotos);
 
   overlay.addEventListener("click", (e) => {
     if (swallowClick) {
@@ -186,7 +200,7 @@ function renderSlide(el, offset) {
     clearTimeout(el._spinTimer);
     el.classList.add("is-loaded");
   };
-  full.src = displayUrl(photo);
+  setDisplay(full, photo);
 
   if (full.complete && full.naturalWidth) full.onload();
   else el._spinTimer = setTimeout(() => el.classList.add("is-slow"), 300);
@@ -257,6 +271,42 @@ function settle(dir) {
   preload(dir);
 }
 
+// On a phone, a plain download lands in the Files app. The share sheet has
+// "Save Image", which goes straight into Photos, so use that where the browser
+// can share a file. Anywhere else (desktop, or a failure) the link's normal
+// download runs.
+let sharing = false;
+async function shareToPhotos(e) {
+  if (sharing) return e.preventDefault();
+  const photo = photos[index];
+  if (!photo.key || !navigator.canShare || !window.matchMedia("(pointer: coarse)").matches) return;
+  try {
+    if (!navigator.canShare({ files: [new File([], photo.name, { type: "image/jpeg" })] })) return;
+  } catch {
+    return;
+  }
+
+  e.preventDefault();
+  sharing = true;
+  const label = downloadLink.lastChild;
+  const original = label.textContent;
+  label.textContent = " Preparing…";
+  try {
+    const res = await fetch(`/api/photo?key=${encodeURIComponent(photo.key)}`);
+    if (!res.ok) throw new Error(`photo ${res.status}`);
+    const file = new File([await res.blob()], photo.name, { type: "image/jpeg" });
+    await navigator.share({ files: [file] });
+  } catch (err) {
+    // Closing the sheet is a choice, not a failure. Anything else (the share
+    // being refused after a slow fetch, a dropped connection) falls back to
+    // the ordinary download.
+    if (err?.name !== "AbortError") window.location.href = photo.fullUrl;
+  } finally {
+    label.textContent = original;
+    sharing = false;
+  }
+}
+
 function updateChrome() {
   const photo = photos[index];
   downloadLink.href = photo.fullUrl;
@@ -288,14 +338,17 @@ function onSlowConnection() {
 }
 
 // Warms the neighbours so arrow/swipe navigation doesn't wait on a cold fetch.
-// Reaches two out either way plus a third in the direction of travel, because
-// a flick can commit three photos before the first has finished loading.
+// On a desktop that reaches two out either way plus a third in the direction
+// of travel, because a flick can commit three photos before the first has
+// finished loading.
 function preload(dir = 1) {
   if (photos.length < 2) return;
-  const offsets = [1, -1, 2, -2];
-  if (!onSlowConnection()) offsets.push(dir === -1 ? -3 : 3);
+  // On a phone each preloaded neighbour is data the visitor pays for, and
+  // swiping is slower than on a desktop, so it only reaches one either way.
+  const lean = onSlowConnection() || window.matchMedia("(max-width: 800px)").matches;
+  const offsets = lean ? [1, -1] : [1, -1, 2, -2, dir === -1 ? -3 : 3];
   for (const offset of offsets) {
-    new Image().src = displayUrl(photos[wrap(index + offset)]);
+    setDisplay(new Image(), photos[wrap(index + offset)]);
   }
 }
 

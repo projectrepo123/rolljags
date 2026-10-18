@@ -20,6 +20,8 @@ export async function initPhotoBanner() {
     if (!res.ok) throw new Error(`banner ${res.status}`);
     const data = await res.json();
     const images = data.images || [];
+    // Small tiles for the strip; the viewer opens the full-size file.
+    const thumbs = data.thumbs && data.thumbs.length === images.length ? data.thumbs : images;
     if (images.length === 0) {
       bannerEl.hidden = true;
       return;
@@ -28,9 +30,9 @@ export async function initPhotoBanner() {
     // The banner only has one size per photo (no separate view/thumb the way
     // week photos do), so the same URL serves as both the on-screen display
     // and the downloadable file.
-    const photos = images.map((src) => ({
+    const photos = images.map((src, i) => ({
       name: src.split("/").pop(),
-      thumbUrl: src,
+      thumbUrl: thumbs[i],
       viewUrl: src,
       fullUrl: src,
     }));
@@ -53,7 +55,7 @@ export async function initPhotoBanner() {
         btn.addEventListener("click", () => openLightbox(photos, photoIndex));
 
         const img = document.createElement("img");
-        img.src = images[photoIndex];
+        img.src = thumbs[photoIndex];
         img.loading = "lazy";
         img.fetchPriority = "low";
         img.alt = "";

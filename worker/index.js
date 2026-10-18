@@ -4,6 +4,7 @@ import { getSeasonSummary } from "./routes/season.js";
 import { handleZip } from "./routes/zip.js";
 import { handleSchedule, scheduleGames } from "./routes/schedule.js";
 import { handleBanner } from "./routes/banner.js";
+import { handlePhoto } from "./routes/photo.js";
 import { handleSitemap } from "./routes/sitemap.js";
 import { handleGetLikes, handleLike } from "./routes/likes.js";
 import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, opponentPhrase } from "./lib/meta.js";
@@ -95,7 +96,7 @@ async function preloadHomeHero(asset, url, env, ctx) {
     const view = cover.replace("/thumbs/", "/view/");
     const link =
       `<link rel="preload" as="image" fetchpriority="high" href="${escapeAttr(view)}" ` +
-      `imagesrcset="${escapeAttr(cover)} 640w, ${escapeAttr(view)} 1600w" ` +
+      `imagesrcset="${[`${escapeAttr(cover)} 640w`, latest.heroMid && `${escapeAttr(latest.heroMid)} 1080w`, `${escapeAttr(view)} 1600w`].filter(Boolean).join(", ")}" ` +
       `imagesizes="(min-width: 1100px) 1052px, 100vw">`;
     return new HTMLRewriter()
       .on("head", { element: (el) => el.append(link, { html: true }) })
@@ -119,6 +120,11 @@ async function handle(request, env, ctx) {
       // GET /api/weeks
       if (parts[1] === "weeks" && parts.length === 2) {
         return withCache(request, ctx, () => handleWeeks(env));
+      }
+
+      // GET /api/photo?key=<original photo key>
+      if (parts[1] === "photo" && parts.length === 2) {
+        return handlePhoto(env, url.searchParams.get("key"));
       }
 
       // GET /api/week/:year/:week
@@ -360,9 +366,22 @@ async function withCache(request, ctx, handler, varyParams = [], canonicalPath =
   // page long after a score or upload. Restate it on the way out.
   const cached = await cache.match(key);
   if (cached) {
-    const hit = new Response(cached.body, cached);
-    hit.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
-    return hit;
+    const age = Date.now() - Number(cached.headers.get("X-Built-At") || 0);
+    // Stale-while-revalidate, done here at the edge. The entry is stored for
+    // STORE_SECONDS but is only "fresh" for 5 minutes; past that the
+    // visitor still gets it immediately and a rebuild runs behind the
+    // response, so nobody waits on the R2 listing. (Browsers never see this:
+    // they are always told max-age=300, which is what bit us with browser-side
+    // SWR.) Beyond MAX_STALE_MS the copy is too old to serve, so wait instead.
+    if (age > FRESH_MS && age < MAX_STALE_MS) {
+      ctx.waitUntil(refresh(cache, key, handler));
+    }
+    if (age < MAX_STALE_MS) {
+      const hit = new Response(cached.body, cached);
+      hit.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
+      hit.headers.delete("X-Built-At");
+      return hit;
+    }
   }
 
   const response = await handler();
@@ -373,6 +392,26 @@ async function withCache(request, ctx, handler, varyParams = [], canonicalPath =
 
   const cacheable = new Response(response.body, response);
   cacheable.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
-  ctx.waitUntil(cache.put(key, cacheable.clone()));
+  ctx.waitUntil(store(cache, key, cacheable.clone()));
   return cacheable;
+}
+
+const FRESH_MS = 5 * 60 * 1000;
+const MAX_STALE_MS = 60 * 60 * 1000;
+const STORE_SECONDS = 2 * 60 * 60;
+
+function store(cache, key, response) {
+  const copy = new Response(response.body, response);
+  copy.headers.set("Cache-Control", `public, max-age=${STORE_SECONDS}`);
+  copy.headers.set("X-Built-At", String(Date.now()));
+  return cache.put(key, copy);
+}
+
+async function refresh(cache, key, handler) {
+  try {
+    const response = await handler();
+    if (response.ok) await store(cache, key, response);
+  } catch (err) {
+    console.error("cache refresh failed", err);
+  }
 }

@@ -80,6 +80,22 @@ async function main() {
       })
     );
 
+    // The strip shows these at about 150x200, so it loads this small tile and
+    // only the viewer fetches the 1400px file above.
+    const tileBuffer = await sharp(bannerBuffer)
+      .resize({ width: 300, height: 400, fit: "cover" })
+      .webp({ quality: 72 })
+      .toBuffer();
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: `${BANNER_PREFIX}thumbs/${fileName.replace(IMAGE_EXT, ".webp")}`,
+        Body: tileBuffer,
+        ContentType: "image/webp",
+        CacheControl: "public, max-age=31536000, immutable",
+      })
+    );
+
     done += 1;
     console.log(`  [${done}/${files.length}] ${fileName}`);
   }

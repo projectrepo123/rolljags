@@ -35,9 +35,28 @@ export async function getWeekData(env, year, weekNum) {
     const objects = await listObjects(env.PHOTOS, levelPrefix);
     if (objects.length === 0) continue;
 
+    // Photos uploaded before the WebP sizes existed have no .400.webp, so the
+    // extra sizes are only offered where the file is really there.
+    const webpStems = new Set(
+      (await listObjects(env.PHOTOS, `${levelPrefix}thumbs/`))
+        .map((o) => o.key.split("/").pop())
+        .filter((n) => n.endsWith(".400.webp"))
+        .map((n) => n.slice(0, -".400.webp".length))
+    );
+
     const photos = objects.map((obj) => {
       const fileName = obj.key.split("/").pop();
+      const stem = fileName.replace(/\.jpe?g$/i, "");
+      const tiers = webpStems.has(stem)
+        ? {
+            thumbSrcset:
+              `${publicUrl(`${levelPrefix}thumbs/${stem}.400.webp`)} 400w, ` +
+              `${publicUrl(`${levelPrefix}thumbs/${stem}.640.webp`)} 640w`,
+            midUrl: publicUrl(`${levelPrefix}view/${stem}.1080.webp`),
+          }
+        : {};
       return {
+        ...tiers,
         name: fileName,
         // The object key doubles as the photo's like-counter ID. Exposed here
         // so the client doesn't have to reassemble it out of the public URL.

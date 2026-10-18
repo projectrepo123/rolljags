@@ -43,6 +43,15 @@ const THUMB_WIDTH = 640;
 // burns cellular data for no visible gain, so we ship this instead and keep
 // the original behind the Download button.
 const VIEW_WIDTH = 1600;
+// WebP copies the site picks between with srcset: two thumbnail sizes (a grid
+// tile is 140-200 CSS px) and a 1080w display size for phones. Names are
+// <photo>.400.webp etc. next to the JPEG; scripts/backfill-tiers.mjs builds
+// the same files for weeks uploaded before these existed.
+const WEBP_TIERS = [
+  { dir: "thumbs", width: 400, quality: 75, suffix: ".400.webp" },
+  { dir: "thumbs", width: 640, quality: 75, suffix: ".640.webp" },
+  { dir: "view", width: 1080, quality: 78, suffix: ".1080.webp" },
+];
 const IMAGE_EXT = /\.(jpe?g)$/i;
 
 // Encoder settings for the downloadable original. mozjpeg's trellis
@@ -372,6 +381,24 @@ async function main() {
         CacheControl: "public, max-age=31536000, immutable",
       })
     );
+
+    const stem = uploadName.replace(IMAGE_EXT, "");
+    for (const tier of WEBP_TIERS) {
+      const body = await sharp(buffer)
+        .rotate()
+        .resize({ width: tier.width, withoutEnlargement: true })
+        .webp({ quality: tier.quality })
+        .toBuffer();
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.R2_BUCKET,
+          Key: `${prefix}${tier.dir}/${stem}${tier.suffix}`,
+          Body: body,
+          ContentType: "image/webp",
+          CacheControl: "public, max-age=31536000, immutable",
+        })
+      );
+    }
 
     done += 1;
     console.log(`  [${done}/${files.length}] ${uploadName}`);

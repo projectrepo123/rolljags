@@ -45,6 +45,13 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     // Only the newest week is ever the hero, but every week gets one so the
     // home page never has to know which that is in advance.
     const heroCover = pickDailyOther(candidates, seed);
+    // The 1080w WebP the hero offers phones; weeks uploaded before it existed
+    // simply don't get one. Its name is derived from the thumb's key.
+    let heroMid = null;
+    if (heroCover) {
+      const key = decodeURIComponent(new URL(heroCover).pathname.slice(1)).replace("/thumbs/", "/view/").replace(/\.jpe?g$/i, ".1080.webp");
+      if (await env.PHOTOS.head(key)) heroMid = publicUrl(key);
+    }
     weeks.set(weekNum, {
       year,
       week: weekNum,
@@ -54,6 +61,7 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
       photoCount: totalCount,
       cover,
       ...(heroCover ? { heroCover } : {}),
+      ...(heroMid ? { heroMid } : {}),
       status: "live",
       opponent: scheduledGame?.opponent,
       homeAway: scheduledGame?.homeAway,

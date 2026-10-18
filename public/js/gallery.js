@@ -150,6 +150,12 @@ function renderLevel() {
 
     const img = document.createElement("img");
     img.src = photo.thumbUrl;
+    // 400w for the small desktop tiles, 640w for dense phone screens; the JPEG
+    // above stays as the fallback for photos without WebP copies.
+    if (photo.thumbSrcset) {
+      img.srcset = photo.thumbSrcset;
+      img.sizes = "(max-width: 480px) 50vw, 180px";
+    }
     // The first rows are on screen at once, so lazy-loading them only delays
     // what people see first. The rest wait until they're scrolled near.
     if (i < 12) {

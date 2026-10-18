@@ -83,7 +83,9 @@ function renderHero(week) {
   if (photo && !photo.startsWith("/")) {
     const img = el("img", "home-hero-photo");
     img.src = photo.replace("/thumbs/", "/view/");
-    img.srcset = `${photo} 640w, ${photo.replace("/thumbs/", "/view/")} 1600w`;
+    // The 1080w WebP sits between the two JPEGs when this week has one.
+    const view = photo.replace("/thumbs/", "/view/");
+    img.srcset = [`${photo} 640w`, week.heroMid && `${week.heroMid} 1080w`, `${view} 1600w`].filter(Boolean).join(", ");
     img.sizes = "(min-width: 1100px) 1052px, 100vw";
     img.fetchPriority = "high";
     img.alt = "";

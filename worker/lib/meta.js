@@ -133,9 +133,10 @@ export function injectWeekMeta(assetResponse, data, url) {
       : `${data.label} | ${SITE_NAME}`;
 
     if (data.status === "live") {
-      description =
-        data.caption ||
-        `${data.label} photos of ${SCHOOL_NAME} Jaguars football in ${LOCALITY}. Browse and download the full set.`;
+      const standard = `${data.label} photos of ${SCHOOL_NAME} Jaguars football in ${LOCALITY}. Browse and download the full set.`;
+      // A caption alone is a few words ("Home vs. Fox, W 26-20"), too thin for
+      // a search snippet, so the standard sentence follows it.
+      description = data.caption ? `${data.caption.replace(/[.!]?\s*$/, ".")} ${standard}` : standard;
       image = data.shareImage || data.cover || fallbackImage;
 
       const photoCount = data.levels.reduce((sum, lvl) => sum + lvl.photos.length, 0);
