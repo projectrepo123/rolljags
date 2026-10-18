@@ -232,9 +232,12 @@ function renderCard(week, i) {
   }
 
   const count = week.status === "no-photos" ? "No photos" : `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
-  info.appendChild(
-    el("div", "wc-meta", [cardEyebrow(week), week.opponent ? week.notes : null, count, week.moreToCome ? "More coming" : null].filter(Boolean).join(" · "))
-  );
+  // Two lines so a long occasion ("Senior Night", "Homecoming") never pushes
+  // the photo count onto a line that starts with a stray dot.
+  const meta = el("div", "wc-meta");
+  meta.appendChild(el("span", "", [cardEyebrow(week), week.opponent ? week.notes : null].filter(Boolean).join(" · ")));
+  meta.appendChild(el("span", "wc-count", [count, week.moreToCome ? "More coming" : null].filter(Boolean).join(" · ")));
+  info.appendChild(meta);
   card.appendChild(info);
 
   cell.appendChild(card);
@@ -243,12 +246,17 @@ function renderCard(week, i) {
 
 // Played weeks, newest first. Upcoming games live in the "Next up" strip
 // instead of the grid.
-function renderYear(yearGroup) {
+// `skip` is the week already shown in the hero above, so the same game isn't
+// on screen twice; the hero links to its gallery.
+function renderYear(yearGroup, skip = null) {
   const section = el("section", "year-section");
-  section.appendChild(el("h2", "", `${yearGroup.year} Season`));
+  const heading = el("h2", "", `${yearGroup.year} Season`);
+  const record = seasonRecord(yearGroup.weeks);
+  if (record) heading.appendChild(el("span", "year-record", ` · ${record}`));
+  section.appendChild(heading);
 
   const grid = el("div", "week-grid");
-  const played = yearGroup.weeks.filter((w) => w.status !== "coming-soon").reverse();
+  const played = yearGroup.weeks.filter((w) => w.status !== "coming-soon" && w !== skip).reverse();
   played.forEach((week, i) => grid.appendChild(renderCard(week, i)));
 
   section.appendChild(grid);
@@ -277,6 +285,7 @@ async function init() {
     const nextUp = data.years[0].weeks.find((w) => w.status === "coming-soon");
 
     const latestYear = latest && data.years.find((y) => y.weeks.includes(latest));
+    const heroShown = Boolean(latest);
     if (latest) renderHero(latest, seasonRecord(latestYear.weeks));
     else heroEl.remove();
 
@@ -284,7 +293,7 @@ async function init() {
     else nextUpEl.remove();
 
     for (const yearGroup of data.years) {
-      if (yearGroup.weeks.some((w) => w.status !== "coming-soon")) weeksEl.appendChild(renderYear(yearGroup));
+      if (yearGroup.weeks.some((w) => w.status !== "coming-soon")) weeksEl.appendChild(renderYear(yearGroup, heroShown && yearGroup === latestYear ? latest : null));
     }
 
     if (!allWeeks.some((w) => w.status !== "coming-soon")) {
