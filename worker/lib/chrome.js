@@ -10,7 +10,6 @@ const NAV = [
   { href: "/schedule", label: "Schedule" },
   { href: "/history", label: "History" },
   { href: "/records", label: "Records" },
-  { href: "/podcast", label: "Podcast" },
 ];
 
 // Which tab a page belongs under. A gallery is part of Photos and a single
@@ -49,6 +48,11 @@ export function headerHtml(pathname) {
       <nav class="site-nav" aria-label="Main">
         <div class="nav-links" id="nav-links">
           ${links}
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" aria-pressed="false">
+            <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+            <span class="theme-toggle-text">Theme</span>
+          </button>
         </div>
         <span class="kickoff-countdown" id="kickoff-countdown" hidden>
           <span class="kickoff-label" id="kickoff-label">Kickoff</span>
@@ -64,12 +68,29 @@ export function headerHtml(pathname) {
   `;
 }
 
+const SOCIAL = [
+  { href: "https://www.facebook.com/p/Jaguar-Football-Booster-Club-61558713380822/", label: "Facebook" },
+  { href: "https://www.instagram.com/seckmanfootball/", label: "Instagram" },
+  { href: "/podcast", label: "Podcast" },
+];
+
 export const FOOTER_HTML = `
-    <div class="container">
-      <p>Jaguar Football</p>
-      <p class="footer-credit">Photos and Website by <a href="https://jbwebco.com">Jon Baer</a></p>
-      <p class="footer-support">
-        <a href="https://venmo.com/u/jonlol" title="Helps cover camera gear and hosting. Totally optional, and not affiliated with the school.">Thanks for the memories</a>
-      </p>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="/logo.webp" width="512" height="409" alt="" loading="lazy" />
+        <div>
+          <p>Jaguar Football</p>
+          <p class="footer-credit">Photos and Website by <a href="https://jbwebco.com">Jon Baer</a></p>
+          <p class="footer-support">
+            <a href="https://venmo.com/u/jonlol" title="Helps cover camera gear and hosting. Totally optional, and not affiliated with the school.">Thanks for the memories</a>
+          </p>
+        </div>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        ${NAV.map(({ href, label }) => `<a href="${href}">${label}</a>`).join("\n        ")}
+      </nav>
+      <div class="footer-links footer-social">
+        ${SOCIAL.map(({ href, label }) => `<a href="${href}">${label}</a>`).join("\n        ")}
+      </div>
     </div>
   `;

@@ -263,7 +263,13 @@ function renderSeason(games) {
   }
   canonical.href = `https://rolljags.com/season?year=${encodeURIComponent(year)}`;
 
-  recordEl.innerHTML = `<strong>${recordString(record)}</strong>`;
+  recordEl.replaceChildren();
+  const eyebrow = document.createElement("span");
+  eyebrow.className = "stat-eyebrow";
+  eyebrow.textContent = `${year} record`;
+  const value = document.createElement("strong");
+  value.textContent = recordString(record);
+  recordEl.append(eyebrow, value);
 
   tbodyEl.innerHTML = "";
   for (const game of games) {
@@ -276,6 +282,13 @@ function renderSeason(games) {
 
     const opponentCell = document.createElement("td");
     opponentCell.textContent = game.opponent;
+    // Phones hide the Game Type column, so it rides under the opponent.
+    if (game.gameType) {
+      const note = document.createElement("span");
+      note.className = "row-note";
+      note.textContent = game.gameType;
+      opponentCell.appendChild(note);
+    }
     tr.appendChild(opponentCell);
 
     const locationCell = document.createElement("td");

@@ -84,22 +84,62 @@ function isAfterDarkNow() {
   return true;
 }
 
-// Applies light or dark purely from the local sunrise/sunset times above.
-// There is no manual override, so nothing is read from or written to storage.
+// Light or dark from the local sunrise/sunset times above, unless the header
+// toggle picked one. A pick only lasts until the next sunrise or sunset: it is
+// stored with the automatic theme it overrode, and once that changes the
+// override is dropped and the sun takes over again.
+const THEME_KEY = "rolljags-theme";
+
+function readOverride(auto) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(THEME_KEY) || "null");
+    if (saved && saved.auto === auto && (saved.theme === "light" || saved.theme === "dark")) return saved.theme;
+    localStorage.removeItem(THEME_KEY);
+  } catch {}
+  return null;
+}
+
 function initTheme() {
   const html = document.documentElement;
+
+  function autoTheme() {
+    return isAfterDarkNow() ? "dark" : "light";
+  }
 
   function applyTheme() {
     // Always set an explicit value rather than clearing the attribute: the
     // stylesheet's prefers-color-scheme block matches :root:not([data-theme="light"]),
     // so an absent attribute would force dark in daylight for anyone whose
     // OS is set to dark mode.
-    html.setAttribute("data-theme", isAfterDarkNow() ? "dark" : "light");
+    const auto = autoTheme();
+    html.setAttribute("data-theme", readOverride(auto) || auto);
+    syncToggle();
+  }
+
+  function syncToggle() {
+    const btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    const dark = html.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-pressed", String(dark));
+    btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
   }
 
   applyTheme();
   // Re-check periodically so a tab left open flips at the real sunset/sunrise.
   setInterval(applyTheme, 15 * 60 * 1000);
+
+  // The header is filled in after this runs, so wait for it.
+  document.addEventListener("DOMContentLoaded", () => {
+    syncToggle();
+    document.getElementById("theme-toggle")?.addEventListener("click", () => {
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem(THEME_KEY, JSON.stringify({ theme: next, auto: autoTheme() }));
+      } catch {}
+      html.setAttribute("data-theme", next);
+      syncToggle();
+    });
+  });
 }
 
 initTheme();

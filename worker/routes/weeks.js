@@ -52,6 +52,7 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
       status: "live",
       opponent: scheduledGame?.opponent,
       homeAway: scheduledGame?.homeAway,
+      ...(scheduledGame?.notes ? { notes: scheduledGame.notes } : {}),
       ...(scheduledGame?.moreToCome ? { moreToCome: true } : {}),
       ...(scheduledGame?.result
         ? { result: scheduledGame.result, pointsFor: scheduledGame.pointsFor, pointsAgainst: scheduledGame.pointsAgainst }
@@ -106,6 +107,7 @@ export async function handleWeeks(env) {
         status: game.noPhotos ? "no-photos" : "coming-soon",
         opponent: game.opponent,
         homeAway: game.homeAway,
+        ...(game.notes ? { notes: game.notes } : {}),
         ...(game.result
           ? { result: game.result, pointsFor: game.pointsFor, pointsAgainst: game.pointsAgainst }
           : {}),

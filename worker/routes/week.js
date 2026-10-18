@@ -18,6 +18,8 @@ export async function getWeekData(env, year, weekNum) {
         caption: scheduleCaption(scheduledGame),
         date: scheduledGame.date,
         ...(scheduledGame.opponent ? { opponent: scheduledGame.opponent } : {}),
+        ...(scheduledGame.notes ? { notes: scheduledGame.notes } : {}),
+        ...(scheduledGame.cover ? { logo: scheduledGame.cover } : {}),
         ...(scheduledGame.homeAway ? { homeAway: scheduledGame.homeAway } : {}),
         ...(scheduledGame.result
           ? { result: scheduledGame.result, pointsFor: scheduledGame.pointsFor, pointsAgainst: scheduledGame.pointsAgainst }
@@ -82,6 +84,8 @@ export async function getWeekData(env, year, weekNum) {
     // the client parsing them back out of the caption string.
     date: found.date,
     ...(scheduledGame?.opponent ? { opponent: scheduledGame.opponent } : {}),
+    ...(scheduledGame?.notes ? { notes: scheduledGame.notes } : {}),
+    ...(scheduledGame?.cover ? { logo: scheduledGame.cover } : {}),
     ...(scheduledGame?.homeAway ? { homeAway: scheduledGame.homeAway } : {}),
     ...(caption ? { caption } : {}),
     ...(scheduledGame?.moreToCome ? { moreToCome: true } : {}),

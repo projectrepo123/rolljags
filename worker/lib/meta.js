@@ -33,9 +33,21 @@ export function opponentPhrase(opponent, homeAway) {
 // The visible <h1> on a week page. gallery.js builds the same string client
 // side (see weekHeading there) so the heading doesn't flicker when the photo
 // list lands — keep the two in step.
+// The week number and date sit in the eyebrow above it (see prefillWeek), so
+// the heading itself stays short.
 export function weekHeading(label, opponent, homeAway) {
   const phrase = opponentPhrase(opponent, homeAway);
-  return phrase ? `${SITE_NAME} ${phrase}, ${label}` : `${SITE_NAME}, ${label}`;
+  return phrase ? `${TEAM_NAME} ${phrase}` : `${TEAM_NAME}, ${labelWithoutDate(label)}`;
+}
+
+// "Week 8 (Oct 16)" -> "Week 8"
+function labelWithoutDate(label) {
+  return label.replace(/\s*\([^)]*\)\s*$/, "").trim();
+}
+
+// "Week 8 (Oct 16)" -> "Oct 16"
+function labelDate(label) {
+  return label.match(/\(([^)]*)\)\s*$/)?.[1] || "";
 }
 
 // 1200x630, the size link previews are drawn at. Gallery photos vary in
@@ -158,11 +170,27 @@ export function injectWeekMeta(assetResponse, data, url) {
 // loads, so nothing above the grid appears late and pushes it down. The
 // caption rule matches gallery.js: skip it when it only repeats the title.
 function prefillWeek(response, data) {
-  const titleWithoutDate = data.label.replace(/\s*\([^)]*\)\s*$/, "").trim();
-  const caption = data.caption && data.caption !== titleWithoutDate ? data.caption : "";
+  const titleWithoutDate = labelWithoutDate(data.label);
+  const hasScore = Boolean(data.result);
+  // A caption that's just the score ("vs. Ritenour, W 26-0") repeats the
+  // scoreboard, so it's dropped once there is one.
+  const repeatsScore = hasScore && data.caption?.includes(`${data.pointsFor}-${data.pointsAgainst}`);
+  const caption = data.caption && data.caption !== titleWithoutDate && !repeatsScore ? data.caption : "";
   const live = data.status === "live";
 
+  const eyebrow = [data.opponent ? titleWithoutDate : null, labelDate(data.label), data.notes]
+    .filter(Boolean)
+    .join(" · ");
+
   return new HTMLRewriter()
+    .on("#week-eyebrow", { element: (el) => el.setInnerContent(eyebrow) })
+    .on("#scoreboard", {
+      element: (el) => {
+        if (!hasScore || !data.opponent) return;
+        el.removeAttribute("hidden");
+        el.setInnerContent(scoreboardHtml(data), { html: true });
+      },
+    })
     .on("#week-caption", { element: (el) => el.setInnerContent(caption) })
     .on("#week-more-coming", {
       element: (el) => {
@@ -175,6 +203,34 @@ function prefillWeek(response, data) {
       },
     })
     .transform(response);
+}
+
+// Seckman always on the left; the winning side's number is picked out in gold.
+function scoreboardHtml(data) {
+  const ours = Number(data.pointsFor);
+  const theirs = Number(data.pointsAgainst);
+  const status = { W: "Final · Win", L: "Final · Loss", T: "Final · Tie" }[data.result] || "Final";
+  const opponentLogo = data.logo
+    ? `<img class="sb-logo sb-logo-badge" src="${escapeAttr(data.logo)}" alt="" width="64" height="64">`
+    : "";
+  return `
+      <div class="sb-team">
+        <img class="sb-logo" src="/logo.webp" alt="" width="64" height="51">
+        <span class="sb-name">Seckman</span>
+      </div>
+      <div class="sb-center">
+        <span class="sb-status">${escapeAttr(status)}</span>
+        <span class="sb-points">
+          <span class="sb-score${ours > theirs ? " sb-lead" : ""}">${ours}</span>
+          <span class="sb-dash" aria-hidden="true">–</span>
+          <span class="sb-score${theirs > ours ? " sb-lead" : ""}">${theirs}</span>
+        </span>
+      </div>
+      <div class="sb-team sb-team-them">
+        ${opponentLogo}
+        <span class="sb-name">${escapeAttr(data.opponent)}</span>
+      </div>
+    `;
 }
 
 // Same idea as injectWeekMeta, but for season.html: reflects the season's

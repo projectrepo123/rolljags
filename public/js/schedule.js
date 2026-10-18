@@ -12,9 +12,14 @@ function weekUrl(week) {
   return `/week?year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`;
 }
 
-function gameDateLabel(dateStr) {
+// The weekday sits in its own span so phones can drop it and keep the date on
+// one line.
+function dateCellContent(cell, dateStr) {
   const date = new Date(`${dateStr}T12:00:00`);
-  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  const weekday = document.createElement("span");
+  weekday.className = "date-weekday";
+  weekday.textContent = `${date.toLocaleDateString("en-US", { weekday: "short" })}, `;
+  cell.append(weekday, date.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
 }
 
 function render(games) {
@@ -40,11 +45,12 @@ function render(games) {
   games.forEach((game, i) => {
     const tr = document.createElement("tr");
     const gameDate = new Date(`${game.date}T12:00:00`);
-    if (i === nextIndex) tr.className = "schedule-next";
-    else if (gameDate < today) tr.className = "schedule-past";
+    if (i === nextIndex) tr.classList.add("schedule-next");
+    else if (gameDate < today) tr.classList.add("schedule-past");
+    if (game.result) tr.classList.add(game.result === "W" ? "game-win" : game.result === "L" ? "game-loss" : "game-tie");
 
     const dateCell = document.createElement("td");
-    dateCell.textContent = gameDateLabel(game.date);
+    dateCellContent(dateCell, game.date);
     tr.appendChild(dateCell);
 
     const opponentCell = document.createElement("td");
@@ -52,6 +58,13 @@ function render(games) {
     link.href = weekUrl(game.week);
     link.textContent = game.opponent || game.label || "TBD";
     opponentCell.appendChild(link);
+    // Phones hide the Notes column, so the note rides under the opponent.
+    if (game.notes) {
+      const note = document.createElement("span");
+      note.className = "row-note";
+      note.textContent = game.notes;
+      opponentCell.appendChild(note);
+    }
     tr.appendChild(opponentCell);
 
     const locationCell = document.createElement("td");
@@ -63,13 +76,12 @@ function render(games) {
       // The cell shows a letter; the tooltip spells it out.
       loc.title = game.homeAway;
       locationCell.appendChild(loc);
-    } else {
-      locationCell.textContent = "—";
     }
     tr.appendChild(locationCell);
 
     const resultCell = document.createElement("td");
-    resultCell.textContent = game.result ? `${game.result} ${game.pointsFor}-${game.pointsAgainst}` : "—";
+    resultCell.className = "result-cell";
+    resultCell.textContent = game.result ? `${game.result} ${game.pointsFor}-${game.pointsAgainst}` : "";
     tr.appendChild(resultCell);
 
     const notesCell = document.createElement("td");

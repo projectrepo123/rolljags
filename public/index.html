@@ -88,15 +88,15 @@
   <header class="site-header"></header>
 
   <main id="main">
-    <div class="photo-banner" id="photo-banner" aria-label="Old season photos">
-      <div class="photo-banner-track" id="photo-banner-track"></div>
-      <span class="photo-banner-label" aria-hidden="true">From the Archives</span>
-    </div>
     <div class="container">
       <!-- The heading and intro sit outside #weeks on purpose: home.js clears
            that container's innerHTML once the week list loads, and this copy is
            the only thing a crawler without JS ever sees. -->
       <h1>Seckman Jaguars Football</h1>
+      <!-- Filled by home.js. Both hold their final size from the first paint so
+           nothing below them jumps when the week list lands. -->
+      <a class="home-hero" id="home-hero" aria-label="Latest game"></a>
+      <a class="next-up" id="next-up" href="/schedule" aria-label="Next game"></a>
       <p class="page-intro">
         Game photos for Seckman Jaguars football in Imperial, MO, posted week by week
         all season. Browse by game and grab the full-resolution photos for free.
@@ -128,6 +128,12 @@
         </div>
         <noscript><p class="empty-state">Photos need JavaScript enabled to load.</p></noscript>
       </div>
+      <section class="archive-section year-section" id="photo-banner" aria-labelledby="archive-heading">
+        <h2 id="archive-heading">From the Archives</h2>
+        <div class="photo-banner">
+          <div class="photo-banner-track" id="photo-banner-track"></div>
+        </div>
+      </section>
     </div>
   </main>
 

@@ -284,7 +284,9 @@ export function renderLeaderboardCard(title, items, buildFullView, options = {})
 
     const valueEl = document.createElement("span");
     valueEl.className = "value";
-    valueEl.textContent = item.value;
+    // A "(N)" program rank only repeats the row's place in a top-N card; the
+    // full tables still show it as a superscript.
+    valueEl.textContent = String(item.value ?? "").replace(/\s*\(\d+\)$/, "");
 
     li.append(nameEl, " ", valueEl);
     listEl.appendChild(li);

@@ -1,11 +1,7 @@
 import { openLightbox } from "./lightbox.js";
 
-// Keeps per-photo scroll speed constant regardless of how many photos are in
-// the set, so adding more later doesn't speed up the loop.
-const SECONDS_PER_PHOTO = 6;
-
-// Wires up the rotating old-photos strip. Safe to call on any page — it's a
-// no-op if that page doesn't have the #photo-banner markup.
+// Wires up the old-photos strip, a row people scroll through themselves.
+// Safe to call on any page; it's a no-op without the #photo-banner markup.
 export async function initPhotoBanner() {
   const bannerEl = document.getElementById("photo-banner");
   const trackEl = document.getElementById("photo-banner-track");
@@ -31,14 +27,8 @@ export async function initPhotoBanner() {
       fullUrl: src,
     }));
 
-    // The strip scrolls continuously; duplicating the tiles once lets the
-    // animation loop from -50% back to 0% without a visible seam. Each tile
-    // still opens the lightbox on the underlying (non-duplicated) photo list,
-    // so prev/next navigation inside it cycles through the real set of photos.
     trackEl.innerHTML = "";
-    for (let i = 0; i < images.length * 2; i++) {
-      const photoIndex = i % images.length;
-
+    for (let photoIndex = 0; photoIndex < images.length; photoIndex++) {
       const btn = document.createElement("button");
       btn.setAttribute("aria-label", `Open photo ${photoIndex + 1} of ${images.length}`);
       btn.addEventListener("click", () => openLightbox(photos, photoIndex));
@@ -52,8 +42,6 @@ export async function initPhotoBanner() {
       btn.appendChild(img);
       trackEl.appendChild(btn);
     }
-
-    trackEl.style.animationDuration = `${images.length * SECONDS_PER_PHOTO}s`;
 
     bannerEl.hidden = false;
   } catch (err) {

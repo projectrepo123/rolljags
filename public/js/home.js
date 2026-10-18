@@ -1,6 +1,8 @@
 import { initPhotoBanner } from "./banner.js";
 
 const weeksEl = document.getElementById("weeks");
+const heroEl = document.getElementById("home-hero");
+const nextUpEl = document.getElementById("next-up");
 
 function weekUrl(year, week) {
   // The extensionless form, matching the canonical the Worker injects and the
@@ -9,137 +11,187 @@ function weekUrl(year, week) {
   return `/week?year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`;
 }
 
-// The most recent week that actually has photos, so it can be flagged as the
-// newest set. Years arrive newest-first from the API.
-function findLatestWeek(years) {
-  for (const yearGroup of years) {
-    const live = yearGroup.weeks.filter((w) => w.status === "live");
-    if (live.length > 0) {
-      const newest = live[live.length - 1];
-      return `${newest.year}/${newest.week}`;
-    }
-  }
-  return null;
+// "Week 3 (Sep 11)" -> "Week 3"; "Blue & Gold Scrimmage (Aug 15)" -> "Blue & Gold Scrimmage"
+function labelWithoutDate(label) {
+  return label.replace(/\s*\([^)]*\)\s*$/, "").trim();
 }
 
-function renderYear(yearGroup, latestKey) {
-  const section = document.createElement("section");
-  section.className = "year-section";
+// "Week 3 (Sep 11)" -> "Sep 11"
+function labelDate(label) {
+  return label.match(/\(([^)]*)\)\s*$/)?.[1] || "";
+}
 
-  const heading = document.createElement("h2");
-  heading.textContent = `${yearGroup.year} Season`;
-  section.appendChild(heading);
+function opponentPhrase(week) {
+  if (!week.opponent) return "";
+  return `${week.homeAway === "Away" ? "at" : "vs."} ${week.opponent}`;
+}
 
-  const grid = document.createElement("div");
-  grid.className = "week-grid";
+// The card's big line: the opponent when there is one, else the event's name.
+function cardTitle(week) {
+  return opponentPhrase(week) || labelWithoutDate(week.label);
+}
 
-  // Weeks that actually have photos, plus the next game as a teaser. Future
-  // weeks beyond that stay hidden so the grid doesn't fill with empty cards.
-  // A "no-photos" week was played, so it counts as played and shows in order.
-  const played = yearGroup.weeks.filter((w) => w.status !== "coming-soon");
-  const nextUp = yearGroup.weeks.find((w) => w.status === "coming-soon");
-  const visibleWeeks = nextUp ? [...played, nextUp] : played;
+// The small line above it: week number and date, or just the date for an
+// event whose name is already the title.
+function cardEyebrow(week) {
+  return [week.opponent ? labelWithoutDate(week.label) : null, labelDate(week.label)].filter(Boolean).join(" · ");
+}
 
-  visibleWeeks.forEach((week, i) => {
-    const card = document.createElement("a");
-    card.className = "week-card";
-    card.href = weekUrl(week.year, week.week);
-    // Drives the staggered entrance; capped so a long list doesn't leave the
-    // last cards waiting noticeably.
-    card.style.setProperty("--enter-delay", `${Math.min(i, 7) * 60}ms`);
+function photoAlt(week) {
+  return week.opponent
+    ? `Seckman Jaguars football ${opponentPhrase(week)}, ${week.label}`
+    : `Seckman Jaguars football, ${week.label}`;
+}
 
-    if (week.cover) {
-      const img = document.createElement("img");
-      // An upcoming week's cover is an opponent crest served from this site,
-      // not a photo off photos.rolljags.com. Cropping a logo to fill a 4:3 box
-      // slices it in half, so those get fitted instead — see .cover-logo.
-      const isLogo = week.cover.startsWith("/");
-      img.className = isLogo ? "cover cover-logo" : "cover";
-      // The first cover is the largest thing above the fold, so let it load
-      // right away instead of waiting on the lazy-loading pass.
-      if (i === 0) {
-        img.fetchPriority = "high";
-      } else {
-        img.loading = "lazy";
-      }
-      // Names the team and opponent rather than just "Week 2 (Sep 4)", so the
-      // cover shots mean something in image search.
-      img.alt = week.opponent
-        ? `Seckman Jaguars football ${week.homeAway === "Away" ? "at" : "vs."} ${week.opponent}, ${week.label}`
-        : `Seckman Jaguars football, ${week.label}`;
-      img.src = week.cover;
-      // The Latest card spans two columns, wider than the 640w thumb, so let
-      // high-density screens pull the 1600w view copy instead.
-      const isHero = latestKey && `${week.year}/${week.week}` === latestKey;
-      if (isHero && !isLogo && week.cover.includes("/thumbs/")) {
-        img.srcset = `${week.cover} 640w, ${week.cover.replace("/thumbs/", "/view/")} 1600w`;
-        img.sizes = "(min-width: 1140px) 740px, (min-width: 560px) 66vw, 100vw";
-      }
-      card.appendChild(img);
-    } else {
-      const placeholder = document.createElement("div");
-      placeholder.className = "cover";
-      card.appendChild(placeholder);
-    }
+function resultChip(week) {
+  const chip = document.createElement("span");
+  const kind = { W: "win", L: "loss", T: "tie" }[week.result] || "tie";
+  chip.className = `result-chip ${kind}`;
+  chip.textContent = `${week.result} ${week.pointsFor}-${week.pointsAgainst}`;
+  return chip;
+}
 
-    const body = document.createElement("div");
-    body.className = "card-body";
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
 
-    const title = document.createElement("p");
-    title.className = "card-title";
-    title.textContent = week.label;
-    body.appendChild(title);
+// An opponent crest sits on a white badge over a navy tile, so logos that
+// arrive with their own white or black box still look like one set.
+function logoTile(src, className) {
+  const tile = el("div", className);
+  const img = el("img", "logo-badge");
+  img.src = src;
+  img.alt = "";
+  img.loading = "lazy";
+  tile.appendChild(img);
+  return tile;
+}
 
-    if (week.status === "coming-soon") {
-      const badge = document.createElement("span");
-      badge.className = "badge-coming-soon";
-      badge.textContent = "Coming soon";
-      body.appendChild(badge);
-    } else if (week.status === "no-photos") {
-      const badge = document.createElement("span");
-      badge.className = "badge-coming-soon badge-no-photos";
-      badge.textContent = "No photos";
-      body.appendChild(badge);
-    } else {
-      const meta = document.createElement("div");
-      meta.className = "card-meta";
+// The newest week with photos: the photo itself, the final score over it, and
+// a way into the gallery.
+function renderHero(week) {
+  heroEl.href = weekUrl(week.year, week.week);
+  heroEl.setAttribute("aria-label", `Latest game: ${photoAlt(week)}, ${week.photoCount} photos`);
 
-      const count = document.createElement("p");
-      count.className = "card-count";
-      count.textContent = `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
-      meta.appendChild(count);
+  if (week.cover && !week.cover.startsWith("/")) {
+    const img = el("img", "home-hero-photo");
+    img.src = week.cover.replace("/thumbs/", "/view/");
+    img.srcset = `${week.cover} 640w, ${week.cover.replace("/thumbs/", "/view/")} 1600w`;
+    img.sizes = "(min-width: 1100px) 1052px, 100vw";
+    img.fetchPriority = "high";
+    img.alt = "";
+    heroEl.appendChild(img);
+  }
 
-      // Grouped so the row stays two-part — count on the left, badges together
-      // on the right — however many badges a week ends up carrying.
-      const badges = document.createElement("div");
-      badges.className = "card-badges";
+  const body = el("div", "home-hero-body");
+  const eyebrow = [week.result ? "Final" : "Latest photos", cardEyebrow(week), week.notes].filter(Boolean).join(" · ");
+  body.appendChild(el("p", "home-hero-eyebrow", eyebrow));
 
-      if (week.moreToCome) {
-        const badge = document.createElement("span");
-        badge.className = "badge-more-coming";
-        badge.textContent = "More coming";
-        badges.appendChild(badge);
-      }
+  if (week.result && week.opponent) {
+    const score = el("p", "home-hero-score");
+    const ours = Number(week.pointsFor);
+    const theirs = Number(week.pointsAgainst);
+    score.append(
+      el("span", "", "Seckman "),
+      el("span", `home-hero-points${ours > theirs ? " lead" : ""}`, String(ours)),
+      el("span", "home-hero-sep", " · "),
+      el("span", "", `${week.opponent} `),
+      el("span", `home-hero-points${theirs > ours ? " lead" : ""}`, String(theirs))
+    );
+    body.appendChild(score);
+  } else {
+    body.appendChild(el("p", "home-hero-score", cardTitle(week)));
+  }
 
-      if (latestKey && `${week.year}/${week.week}` === latestKey) {
-        // Also promotes the card itself to the hero treatment — a wider frame
-        // and the navy/gold block, so the newest week reads as the headline
-        // rather than as one more tile carrying a small tag.
-        card.classList.add("week-card-hero");
+  body.appendChild(el("span", "btn btn-gold", `See all ${week.photoCount} photos`));
+  heroEl.appendChild(body);
+  heroEl.classList.add("ready");
+}
 
-        const badge = document.createElement("span");
-        badge.className = "badge-latest";
-        badge.textContent = "Latest";
-        badges.appendChild(badge);
-      }
+// The kickoff time the worker stamps into every page (see injectKickoff), so
+// the strip can say "7:00 PM" without the schedule carrying times.
+function kickoffTime(week) {
+  const content = document.querySelector('meta[name="next-kickoff"]')?.content;
+  if (!content) return "";
+  const at = new Date(content);
+  if (Number.isNaN(at.getTime())) return "";
+  const sameDay = at.toLocaleDateString("en-CA", { timeZone: "America/Chicago" }) === week.date;
+  return sameDay ? at.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" }) : "";
+}
 
+function renderNextUp(week) {
+  nextUpEl.setAttribute("aria-label", `Next game: ${cardTitle(week)}, ${labelDate(week.label)}`);
+  if (week.cover && week.cover.startsWith("/")) nextUpEl.appendChild(logoTile(week.cover, "next-up-logo"));
+
+  const text = el("div", "next-up-text");
+  text.appendChild(el("span", "next-up-label", "Next up"));
+  text.appendChild(el("span", "next-up-title", cardTitle(week)));
+  const date = new Date(`${week.date}T12:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  text.appendChild(el("span", "next-up-when", [date, kickoffTime(week), week.notes].filter(Boolean).join(" · ")));
+  nextUpEl.appendChild(text);
+  nextUpEl.appendChild(el("span", "next-up-cta", "Schedule →"));
+  nextUpEl.classList.add("ready");
+}
+
+function renderCard(week, i) {
+  const card = el("a", "week-card");
+  card.href = weekUrl(week.year, week.week);
+  // Drives the staggered entrance; capped so a long list doesn't leave the
+  // last cards waiting noticeably.
+  card.style.setProperty("--enter-delay", `${Math.min(i, 7) * 60}ms`);
+
+  if (week.cover && week.cover.startsWith("/")) {
+    card.appendChild(logoTile(week.cover, "cover cover-logo-tile"));
+  } else if (week.cover) {
+    const img = el("img", "cover");
+    img.loading = "lazy";
+    // Names the team and opponent rather than just "Week 2 (Sep 4)", so the
+    // cover shots mean something in image search.
+    img.alt = photoAlt(week);
+    img.src = week.cover;
+    card.appendChild(img);
+  } else {
+    card.appendChild(el("div", "cover"));
+  }
+
+  const body = el("div", "card-body");
+  body.appendChild(el("p", "card-eyebrow", cardEyebrow(week)));
+  body.appendChild(el("p", "card-title", cardTitle(week)));
+
+  if (week.status === "no-photos") {
+    const meta = el("div", "card-meta");
+    if (week.result) meta.appendChild(resultChip(week));
+    meta.appendChild(el("span", "badge-coming-soon badge-no-photos", "No photos"));
+    body.appendChild(meta);
+  } else {
+    const meta = el("div", "card-meta");
+    if (week.result) meta.appendChild(resultChip(week));
+    meta.appendChild(el("p", "card-count", `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`));
+
+    if (week.moreToCome) {
+      const badges = el("div", "card-badges");
+      badges.appendChild(el("span", "badge-more-coming", "More coming"));
       meta.appendChild(badges);
-      body.appendChild(meta);
     }
+    body.appendChild(meta);
+  }
 
-    card.appendChild(body);
-    grid.appendChild(card);
-  });
+  card.appendChild(body);
+  return card;
+}
+
+// Played weeks, newest first. Upcoming games live in the "Next up" strip
+// instead of the grid.
+function renderYear(yearGroup) {
+  const section = el("section", "year-section");
+  section.appendChild(el("h2", "", `${yearGroup.year} Season`));
+
+  const grid = el("div", "week-grid");
+  const played = yearGroup.weeks.filter((w) => w.status !== "coming-soon").reverse();
+  played.forEach((week, i) => grid.appendChild(renderCard(week, i)));
 
   section.appendChild(grid);
   return section;
@@ -153,23 +205,42 @@ async function init() {
     weeksEl.innerHTML = "";
 
     if (!data.years || data.years.length === 0) {
+      heroEl.remove();
+      nextUpEl.remove();
       weeksEl.innerHTML = '<p class="empty-state">No photos yet. Check back after the next game.</p>';
       return;
     }
 
-    const latestKey = findLatestWeek(data.years);
+    // Years arrive newest-first, and each year's weeks in date order.
+    const allWeeks = data.years.flatMap((y) => y.weeks);
+    const latest = data.years
+      .map((y) => y.weeks.filter((w) => w.status === "live").pop())
+      .find(Boolean);
+    const nextUp = data.years[0].weeks.find((w) => w.status === "coming-soon");
+
+    if (latest) renderHero(latest);
+    else heroEl.remove();
+
+    if (nextUp) renderNextUp(nextUp);
+    else nextUpEl.remove();
+
     for (const yearGroup of data.years) {
-      weeksEl.appendChild(renderYear(yearGroup, latestKey));
+      if (yearGroup.weeks.some((w) => w.status !== "coming-soon")) weeksEl.appendChild(renderYear(yearGroup));
+    }
+
+    if (!allWeeks.some((w) => w.status !== "coming-soon")) {
+      weeksEl.innerHTML = '<p class="empty-state">No photos yet. Check back after the next game.</p>';
     }
   } catch (err) {
+    heroEl.remove();
+    nextUpEl.remove();
     weeksEl.innerHTML = '<p class="empty-state">Couldn\'t load photos right now. Try refreshing.</p>';
   }
 }
 
 init();
 
-// Deferred until the page's own resources (including the week grid's cover
-// photos, one of which is the LCP candidate) have finished loading, so the
-// banner's own image requests don't compete with them for bandwidth on the
-// same photos.rolljags.com origin and drag out LCP.
+// Deferred until the page's own resources (including the hero photo, the LCP
+// candidate) have finished loading, so the archive strip's image requests
+// don't compete with them on the same photos.rolljags.com origin.
 window.addEventListener("load", () => initPhotoBanner());

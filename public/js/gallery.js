@@ -6,8 +6,6 @@ const year = params.get("year");
 const week = params.get("week");
 
 const titleEl = document.getElementById("week-title");
-const captionEl = document.getElementById("week-caption");
-const moreToComeEl = document.getElementById("week-more-coming");
 const tabsEl = document.getElementById("level-tabs");
 const toolbarEl = document.getElementById("level-toolbar");
 const gridEl = document.getElementById("photo-grid");
@@ -32,8 +30,8 @@ function opponentPhrase(opponent, homeAway) {
 function weekHeading(label, opponent, homeAway) {
   const phrase = opponentPhrase(opponent, homeAway);
   return phrase
-    ? `Seckman Jaguars Football ${phrase}, ${label}`
-    : `Seckman Jaguars Football, ${label}`;
+    ? `Seckman Jaguars ${phrase}`
+    : `Seckman Jaguars, ${label.replace(/\s*\([^)]*\)\s*$/, "").trim()}`;
 }
 
 function photoAlt(index, total) {
@@ -206,16 +204,8 @@ async function init() {
       ? `${data.label} ${phrase} | Seckman Jaguars Football`
       : `${data.label} | Seckman Jaguars Football`;
 
-    // A custom-labelled week's caption is sometimes exactly its title with
-    // the date stripped off (e.g. both read "Blue & Gold Scrimmage") — printing
-    // it again right underneath would just repeat the heading, so skip it.
-    const titleWithoutDate = data.label.replace(/\s*\([^)]*\)\s*$/, "").trim();
-    const caption = data.caption && data.caption !== titleWithoutDate ? data.caption : "";
-    captionEl.textContent = caption;
-
-    // A partly-uploaded week says so, rather than letting a half set read as
-    // the finished gallery. Set in lib/schedule.js, cleared when the rest go up.
-    moreToComeEl.hidden = !data.moreToCome;
+    // The eyebrow, scoreboard, caption and "more coming" note are all
+    // server-rendered (prefillWeek in worker/lib/meta.js).
 
     if (data.status === "coming-soon") {
       showComingSoon();

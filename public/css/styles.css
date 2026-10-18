@@ -17,7 +17,7 @@
   --gold: #ffc72c;
   --navy-light: #2b5391;
   --grad-navy: linear-gradient(180deg, var(--navy-light) 0%, var(--navy) 100%);
-  --grad-gold: linear-gradient(180deg, #ffd75e 0%, #f5b800 100%);
+  --grad-gold: linear-gradient(var(--gold), var(--gold));
   --yardlines-on-navy: repeating-linear-gradient(90deg, transparent 0 39px, rgba(255, 255, 255, 0.05) 39px 40px);
   --bg: #f7f8fa;
   --card-bg: #ffffff;
@@ -36,6 +36,39 @@
      radii — the contrast between the two is the point. */
   --radius-badge: 2px;
   --container-width: 1100px;
+  /* Tints and shades around the two school colors. --navy and --gold above
+     are the brand values themselves. Gold is never text on a light
+     background (about 1.6:1 on white); --gold-700 is for that. */
+  --navy-950: #0b1628;
+  --navy-100: #e3eaf5;
+  --gold-700: #8a6400;
+  --gold-100: #fff4d1;
+  --win-bg: #e3f4e9;
+  --loss-bg: #fbe5e9;
+  /* Type scale (major third), tracking, spacing, radii and motion. */
+  --step--2: 0.75rem;
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.6rem, 1.2rem + 1.6vw, 1.95rem);
+  --step-4: clamp(2rem, 1.4rem + 2.6vw, 2.45rem);
+  --leading-body: 1.55;
+  --tracking-tight: 0.02em;
+  --tracking-display: 0.04em;
+  --tracking-eyebrow: 0.08em;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --radius-sm: 4px;
+  --radius-lg: 12px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 220ms;
 
   /* Display face. Condensed and flat-sided, in the jersey/scoreboard register.
      Only page titles, section headings, badges and stat figures use it; body
@@ -54,7 +87,6 @@
   /* Background depth: a wash from the top, and darker edges beyond the
      container (see the min-width guard on the vignette). */
   --bg-glow: rgba(27, 58, 107, 0.05);
-  --bg-vignette: rgba(16, 24, 40, 0.05);
 
   /* Surface treatment. Panels get a soft top-to-bottom gradient plus a
      1px light catch along their top edge, so they read as lit from above
@@ -70,19 +102,21 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1a1a1a;
-    --card-bg: #2d2d2d;
-    --text: #e0e0e0;
-    --text-muted: #a0a0a0;
-    --border: #3d3d3d;
-    --navy-text: #7fb2ff;
+    --bg: #0b1424;
+    --card-bg: #121e33;
+    --text: #e8edf5;
+    --text-muted: #9aa8bd;
+    --border: #22324f;
+    --navy-text: #ffd75e;
     --win: #4ade80;
     --loss: #fa8a8a;
+    --win-bg: rgba(74, 222, 128, 0.14);
+    --loss-bg: rgba(250, 138, 138, 0.14);
     --season-loss-accent: #8a9aaf;
     --row-accent: rgba(255, 255, 255, 0.06);
     --focus-ring: #ffc72c;
-    --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
-    --surface-hover: linear-gradient(180deg, #3d3d3d 0%, #303030 100%);
+    --surface: linear-gradient(180deg, #16233b 0%, #121e33 100%);
+    --surface-hover: linear-gradient(180deg, #1c2b47 0%, #16233b 100%);
     --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
@@ -91,24 +125,25 @@
     --yardline: rgba(255, 255, 255, 0.05);
     --rule-navy: rgba(127, 178, 255, 0.4);
     --bg-glow: rgba(127, 178, 255, 0.07);
-    --bg-vignette: rgba(0, 0, 0, 0.28);
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #1a1a1a;
-  --card-bg: #2d2d2d;
-  --text: #e0e0e0;
-  --text-muted: #a0a0a0;
-  --border: #3d3d3d;
-  --navy-text: #7fb2ff;
+  --bg: #0b1424;
+  --card-bg: #121e33;
+  --text: #e8edf5;
+  --text-muted: #9aa8bd;
+  --border: #22324f;
+  --navy-text: #ffd75e;
   --win: #4ade80;
   --loss: #fa8a8a;
+  --win-bg: rgba(74, 222, 128, 0.14);
+  --loss-bg: rgba(250, 138, 138, 0.14);
   --season-loss-accent: #8a9aaf;
   --row-accent: rgba(255, 255, 255, 0.06);
   --focus-ring: #ffc72c;
-  --surface: linear-gradient(180deg, #353535 0%, #2a2a2a 100%);
-  --surface-hover: linear-gradient(180deg, #3d3d3d 0%, #303030 100%);
+  --surface: linear-gradient(180deg, #16233b 0%, #121e33 100%);
+  --surface-hover: linear-gradient(180deg, #1c2b47 0%, #16233b 100%);
   --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.35);
@@ -117,7 +152,6 @@
   --yardline: rgba(255, 255, 255, 0.05);
   --rule-navy: rgba(127, 178, 255, 0.4);
   --bg-glow: rgba(127, 178, 255, 0.07);
-  --bg-vignette: rgba(0, 0, 0, 0.28);
 }
 
 /* The UA default focus ring is nearly invisible on the navy header and inside
@@ -162,18 +196,6 @@ body {
   background-image: radial-gradient(120% 520px at 50% 0%, var(--bg-glow) 0%, transparent 68%);
   background-repeat: no-repeat;
   background-size: 100% 720px;
-}
-
-/* Darker edges, but only once the viewport is wider than the 1100px container
-   plus its gutters — past that the vignette falls entirely in dead margin. At
-   phone widths the same band would sit underneath the text. */
-@media (min-width: 1240px) {
-  body {
-    background-image:
-      radial-gradient(120% 520px at 50% 0%, var(--bg-glow) 0%, transparent 68%),
-      linear-gradient(90deg, var(--bg-vignette) 0%, transparent 15%, transparent 85%, var(--bg-vignette) 100%);
-    background-size: 100% 720px, 100% 100%;
-  }
 }
 
 a {
@@ -281,7 +303,7 @@ header.site-header a {
 
 .back-link {
   display: inline-block;
-  font-size: 0.95rem;
+  font-size: var(--step--1);
   color: var(--navy-text);
   margin-bottom: 1rem;
 }
@@ -415,7 +437,7 @@ header.site-header .site-nav {
 /* Links are pills rather than underlined text: an underline would sit at the
    bottom of the 44px tap target, detached from the centred label. */
 header.site-header .site-nav a {
-  font-size: 0.95rem;
+  font-size: var(--step--1);
   color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
   display: inline-flex;
@@ -465,11 +487,11 @@ main {
    horizontal scroll on desktop. */
 main h1 {
   font-family: var(--font-display);
-  font-size: 1.85rem;
+  font-size: var(--step-3);
   margin: 0.4rem 0 1.35rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.015em;
+  letter-spacing: var(--tracking-tight);
   line-height: 1.15;
   padding: 0.65rem 0.9rem 0.7rem;
   background:
@@ -491,11 +513,11 @@ main h1 {
 .year-section h2 {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: var(--step-1);
   color: var(--text);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-display);
   margin: 0 0 0.9rem;
   padding-bottom: 0.3rem;
   border-bottom: 3px solid var(--gold);
@@ -544,69 +566,6 @@ main h1 {
   }
 }
 
-/* An opponent crest, not a photo. `cover` would crop it to a fragment, so fit
-   the whole mark inside the same 4:3 box and inset it off the edges. */
-.week-card .cover.cover-logo {
-  object-fit: contain;
-  padding: 14%;
-  background: var(--row-accent);
-}
-
-/* Zooming a fitted logo on hover reads as a rendering glitch rather than the
-   photo lift it's borrowing. */
-.week-card:hover .cover.cover-logo {
-  transform: none;
-}
-
-/* The newest set of photos is what most people came for, so it stops being one
-   more identical tile: wider frame, a cinematic crop, and the navy/gold block
-   under it. The body is navy in both themes on purpose — like the podcast
-   poster, it's brand artwork rather than page chrome. */
-.week-card.week-card-hero {
-  border-top: 4px solid var(--gold);
-}
-
-/* Only once there are at least two columns to span. auto-fill would otherwise
-   create an implicit second column on a phone and push the card off-screen. */
-@media (min-width: 560px) {
-  .week-card.week-card-hero {
-    grid-column: span 2;
-  }
-
-  .week-card.week-card-hero .cover {
-    aspect-ratio: 16 / 9;
-  }
-}
-
-.week-card.week-card-hero .card-body {
-  padding: 1rem 1.1rem;
-  color: #fff;
-  background:
-    var(--yardlines-on-navy),
-    linear-gradient(100deg, #234882 0%, var(--navy-dark) 60%, #0f2140 100%);
-}
-
-.week-card.week-card-hero .card-title {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  margin-bottom: 0.15rem;
-}
-
-.week-card.week-card-hero .card-count {
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.week-card.week-card-hero .badge-latest {
-  font-size: 0.85rem;
-  padding: 0.22rem 0.6rem;
-  background: var(--grad-gold);
-  color: var(--navy-dark);
-  border-left-color: #fff;
-}
-
 .week-card .card-body {
   padding: 0.75rem 0.9rem;
 }
@@ -618,7 +577,7 @@ main h1 {
 
 .week-card .card-count {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   margin: 0;
   /* "30 photos" is one label, so let the badges beside it wrap away
      instead of breaking it across two lines. */
@@ -633,9 +592,9 @@ main h1 {
   box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   color: var(--navy-dark);
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: var(--step--1);
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-display);
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
   border-radius: var(--radius-badge);
@@ -670,7 +629,7 @@ main h1 {
    a week heading carries an opponent and a date and runs long. */
 .week-title {
   margin: 0.4rem 0 1.1rem;
-  font-size: 1.55rem;
+  font-size: var(--step-2);
 }
 
 .week-caption {
@@ -695,7 +654,7 @@ main h1 {
   border: none;
   padding: 0.7rem 1rem;
   min-height: 44px;
-  font-size: 1rem;
+  font-size: var(--step-0);
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -726,7 +685,7 @@ main h1 {
 
 .level-toolbar .photo-count {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: var(--step--1);
 }
 
 .count-group {
@@ -741,8 +700,8 @@ main h1 {
 .level-score {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-tight);
   font-variant-numeric: tabular-nums;
   color: var(--text-muted);
 }
@@ -770,7 +729,7 @@ main h1 {
   border-radius: 50%;
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 0.72rem;
+  font-size: var(--step--2);
   font-weight: 700;
   font-style: italic;
   font-family: Georgia, "Times New Roman", serif;
@@ -805,7 +764,7 @@ main h1 {
   background: var(--card-bg);
   box-shadow: var(--shadow-2);
   color: var(--text);
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   font-weight: 400;
   line-height: 1.45;
   text-align: left;
@@ -849,7 +808,7 @@ main h1 {
   border-radius: var(--radius);
   padding: 0.7rem 1.1rem;
   min-height: 44px;
-  font-size: 1rem;
+  font-size: var(--step-0);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -958,7 +917,7 @@ main h1 {
   background: none;
   color: #fff;
   font: inherit;
-  font-size: 0.72rem;
+  font-size: var(--step--2);
   line-height: 1;
   cursor: pointer;
   opacity: 0.6;
@@ -966,7 +925,7 @@ main h1 {
 }
 
 .like-flame {
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   /* The emoji sits high in its box; nudge it onto the number's baseline. */
   line-height: 1;
   filter: grayscale(1) opacity(0.8);
@@ -1175,7 +1134,7 @@ main h1 {
   border-radius: 50%;
   width: 44px;
   height: 44px;
-  font-size: 1.2rem;
+  font-size: var(--step-1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1199,7 +1158,7 @@ main h1 {
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.8rem;
+  font-size: var(--step-3);
   padding: 0.75rem;
   cursor: pointer;
   line-height: 1;
@@ -1303,7 +1262,7 @@ main h1 {
 
   .lightbox-counter {
     align-self: center;
-    font-size: 0.9rem;
+    font-size: var(--step--1);
     color: rgba(255, 255, 255, 0.75);
   }
 
@@ -1327,16 +1286,16 @@ footer.site-footer {
     var(--yardlines),
     linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 100%);
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   padding: 1.5rem 0;
 }
 
 footer.site-footer p:first-child {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: var(--step-0);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-eyebrow);
   color: var(--text);
 }
 
@@ -1349,12 +1308,12 @@ footer.site-footer p + p {
 }
 
 .footer-credit {
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   color: var(--text-muted);
 }
 
 .footer-support {
-  font-size: 0.75rem;
+  font-size: var(--step--2);
   color: var(--text-muted);
 }
 
@@ -1382,10 +1341,10 @@ footer.site-footer p + p {
 
 .season-year {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: var(--step-1);
   margin: 0 0 0.35rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-display);
   color: var(--text-muted);
 }
 
@@ -1393,7 +1352,7 @@ footer.site-footer p + p {
    They used to be near enough the same size to read as a pair of equals. */
 .season-record-display {
   font-family: var(--font-display);
-  font-size: 2.15rem;
+  font-size: var(--step-4);
   margin: 0;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -1403,12 +1362,12 @@ footer.site-footer p + p {
 
 .season-title {
   margin: 0.4rem 0 1.1rem;
-  font-size: 1.55rem;
+  font-size: var(--step-2);
 }
 
 .season-record {
   margin: 0 0 1.5rem;
-  font-size: 1.1rem;
+  font-size: var(--step-1);
   color: var(--text-muted);
 }
 
@@ -1430,9 +1389,9 @@ footer.site-footer p + p {
 .stat-tile-label {
   margin: 0 0 0.3rem;
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -1440,7 +1399,7 @@ footer.site-footer p + p {
 .stat-tile-value {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: var(--step-1);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--navy-text);
@@ -1456,7 +1415,7 @@ footer.site-footer p + p {
 }
 
 .season-stats .stat-tile:nth-child(-n + 2) .stat-tile-value {
-  font-size: 1.5rem;
+  font-size: var(--step-2);
   font-weight: 700;
   line-height: 1.15;
 }
@@ -1480,7 +1439,7 @@ footer.site-footer p + p {
   padding: 0.85rem;
   text-align: left;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   border-bottom: 2px solid var(--gold);
 }
 
@@ -1507,9 +1466,9 @@ footer.site-footer p + p {
    the cell's box against its neighbours. */
 .season-table .result-cell {
   font-family: var(--font-display);
-  font-size: 1.02rem;
+  font-size: var(--step-0);
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-tight);
   font-variant-numeric: tabular-nums;
   padding-left: 1.1rem;
 }
@@ -1544,10 +1503,10 @@ footer.site-footer p + p {
   border-left-width: 3px;
   border-radius: var(--radius-badge);
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   font-weight: 700;
   line-height: 1.35;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-display);
 }
 
 .loc-badge.loc-home {
@@ -1575,34 +1534,20 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
-.photo-banner {
-  position: relative;
-  overflow: hidden;
-  height: 200px;
-  background: var(--navy-dark);
-  border-bottom: 3px solid var(--gold);
-  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+/* A still row people scroll themselves, under the season grid. */
+.archive-section {
+  margin-top: 2.5rem;
 }
 
-.photo-banner-label {
-  position: absolute;
-  bottom: 0.75rem;
-  left: 1rem;
-  z-index: 3;
-  color: var(--gold);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(20, 44, 82, 0.55);
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--radius-badge);
-  border-left: 3px solid var(--gold);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  pointer-events: none;
+.photo-banner {
+  position: relative;
+  height: 200px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  border-radius: 12px;
+  background: var(--navy-dark);
+  scroll-snap-type: x proximity;
 }
 
 .photo-banner-track {
@@ -1610,9 +1555,6 @@ footer.site-footer p + p {
   align-items: center;
   height: 100%;
   width: max-content;
-  animation-name: photo-banner-scroll;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
 }
 
 /* Every frame is the same window onto its photo. Sizing by the image's own
@@ -1624,6 +1566,7 @@ footer.site-footer p + p {
   flex: none;
   margin-right: 3px;
   padding: 0;
+  scroll-snap-align: start;
   border: none;
   background: none;
   cursor: pointer;
@@ -1642,27 +1585,6 @@ footer.site-footer p + p {
 .photo-banner-track button:hover img,
 .photo-banner-track button:focus-visible img {
   filter: brightness(1.15);
-}
-
-.photo-banner:hover .photo-banner-track {
-  animation-play-state: paused;
-}
-
-@keyframes photo-banner-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    /* Exactly half the track's width, since the image set is duplicated
-       once — this is what makes the loop seamless. */
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .photo-banner-track {
-    animation: none;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1695,7 +1617,7 @@ footer.site-footer p + p {
   padding: 0.85rem;
   text-align: left;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   border-bottom: 2px solid var(--gold);
 }
 
@@ -1768,7 +1690,7 @@ footer.site-footer p + p {
 .records-section summary {
   cursor: pointer;
   list-style: none;
-  font-size: 1rem;
+  font-size: var(--step-0);
   color: var(--navy-text);
 }
 
@@ -1794,7 +1716,7 @@ footer.site-footer p + p {
 .record-count {
   margin-left: 0.5rem;
   font-weight: 400;
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   color: var(--text-muted);
 }
 
@@ -1841,11 +1763,11 @@ footer.site-footer p + p {
 .leaderboard-card h3 {
   margin: 0 0 1rem;
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: var(--step-1);
   font-weight: 700;
   color: var(--navy-text);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-display);
 }
 
 .leaderboard-list {
@@ -1859,7 +1781,7 @@ footer.site-footer p + p {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   border-bottom: 1px solid var(--border);
   color: var(--text);
 }
@@ -1876,7 +1798,7 @@ footer.site-footer p + p {
 .leaderboard-item .value {
   color: var(--navy-text);
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: var(--step-1);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
@@ -1896,14 +1818,14 @@ footer.site-footer p + p {
 }
 
 .leaderboard-item:first-child .value {
-  font-size: 1.8rem;
+  font-size: var(--step-3);
 }
 
 .leaderboard-link {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   color: var(--navy-text);
   text-decoration: none;
   font-weight: 600;
@@ -1924,11 +1846,11 @@ footer.site-footer p + p {
 .section-heading {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: var(--step-1);
   color: var(--text);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-display);
   margin: 0 0 0.9rem;
   padding-bottom: 0.3rem;
   border-bottom: 3px solid var(--gold);
@@ -1947,7 +1869,7 @@ footer.site-footer p + p {
 
 .section-heading-link {
   color: var(--navy-text);
-  font-size: 0.9rem;
+  font-size: var(--step--1);
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -1991,13 +1913,13 @@ footer.site-footer p + p {
   background: var(--card-bg);
   color: var(--text);
   /* 16px minimum, otherwise iOS zooms the page in when the field is focused. */
-  font-size: 1rem;
+  font-size: var(--step-0);
 }
 
 .search-result-count {
   display: block;
   margin-top: 0.5rem;
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   color: var(--text-muted);
 }
 
@@ -2006,10 +1928,10 @@ footer.site-footer p + p {
 .season-leaders-heading {
   margin: 2rem 0 1rem;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: var(--step-1);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-display);
   padding-bottom: 0.45rem;
   border-bottom: 3px solid var(--gold);
   box-shadow: 0 1px 0 var(--rule-navy);
@@ -2021,7 +1943,7 @@ footer.site-footer p + p {
 
 .subsection-title {
   margin: 0 0 0.75rem;
-  font-size: 0.95rem;
+  font-size: var(--step--1);
   font-weight: 600;
   color: var(--navy-text);
 }
@@ -2117,7 +2039,7 @@ footer.site-footer p + p {
   background: none;
   border: none;
   color: var(--text);
-  font-size: 1.8rem;
+  font-size: var(--step-3);
   padding: 0.75rem;
   cursor: pointer;
   line-height: 1;
@@ -2134,10 +2056,10 @@ footer.site-footer p + p {
 .records-modal-title {
   margin: 0 0 1.25rem;
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: var(--step-2);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-display);
   color: var(--navy-text);
 }
 
@@ -2146,12 +2068,12 @@ footer.site-footer p + p {
 }
 
 .records-modal .records-table {
-  font-size: 0.9rem;
+  font-size: var(--step--1);
 }
 
 .records-modal .records-table th {
   padding: 0.7rem;
-  font-size: 0.85rem;
+  font-size: var(--step--1);
 }
 
 .records-modal .records-table td {
@@ -2183,7 +2105,7 @@ footer.site-footer p + p {
   .records-modal .records-table th,
   .records-modal .records-table td {
     padding: 0.4rem 0.5rem;
-    font-size: 0.8rem;
+    font-size: var(--step--1);
   }
 }
 
@@ -2366,13 +2288,13 @@ footer.site-footer p + p {
 
   /* The title band keeps its rules and yard lines, just at phone metrics. */
   main h1 {
-    font-size: 1.5rem;
+    font-size: var(--step-2);
     padding: 0.55rem 0.7rem 0.6rem;
   }
 
   .week-title,
   .season-title {
-    font-size: 1.3rem;
+    font-size: var(--step-1);
   }
 }
 
@@ -2504,29 +2426,20 @@ header.site-header .skip-link:focus {
 
 /* The two pills differ only in color, so the shape lives here once and each
    rule below carries just what makes it itself. */
-.badge-latest,
 .badge-more-coming {
   display: inline-block;
   flex: none;
   font-family: var(--font-display);
-  font-size: 0.76rem;
+  font-size: var(--step--2);
   font-weight: 700;
   /* Fixed so both badges stand the same height whatever their label. */
   line-height: 1.4;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   white-space: nowrap;
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-badge);
   border-left: 3px solid transparent;
-}
-
-/* Marks the newest set of photos in the grid. */
-.badge-latest {
-  background: var(--grad-navy);
-  color: #fff;
-  border-left-color: var(--gold);
-  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 /* Gold, like .badge-coming-soon, because both mean "not the full story yet".
@@ -2542,7 +2455,7 @@ header.site-header .skip-link:focus {
 .week-more-coming {
   margin: -0.6rem 0 1rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: var(--step--1);
 }
 
 /* Brand-tinted text selection. */
@@ -2607,5 +2520,664 @@ header.site-header .skip-link:focus {
   .btn::after,
   .btn:hover::after {
     display: none;
+  }
+}
+
+/* ===================================================================
+   Design refresh: home hero, scoreboard, result chips, logo tiles,
+   phone fixes. Kept together at the end so it reads as one layer over
+   the base styles above.
+   =================================================================== */
+
+/* ---- Home: latest game hero ---- */
+.home-hero {
+  position: relative;
+  display: block;
+  height: clamp(260px, 46vw, 480px);
+  margin: 0 0 var(--space-4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--navy-dark);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: var(--shadow-2);
+}
+
+.home-hero:not(.ready) {
+  background: var(--yardlines-on-navy), var(--grad-navy);
+}
+
+.home-hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+@media (hover: hover) {
+  .home-hero:hover .home-hero-photo {
+    transform: scale(1.02);
+  }
+}
+
+/* Keeps white type readable over any photo. */
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 22, 40, 0) 30%, rgba(11, 22, 40, 0.92) 100%);
+  pointer-events: none;
+}
+
+.home-hero-body {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding: var(--space-5);
+}
+
+.home-hero-eyebrow {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.home-hero-score {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.2rem + 3.6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.home-hero-points {
+  font-variant-numeric: tabular-nums;
+}
+
+.home-hero-points.lead {
+  color: var(--gold);
+}
+
+.home-hero-sep {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---- Home: next game strip ---- */
+.next-up {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 72px;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--gold);
+  background: var(--yardlines-on-navy), var(--grad-navy);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: var(--shadow-1);
+  transition: box-shadow var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .next-up:hover {
+    box-shadow: var(--shadow-2);
+    transform: translateY(-1px);
+  }
+}
+
+.next-up-logo {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 48px;
+}
+
+.next-up-logo .logo-badge {
+  max-width: 100%;
+  max-height: 100%;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.next-up-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.next-up-label {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.next-up-title {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  line-height: 1.15;
+}
+
+.next-up-when {
+  font-size: var(--step--1);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.next-up-cta {
+  margin-left: auto;
+  flex: none;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--gold);
+}
+
+@media (max-width: 480px) {
+  .next-up-cta {
+    display: none;
+  }
+}
+
+/* ---- Season cards: eyebrow, title, result ---- */
+.week-card .card-eyebrow {
+  margin: 0 0 0.15rem;
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.week-card .card-eyebrow:empty {
+  display: none;
+}
+
+.week-card .card-title {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  margin: 0 0 var(--space-2);
+}
+
+.result-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.result-chip.win {
+  background: var(--win-bg);
+  color: var(--win);
+}
+
+.result-chip.loss {
+  background: var(--loss-bg);
+  color: var(--loss);
+}
+
+.result-chip.tie {
+  background: var(--row-accent);
+  color: var(--text-muted);
+}
+
+/* ---- Opponent logos: one badge style whatever box the file came in ---- */
+.week-card .cover.cover-logo-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  background: var(--yardlines-on-navy), var(--grad-navy);
+}
+
+.logo-badge {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 62%;
+  max-height: 66%;
+  padding: 0.6rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* ---- Week page: eyebrow and scoreboard ---- */
+.week-eyebrow {
+  margin: 0.4rem 0 0.2rem;
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.week-eyebrow:empty {
+  display: none;
+}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
+  border-bottom: 3px solid var(--gold);
+  background: var(--yardlines-on-navy), var(--grad-navy);
+  color: #fff;
+  box-shadow: var(--shadow-2);
+}
+
+.scoreboard[hidden] {
+  display: none;
+}
+
+.sb-team {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.sb-team-them {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.sb-logo {
+  flex: none;
+  width: 52px;
+  height: auto;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+
+.sb-logo-badge {
+  width: auto;
+  max-width: 64px;
+  max-height: 48px;
+  padding: 3px;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  filter: none;
+}
+
+.sb-name {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  overflow-wrap: anywhere;
+}
+
+.sb-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sb-status {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.sb-points {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.sb-score.sb-lead {
+  color: var(--gold);
+}
+
+.sb-dash {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 560px) {
+  .scoreboard {
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .sb-team,
+  .sb-team-them {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-1);
+  }
+
+  .sb-logo {
+    width: 40px;
+  }
+
+  .sb-name {
+    font-size: var(--step--1);
+  }
+}
+
+/* ---- Tabs: one scrollable row instead of a stacked list on phones ---- */
+.level-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: none;
+  box-shadow: inset 0 -2px 0 var(--border);
+}
+
+.level-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.level-tab {
+  flex: none;
+  white-space: nowrap;
+  margin-bottom: 0;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+/* ---- Schedule and season tables ---- */
+.season-table td:first-child,
+.season-table .result-cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.season-table td a {
+  color: var(--navy-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.season-table td a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.row-note {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .season-table th:nth-child(5),
+  .season-table td:nth-child(5),
+  .date-weekday {
+    display: none;
+  }
+
+  .row-note {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: var(--step--2);
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .season-table th,
+  .season-table td {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .season-table .result-cell {
+    padding-left: 0.7rem;
+  }
+}
+
+/* ---- Season record: a stat, not a footnote ---- */
+.season-record {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 9rem;
+  min-height: 82px;
+  box-sizing: border-box;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-2) var(--space-4);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  color: var(--text);
+}
+
+.season-record:empty {
+  visibility: hidden;
+}
+
+.season-record strong {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--navy-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---- 404 ---- */
+.not-found {
+  padding-top: var(--space-7);
+  padding-bottom: var(--space-7);
+  text-align: center;
+}
+
+.not-found-logo {
+  display: block;
+  width: 96px;
+  height: auto;
+  margin: 0 auto var(--space-4);
+}
+
+.not-found h1 {
+  display: inline-block;
+}
+
+.not-found .page-intro {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* ---- Reading comfort ---- */
+.page-intro,
+.podcast-intro,
+.week-caption,
+.empty-state,
+.coming-soon-banner {
+  line-height: var(--leading-body);
+}
+
+.page-intro {
+  max-width: 62ch;
+}
+
+/* ---- Buttons: solid gold, no sheen ---- */
+.btn::after {
+  display: none;
+}
+
+.btn.btn-gold {
+  background: var(--gold);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: none;
+  color: var(--navy-dark);
+  box-shadow: var(--shadow-1);
+}
+
+.btn.btn-gold:hover {
+  filter: none;
+  background: #ffd147;
+  box-shadow: var(--shadow-2);
+}
+
+/* ---- Footer ---- */
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5) var(--space-6);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footer-logo {
+  width: 52px;
+  height: auto;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+
+.footer-links a {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--navy-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-social a {
+  color: var(--text-muted);
+}
+
+/* ---- Theme toggle (lives inside the nav links) ---- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 0.4rem;
+  border: none;
+  border-radius: var(--radius);
+  background: none;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.theme-toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.theme-toggle .icon-moon {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* Shows what a click switches to. */
+:root[data-theme="dark"] .theme-toggle .icon-moon,
+:root:not([data-theme="dark"]) .theme-toggle .icon-sun {
+  display: none;
+}
+
+.theme-toggle-text {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .theme-toggle {
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.6rem;
+    font: inherit;
+    font-weight: 600;
+  }
+
+  .theme-toggle-text {
+    display: inline;
+  }
+}
+
+/* ---- Phones: the full wordmark fits next to the kickoff pill ---- */
+@media (max-width: 400px) {
+  header.site-header .brand {
+    gap: 0.45rem;
+  }
+
+  header.site-header .site-logo {
+    height: 30px;
+  }
+
+  header.site-header .brand-name {
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
   }
 }
