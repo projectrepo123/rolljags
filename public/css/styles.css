@@ -3239,3 +3239,28 @@ header.site-header .skip-link:focus {
     height: 34px;
   }
 }
+
+/* Roster: a plain season-table, with the jersey number set like a scoreboard
+   figure so the column reads at a glance. */
+.roster-table .roster-num {
+  width: 3.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--navy-text);
+}
+
+.roster-table .roster-name {
+  font-weight: 600;
+}
+
+.roster-table abbr {
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .roster-table th,
+  .roster-table td {
+    padding: 0.65rem 0.6rem;
+  }
+}

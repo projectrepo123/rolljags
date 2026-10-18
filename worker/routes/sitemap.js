@@ -7,6 +7,7 @@ const STATIC_PAGES = [
   ["/schedule", "weekly", "0.8"],
   ["/history", "monthly", "0.8"],
   ["/records", "monthly", "0.8"],
+  ["/roster", "yearly", "0.7"],
   ["/podcast", "weekly", "0.8"],
 ];
 

@@ -10,6 +10,7 @@ const NAV = [
   { href: "/schedule", label: "Schedule" },
   { href: "/history", label: "History" },
   { href: "/records", label: "Records" },
+  { href: "/roster", label: "Roster" },
 ];
 
 // Which tab a page belongs under. A gallery is part of Photos and a single
@@ -22,6 +23,7 @@ const SECTION_BY_PAGE = {
   history: "/history",
   season: "/history",
   records: "/records",
+  roster: "/roster",
   podcast: "/podcast",
 };
 
