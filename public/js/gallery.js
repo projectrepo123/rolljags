@@ -150,7 +150,13 @@ function renderLevel() {
 
     const img = document.createElement("img");
     img.src = photo.thumbUrl;
-    img.loading = "lazy";
+    // The first rows are on screen at once, so lazy-loading them only delays
+    // what people see first. The rest wait until they're scrolled near.
+    if (i < 12) {
+      if (i < 3) img.fetchPriority = "high";
+    } else {
+      img.loading = "lazy";
+    }
     // Describes the photo rather than its position, so it means something in
     // image search. The button deliberately has no aria-label: a button with a
     // single image takes its accessible name from that image's alt, so this is

@@ -67,6 +67,44 @@ function decorateHtml(response, url) {
   return rewriter.transform(response);
 }
 
+// The home hero photo is the page's largest paint, but home.js only learns
+// which photo it is after fetching /api/weeks. A preload in the head lets the
+// download start while the HTML is still arriving. srcset and sizes must
+// match what renderHero in public/js/home.js sets, or the browser fetches
+// the image twice.
+async function preloadHomeHero(asset, url, env, ctx) {
+  if (!asset.ok || !asset.headers.get("content-type")?.includes("text/html")) return asset;
+  try {
+    // Only from the edge cache: on a miss the week list means a full R2
+    // listing, and the HTML shouldn't wait on that. Warm it for the next
+    // visitor and send this page without the hint.
+    const weeksRequest = new Request(`${url.origin}/api/weeks`);
+    const cached = await caches.default.match(cacheKeyFor(weeksRequest, [], null));
+    if (!cached) {
+      ctx.waitUntil(withCache(weeksRequest, ctx, () => handleWeeks(env)).then((r) => r.body?.cancel()));
+      return asset;
+    }
+    const data = await cached.json();
+    const latest = (data.years || [])
+      .map((y) => y.weeks.filter((w) => w.status === "live").pop())
+      .find(Boolean);
+    const cover = latest?.cover;
+    if (!cover || cover.startsWith("/") || !cover.includes("/thumbs/")) return asset;
+
+    const view = cover.replace("/thumbs/", "/view/");
+    const link =
+      `<link rel="preload" as="image" fetchpriority="high" href="${escapeAttr(view)}" ` +
+      `imagesrcset="${escapeAttr(cover)} 640w, ${escapeAttr(view)} 1600w" ` +
+      `imagesizes="(min-width: 1100px) 1052px, 100vw">`;
+    return new HTMLRewriter()
+      .on("head", { element: (el) => el.append(link, { html: true }) })
+      .transform(asset);
+  } catch (err) {
+    console.error(err);
+    return asset;
+  }
+}
+
 function escapeAttr(str) {
   return String(str ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
@@ -232,6 +270,10 @@ async function handle(request, env, ctx) {
       };
 
       return withCache(request, ctx, buildResponse, ["year"], "/schedule");
+    }
+
+    if (url.pathname === "/" || url.pathname === "/index.html") {
+      return preloadHomeHero(await env.ASSETS.fetch(request), url, env, ctx);
     }
 
     if (url.pathname === "/sitemap.xml") {

@@ -182,7 +182,16 @@ function prefillWeek(response, data) {
     .filter(Boolean)
     .join(" · ");
 
+  // The first thumbnail is the page's largest paint, and gallery.js only adds
+  // it after fetching the photo list, so start the download from the head.
+  const firstThumb = live ? data.levels[0]?.photos[0]?.thumbUrl : null;
+
   return new HTMLRewriter()
+    .on("head", {
+      element: (el) => {
+        if (firstThumb) el.append(`<link rel="preload" as="image" fetchpriority="high" href="${escapeAttr(firstThumb)}">`, { html: true });
+      },
+    })
     .on("#week-eyebrow", { element: (el) => el.setInnerContent(eyebrow) })
     .on("#scoreboard", {
       element: (el) => {
