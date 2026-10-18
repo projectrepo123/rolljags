@@ -3943,3 +3943,55 @@ header.site-header .skip-link:focus {
     -webkit-text-stroke-width: 2px;
   }
 }
+
+/* ---- Card panels with depth: gradients, a lit top edge, and a shimmer ---- */
+.wc-score {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #5d6a83 0%, #3e4a61 52%, #2b3548 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -2px 0 rgba(0, 0, 0, 0.25), 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+.week-card.win .wc-score {
+  background: linear-gradient(180deg, #ffe58a 0%, #ffc72c 48%, #d99a00 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(120, 78, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* A narrow band of light that sweeps across the gold slab every few seconds,
+   and again, faster, when the card is hovered. */
+.week-card.win .wc-score::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
+  transform: translateX(-130%);
+  animation: slab-shimmer 6s ease-in-out 1.5s infinite;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .week-card.win:hover .wc-score::after {
+    animation-duration: 1.4s;
+    animation-delay: 0s;
+  }
+}
+
+@keyframes slab-shimmer {
+  0% { transform: translateX(-130%); }
+  16%, 100% { transform: translateX(330%); }
+}
+
+.wc-kick {
+  background: linear-gradient(180deg, #2f5da3 0%, var(--navy) 55%, var(--navy-dark) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -2px 0 var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .week-card.win .wc-score::after {
+    animation: none;
+    display: none;
+  }
+}
