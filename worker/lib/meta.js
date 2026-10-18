@@ -209,7 +209,7 @@ function prefillWeek(response, data) {
 function scoreboardHtml(data) {
   const ours = Number(data.pointsFor);
   const theirs = Number(data.pointsAgainst);
-  const status = { W: "Final · Win", L: "Final · Loss", T: "Final · Tie" }[data.result] || "Final";
+  const status = { W: "Win", L: "Loss", T: "Tie" }[data.result] || "";
   const opponentLogo = data.logo
     ? `<img class="sb-logo sb-logo-badge" src="${escapeAttr(data.logo)}" alt="" width="64" height="64">`
     : "";

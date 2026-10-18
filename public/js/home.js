@@ -87,7 +87,7 @@ function renderHero(week) {
   }
 
   const body = el("div", "home-hero-body");
-  const eyebrow = [week.result ? "Final" : "Latest photos", cardEyebrow(week), week.notes].filter(Boolean).join(" · ");
+  const eyebrow = [week.result ? "Latest result" : "Latest photos", cardEyebrow(week), week.notes].filter(Boolean).join(" · ");
   body.appendChild(el("p", "home-hero-eyebrow", eyebrow));
 
   if (week.result && week.opponent) {

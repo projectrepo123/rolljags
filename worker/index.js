@@ -252,7 +252,10 @@ const ASSET_CACHE_RULES = [
   [/\.(webp|avif|png|jpe?g|gif|svg|ico|woff2?)$/i, "public, max-age=604800"],
   // The record book fetches a JSON file per scope tab, so give the data the same
   // short window as the code that reads it.
-  [/\.(css|js|json)$/i, "public, max-age=600, stale-while-revalidate=86400"],
+  // No stale-while-revalidate: it let a returning browser run a day-old
+  // script against freshly deployed HTML (e.g. a header button with no
+  // handler yet) for a page view after every deploy.
+  [/\.(css|js|json)$/i, "public, max-age=300"],
 ];
 
 function withAssetCache(url, response) {

@@ -24,8 +24,8 @@
   --text: #1c1e21;
   --text-muted: #5b6470;
   --border: #e1e4e9;
-  --win: #1a7f3d;
-  --loss: #c41e3a;
+  --win: #1b3a6b;
+  --loss: #5b6470;
   /* Loss indicator on season cards: a muted blue-grey instead of red, so the
      colour palette stays blue/gold and red doesn't appear elsewhere on the page. */
   --season-loss-accent: #6b7a8f;
@@ -43,8 +43,8 @@
   --navy-100: #e3eaf5;
   --gold-700: #8a6400;
   --gold-100: #fff4d1;
-  --win-bg: #e3f4e9;
-  --loss-bg: #fbe5e9;
+  --win-bg: #fff4d1;
+  --loss-bg: #eceef2;
   /* Type scale (major third), tracking, spacing, radii and motion. */
   --step--2: 0.75rem;
   --step--1: 0.875rem;
@@ -108,10 +108,10 @@
     --text-muted: #9aa8bd;
     --border: #22324f;
     --navy-text: #ffd75e;
-    --win: #4ade80;
-    --loss: #fa8a8a;
-    --win-bg: rgba(74, 222, 128, 0.14);
-    --loss-bg: rgba(250, 138, 138, 0.14);
+    --win: #ffd75e;
+    --loss: #9aa8bd;
+    --win-bg: rgba(255, 199, 44, 0.14);
+    --loss-bg: rgba(255, 255, 255, 0.06);
     --season-loss-accent: #8a9aaf;
     --row-accent: rgba(255, 255, 255, 0.06);
     --focus-ring: #ffc72c;
@@ -135,10 +135,10 @@
   --text-muted: #9aa8bd;
   --border: #22324f;
   --navy-text: #ffd75e;
-  --win: #4ade80;
-  --loss: #fa8a8a;
-  --win-bg: rgba(74, 222, 128, 0.14);
-  --loss-bg: rgba(250, 138, 138, 0.14);
+  --win: #ffd75e;
+  --loss: #9aa8bd;
+  --win-bg: rgba(255, 199, 44, 0.14);
+  --loss-bg: rgba(255, 255, 255, 0.06);
   --season-loss-accent: #8a9aaf;
   --row-accent: rgba(255, 255, 255, 0.06);
   --focus-ring: #ffc72c;
@@ -1475,7 +1475,7 @@ footer.site-footer p + p {
 
 .season-table .game-win .result-cell {
   color: var(--win);
-  box-shadow: inset 3px 0 0 var(--win);
+  box-shadow: inset 3px 0 0 var(--gold);
 }
 
 .season-table .game-loss .result-cell {
@@ -1547,7 +1547,6 @@ footer.site-footer p + p {
   scrollbar-width: thin;
   border-radius: 12px;
   background: var(--navy-dark);
-  scroll-snap-type: x proximity;
 }
 
 .photo-banner-track {
@@ -1566,7 +1565,6 @@ footer.site-footer p + p {
   flex: none;
   margin-right: 3px;
   padding: 0;
-  scroll-snap-align: start;
   border: none;
   background: none;
   cursor: pointer;
@@ -2735,6 +2733,8 @@ header.site-header .skip-link:focus {
 .result-chip.win {
   background: var(--win-bg);
   color: var(--win);
+  box-shadow: inset 3px 0 0 var(--gold);
+  padding-left: 0.6rem;
 }
 
 .result-chip.loss {
@@ -3179,5 +3179,58 @@ header.site-header .skip-link:focus {
   header.site-header .brand-name {
     font-size: 1.05rem;
     letter-spacing: 0.01em;
+  }
+}
+
+/* ---- Archive strip arrows ---- */
+.archive-carousel {
+  position: relative;
+}
+
+.archive-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid rgba(255, 199, 44, 0.6);
+  border-radius: 50%;
+  background: var(--navy-dark);
+  color: var(--gold);
+  box-shadow: var(--shadow-2);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.archive-arrow:hover {
+  background: var(--navy);
+  border-color: var(--gold);
+}
+
+.archive-arrow.prev {
+  left: 10px;
+}
+
+.archive-arrow.next {
+  right: 10px;
+}
+
+.archive-arrow svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 480px) {
+  .archive-arrow {
+    width: 34px;
+    height: 34px;
   }
 }
