@@ -76,10 +76,14 @@ function renderHero(week) {
   heroEl.href = weekUrl(week.year, week.week);
   heroEl.setAttribute("aria-label", `Latest game: ${photoAlt(week)}, ${week.photoCount} photos`);
 
-  if (week.cover && !week.cover.startsWith("/")) {
+  // heroCover is a different shot from the one on this week's card just
+  // below, so the screen doesn't show the same photo twice. Must match
+  // preloadHomeHero in worker/index.js.
+  const photo = week.heroCover || week.cover;
+  if (photo && !photo.startsWith("/")) {
     const img = el("img", "home-hero-photo");
-    img.src = week.cover.replace("/thumbs/", "/view/");
-    img.srcset = `${week.cover} 640w, ${week.cover.replace("/thumbs/", "/view/")} 1600w`;
+    img.src = photo.replace("/thumbs/", "/view/");
+    img.srcset = `${photo} 640w, ${photo.replace("/thumbs/", "/view/")} 1600w`;
     img.sizes = "(min-width: 1100px) 1052px, 100vw";
     img.fetchPriority = "high";
     img.alt = "";
@@ -87,19 +91,31 @@ function renderHero(week) {
   }
 
   const body = el("div", "home-hero-body");
-  const eyebrow = [week.result ? "Latest result" : "Latest photos", cardEyebrow(week), week.notes].filter(Boolean).join(" · ");
-  body.appendChild(el("p", "home-hero-eyebrow", eyebrow));
+  // The tag and the details are separate so a phone can stack them as two
+  // clean lines instead of wrapping one long spaced-out line mid-phrase.
+  const eyebrow = el("p", "home-hero-eyebrow");
+  eyebrow.append(
+    el("span", "home-hero-tag", week.result ? "Latest result" : "Latest photos"),
+    el("span", "home-hero-sep", " · "),
+    el("span", "", [cardEyebrow(week), week.notes].filter(Boolean).join(" · "))
+  );
+  body.appendChild(eyebrow);
 
   if (week.result && week.opponent) {
     const score = el("p", "home-hero-score");
     const ours = Number(week.pointsFor);
     const theirs = Number(week.pointsAgainst);
+    // Each team is one unbreakable unit, so a narrow screen stacks them
+    // "Seckman 26" over "Ritenour 0" rather than splitting a name from its score.
+    const team = (name, points, lead) => {
+      const span = el("span", "home-hero-team", `${name} `);
+      span.appendChild(el("span", `home-hero-points${lead ? " lead" : ""}`, String(points)));
+      return span;
+    };
     score.append(
-      el("span", "", "Seckman "),
-      el("span", `home-hero-points${ours > theirs ? " lead" : ""}`, String(ours)),
+      team("Seckman", ours, ours > theirs),
       el("span", "home-hero-sep", " · "),
-      el("span", "", `${week.opponent} `),
-      el("span", `home-hero-points${theirs > ours ? " lead" : ""}`, String(theirs))
+      team(week.opponent, theirs, theirs > ours)
     );
     body.appendChild(score);
   } else {

@@ -88,7 +88,8 @@ async function preloadHomeHero(asset, url, env, ctx) {
     const latest = (data.years || [])
       .map((y) => y.weeks.filter((w) => w.status === "live").pop())
       .find(Boolean);
-    const cover = latest?.cover;
+    // Must match the photo renderHero in home.js picks.
+    const cover = latest?.heroCover || latest?.cover;
     if (!cover || cover.startsWith("/") || !cover.includes("/thumbs/")) return asset;
 
     const view = cover.replace("/thumbs/", "/view/");

@@ -40,3 +40,13 @@ export function pickDaily(items, seed) {
   if (!items || items.length === 0) return null;
   return items[hash32(seed) % items.length];
 }
+
+// A second pick for the home hero, which sits right above the newest week's
+// card. It is the photo halfway round the list from the card's: a different
+// pick alone could land on the next frame of the same burst, which reads as
+// the same shot twice. Null when there is only one item.
+export function pickDailyOther(items, seed) {
+  if (!items || items.length < 2) return null;
+  const i = hash32(seed) % items.length;
+  return items[(i + Math.floor(items.length / 2)) % items.length];
+}

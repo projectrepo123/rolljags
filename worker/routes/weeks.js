@@ -1,6 +1,6 @@
 import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, coverLevels, publicUrl } from "../lib/r2.js";
 import { SCHEDULE, scheduleCaption } from "../lib/schedule.js";
-import { todayKey, pickDaily } from "../lib/daily.js";
+import { todayKey, pickDaily, pickDailyOther } from "../lib/daily.js";
 
 async function loadRealWeeks(env, year, yearPrefix, day) {
   const weekPrefixes = await listPrefixes(env.PHOTOS, yearPrefix);
@@ -40,7 +40,11 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     // returns a fixed order, so `candidates` is identical on every request —
     // which is what makes the seeded index stable rather than random.
     const scheduledGame = (SCHEDULE[year.toString()] || []).find(g => g.week === weekNum);
-    const cover = pickDaily(candidates, `${year}/${weekNum}/${day}`) || scheduledGame?.cover || null;
+    const seed = `${year}/${weekNum}/${day}`;
+    const cover = pickDaily(candidates, seed) || scheduledGame?.cover || null;
+    // Only the newest week is ever the hero, but every week gets one so the
+    // home page never has to know which that is in advance.
+    const heroCover = pickDailyOther(candidates, seed);
     weeks.set(weekNum, {
       year,
       week: weekNum,
@@ -49,6 +53,7 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
       label: formatWeekLabel(weekNum, date, scheduledGame?.label),
       photoCount: totalCount,
       cover,
+      ...(heroCover ? { heroCover } : {}),
       status: "live",
       opponent: scheduledGame?.opponent,
       homeAway: scheduledGame?.homeAway,

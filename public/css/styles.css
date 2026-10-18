@@ -3264,3 +3264,46 @@ header.site-header .skip-link:focus {
     padding: 0.65rem 0.6rem;
   }
 }
+
+/* Home hero type on a phone. The eyebrow stacks as a gold tag over a white
+   details line, and the score as one team per line, each with a shadow and a
+   deeper scrim, so neither breaks mid-phrase over a busy photo. */
+.home-hero-eyebrow,
+.home-hero-score {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.home-hero-team {
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .home-hero::after {
+    background: linear-gradient(180deg, rgba(11, 22, 40, 0.1) 0%, rgba(11, 22, 40, 0.55) 40%, rgba(11, 22, 40, 0.94) 100%);
+  }
+
+  .home-hero-body {
+    padding: var(--space-4);
+  }
+
+  .home-hero-eyebrow {
+    margin-bottom: var(--space-2);
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .home-hero-eyebrow .home-hero-tag {
+    display: block;
+    color: var(--gold);
+  }
+
+  .home-hero-eyebrow .home-hero-sep,
+  .home-hero-score .home-hero-sep {
+    display: none;
+  }
+
+  .home-hero-team {
+    display: block;
+  }
+}
