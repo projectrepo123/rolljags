@@ -98,6 +98,18 @@
   --shadow-2: 0 2px 4px rgba(16, 24, 40, 0.06), 0 8px 20px rgba(16, 24, 40, 0.08);
   --shadow-3: 0 12px 40px rgba(16, 24, 40, 0.18);
   --sheen: rgba(255, 255, 255, 0.55);
+
+  /* Text treatments. Heading fill is a navy gradient on light; the dark theme
+     swaps it for white to light gold (see the dark blocks). --label-accent is
+     the gold for small caps labels: --gold-700 on light surfaces, because the
+     brand gold fails contrast there. */
+  --gold-light: #ffe38a;
+  --text-grad-navy: linear-gradient(180deg, var(--navy-light) 0%, var(--navy-dark) 100%);
+  --text-grad-gold: linear-gradient(180deg, #ffffff 0%, var(--gold-light) 100%);
+  --text-shadow-subtle: 0 1px 2px rgba(11, 22, 40, 0.35);
+  --text-shadow-medium: 0 1px 2px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.35);
+  --text-shadow-glow: 0 0 12px rgba(255, 199, 44, 0.45);
+  --label-accent: var(--gold-700);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -125,6 +137,8 @@
     --yardline: rgba(255, 255, 255, 0.05);
     --rule-navy: rgba(127, 178, 255, 0.4);
     --bg-glow: rgba(127, 178, 255, 0.07);
+    --text-grad-navy: var(--text-grad-gold);
+    --label-accent: #ffd75e;
   }
 }
 
@@ -152,6 +166,8 @@
   --yardline: rgba(255, 255, 255, 0.05);
   --rule-navy: rgba(127, 178, 255, 0.4);
   --bg-glow: rgba(127, 178, 255, 0.07);
+  --text-grad-navy: var(--text-grad-gold);
+  --label-accent: #ffd75e;
 }
 
 /* The UA default focus ring is nearly invisible on the navy header and inside
@@ -404,7 +420,7 @@ header.site-header .site-nav {
 
 .kickoff-clock {
   color: var(--gold);
-  text-shadow: 0 0 12px rgba(255, 199, 44, 0.45);
+  text-shadow: var(--text-shadow-glow);
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.88rem;
   font-weight: 600;
@@ -3270,7 +3286,7 @@ header.site-header .skip-link:focus {
    deeper scrim, so neither breaks mid-phrase over a busy photo. */
 .home-hero-eyebrow,
 .home-hero-score {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.35);
+  text-shadow: var(--text-shadow-medium);
 }
 
 .home-hero-team {
@@ -4102,4 +4118,161 @@ header.site-header .skip-link:focus {
 
 .wc-meta {
   color: rgba(255, 255, 255, 0.92);
+}
+
+/* ===================================================================
+   Text treatments: heading fill, labels, links, button and nav text.
+   Text only. Nothing here changes a card container (surface, border,
+   shadow, padding, radius, size or hover), and nothing changes a font size
+   or line height, so the page and everything on it keeps its dimensions.
+   =================================================================== */
+
+/* ---- Headings: gradient fill ----
+   One treatment for every title: navy to deep navy on light, white to light
+   gold on dark (the swap lives in the tokens). The gold goal line under each
+   heading is the accent, so no second bar. No text-shadow on these: a shadow
+   shows through the clipped fill and muddies it.
+   The page title already paints the yard-line plate with its background, so
+   the gradient is the first layer, clipped to the glyphs, with the plate
+   layers below it clipped to the border box exactly as before. Keep those
+   two plate layers in step with `main h1` above. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .section-heading,
+  .year-section h2,
+  .season-leaders-heading {
+    background-image: var(--text-grad-navy);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  main h1 {
+    background:
+      var(--text-grad-navy),
+      var(--yardlines),
+      linear-gradient(90deg, var(--row-accent) 0%, transparent 55%);
+    -webkit-background-clip: text, border-box, border-box;
+    background-clip: text, border-box, border-box;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* The kicker lives inside the h1 and keeps its own solid color. */
+  main h1 .h1-kicker {
+    -webkit-text-fill-color: currentcolor;
+  }
+}
+
+/* Forced colors drops backgrounds, which would leave the clipped text
+   invisible. */
+@media (forced-colors: active) {
+  .section-heading,
+  .year-section h2,
+  .season-leaders-heading,
+  main h1 {
+    -webkit-text-fill-color: currentcolor;
+  }
+}
+
+/* ---- Labels: small caps, tracked, gold accent ---- */
+.h1-kicker {
+  text-transform: uppercase;
+  color: var(--label-accent);
+}
+
+.stat-tile-label {
+  color: var(--label-accent);
+}
+
+/* ---- Links ---- */
+.section-heading-link,
+.leaderboard-link,
+.footer-links a,
+.season-table td a {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.section-heading-link:hover,
+.leaderboard-link:hover,
+.footer-links a:hover,
+.season-table td a:hover {
+  text-decoration-color: var(--gold);
+}
+
+/* Links that are already underlined keep the underline and gain the gold on
+   hover. */
+.back-link,
+main p a {
+  transition: text-decoration-color var(--dur-fast) ease;
+}
+
+.back-link:hover,
+main p a:hover {
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* ---- Buttons: text only ---- */
+.btn {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: var(--text-shadow-subtle);
+}
+
+/* Navy text on gold needs no shadow. */
+.btn.btn-gold {
+  text-shadow: none;
+}
+
+/* ---- Nav: a gold bar slides in under the label ---- */
+header.site-header .site-nav a {
+  position: relative;
+}
+
+header.site-header .site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0.8rem;
+  right: 0.8rem;
+  bottom: 0.5rem;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur) var(--ease);
+  pointer-events: none;
+}
+
+header.site-header .site-nav a.active::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) {
+  header.site-header .site-nav a:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (max-width: 860px) {
+  header.site-header .site-nav .nav-links a::after {
+    left: 0.6rem;
+    right: 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header.site-header .site-nav a::after,
+  .section-heading-link,
+  .leaderboard-link,
+  .footer-links a,
+  .season-table td a,
+  .back-link,
+  main p a {
+    transition: none;
+  }
 }
