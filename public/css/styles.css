@@ -3603,6 +3603,54 @@ header.site-header .skip-link:focus {
   background: var(--gold);
 }
 
+/* The history page reuses .week-grid and .week-card for its season tiles, which
+   have no photo. Undo the photo-card treatment above so they keep their own
+   flat, centred look (styles near .season-card). */
+.week-grid .week-card.season-card {
+  display: flex;
+  aspect-ratio: auto;
+  min-height: 120px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--season-edge);
+  border-radius: var(--radius-lg);
+  background:
+    var(--yardlines),
+    linear-gradient(0deg, var(--season-tint), var(--season-tint)),
+    var(--surface);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  color: var(--text);
+  clip-path: none;
+}
+
+.week-grid .week-card.season-card::before {
+  display: none;
+}
+
+@media (hover: hover) {
+  .week-grid .week-card.season-card:hover {
+    border-color: var(--gold);
+    border-left-color: var(--season-edge);
+    background:
+      var(--yardlines),
+      linear-gradient(0deg, var(--season-tint), var(--season-tint)),
+      var(--surface-hover);
+    box-shadow: var(--shadow-2), var(--surface-highlight);
+    transform: translateY(-3px);
+  }
+}
+
+/* Two across on a phone instead of a single column of 27 tall tiles. */
+@media (max-width: 560px) {
+  .week-grid:not(#weeks .week-grid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .season-card-body {
+    padding: 1.1rem 0.5rem;
+  }
+}
+
 /* ---- Photo ---- */
 .wc-media {
   position: absolute;
