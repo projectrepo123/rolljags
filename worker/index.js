@@ -10,7 +10,7 @@ import { handleGetLikes, handleLike } from "./routes/likes.js";
 import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, injectPlayerMeta, opponentPhrase } from "./lib/meta.js";
 import { loadRoster, findPlayer, injectRoster } from "./lib/roster.js";
 import { isValidYear, isValidWeekNum, isValidLevel, isValidPhotoKey } from "./lib/validate.js";
-import { nextGame } from "./lib/schedule.js";
+import { nextGame, nextEmbargoEnd } from "./lib/schedule.js";
 import { headerHtml, FOOTER_HTML } from "./lib/chrome.js";
 import { loadHistory } from "./lib/history.js";
 
@@ -398,7 +398,10 @@ async function withCache(request, ctx, handler, varyParams = [], canonicalPath =
   // max-age it was stored with, which kept returning visitors on a stale home
   // page long after a score or upload. Restate it on the way out.
   const cached = await cache.match(key);
-  if (cached) {
+  // Built while a week's photos were still embargoed: worthless once that
+  // embargo lifts, so rebuild rather than serve it, even if it's fresh.
+  const builtUntil = Number(cached?.headers.get("X-Embargo-Until") || 0);
+  if (cached && !(builtUntil && Date.now() >= builtUntil)) {
     const age = Date.now() - Number(cached.headers.get("X-Built-At") || 0);
     // Stale-while-revalidate, done here at the edge. The entry is stored for
     // STORE_SECONDS but is only "fresh" for 5 minutes; past that the
@@ -411,8 +414,9 @@ async function withCache(request, ctx, handler, varyParams = [], canonicalPath =
     }
     if (age < MAX_STALE_MS) {
       const hit = new Response(cached.body, cached);
-      hit.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
+      hit.headers.set("Cache-Control", browserCacheControl());
       hit.headers.delete("X-Built-At");
+      hit.headers.delete("X-Embargo-Until");
       return hit;
     }
   }
@@ -424,7 +428,7 @@ async function withCache(request, ctx, handler, varyParams = [], canonicalPath =
   if (!response.ok) return response;
 
   const cacheable = new Response(response.body, response);
-  cacheable.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
+  cacheable.headers.set("Cache-Control", browserCacheControl());
   ctx.waitUntil(store(cache, key, cacheable.clone()));
   return cacheable;
 }
@@ -437,7 +441,18 @@ function store(cache, key, response) {
   const copy = new Response(response.body, response);
   copy.headers.set("Cache-Control", `public, max-age=${STORE_SECONDS}`);
   copy.headers.set("X-Built-At", String(Date.now()));
+  const embargo = nextEmbargoEnd();
+  if (embargo) copy.headers.set("X-Embargo-Until", String(embargo));
   return cache.put(key, copy);
+}
+
+// Browsers keep a response for 5 minutes, but never past the moment a photo
+// embargo lifts, so nobody's tab is still showing "coming soon" at 5:01.
+function browserCacheControl() {
+  const embargo = nextEmbargoEnd();
+  if (!embargo) return EDGE_CACHE_CONTROL;
+  const seconds = Math.floor((embargo - Date.now()) / 1000);
+  return seconds < 300 ? `public, max-age=${Math.max(0, seconds)}` : EDGE_CACHE_CONTROL;
 }
 
 async function refresh(cache, key, handler) {

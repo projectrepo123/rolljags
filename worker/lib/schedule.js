@@ -210,6 +210,24 @@ export function photosInstant(game) {
   return centralInstant(date, time);
 }
 
+// Photos uploaded ahead of their photosAt stay hidden until then: the week
+// reads as "coming soon" everywhere, so a week can be uploaded early and go
+// out on the minute.
+export function isEmbargoed(game, now = Date.now()) {
+  const at = game && photosInstant(game);
+  return Boolean(at) && new Date(at).getTime() > now;
+}
+
+// The soonest embargo still ahead, in ms, or null. Cached responses built
+// before it must not outlive it (see withCache in worker/index.js).
+export function nextEmbargoEnd(now = Date.now()) {
+  const times = Object.values(SCHEDULE)
+    .flat()
+    .map((game) => (game.photosAt ? new Date(photosInstant(game)).getTime() : NaN))
+    .filter((t) => t > now);
+  return times.length ? Math.min(...times) : null;
+}
+
 // The next game that hasn't kicked off yet, across every scheduled season.
 // Returns null once the last game on the schedule has started. Only counts
 // entries with a single opponent — the countdown reads "Home vs. X", which

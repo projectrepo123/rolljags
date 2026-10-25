@@ -1,11 +1,12 @@
 import { levelLabel, levelNote, coverLevels, listObjects, findWeekFolder, findWeekLevels, formatWeekLabel, publicUrl, getCaption } from "../lib/r2.js";
-import { findScheduledGame, scheduleCaption } from "../lib/schedule.js";
+import { findScheduledGame, scheduleCaption, isEmbargoed } from "../lib/schedule.js";
 
 // Looks up a week's data. Returns null if the week doesn't exist and isn't
 // scheduled either (a true "not found" case for the caller to handle).
 export async function getWeekData(env, year, weekNum) {
-  const found = await findWeekFolder(env.PHOTOS, year, weekNum);
   const scheduledGame = findScheduledGame(year, weekNum);
+  // Photos uploaded ahead of their photosAt read as not there yet.
+  const found = isEmbargoed(scheduledGame) ? null : await findWeekFolder(env.PHOTOS, year, weekNum);
 
   if (!found) {
     if (scheduledGame) {

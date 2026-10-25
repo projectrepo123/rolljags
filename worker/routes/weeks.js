@@ -1,5 +1,5 @@
 import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, coverLevels, publicUrl } from "../lib/r2.js";
-import { SCHEDULE, scheduleCaption, photosInstant } from "../lib/schedule.js";
+import { SCHEDULE, scheduleCaption, photosInstant, isEmbargoed } from "../lib/schedule.js";
 import { todayKey, pickDaily, pickDailyOther } from "../lib/daily.js";
 
 async function loadRealWeeks(env, year, yearPrefix, day) {
@@ -9,6 +9,10 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
   for (const weekPrefix of weekPrefixes) {
     const folderName = lastSegment(weekPrefix);
     const { weekNum, date } = parseWeekFolder(folderName);
+    const scheduledGame = (SCHEDULE[year.toString()] || []).find(g => g.week === weekNum);
+    // Uploaded early: leave it to the schedule loop, which shows it as
+    // "coming soon" with its countdown, until its photosAt.
+    if (isEmbargoed(scheduledGame)) continue;
 
     let totalCount = 0;
     // Every cover-eligible photo in the week, as a cover candidate. Collecting
@@ -39,7 +43,6 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     // One photo per week per day. listObjects sorts by key and findWeekLevels
     // returns a fixed order, so `candidates` is identical on every request —
     // which is what makes the seeded index stable rather than random.
-    const scheduledGame = (SCHEDULE[year.toString()] || []).find(g => g.week === weekNum);
     const seed = `${year}/${weekNum}/${day}`;
     const cover = pickDaily(candidates, seed) || scheduledGame?.cover || null;
     // Only the newest week is ever the hero, but every week gets one so the

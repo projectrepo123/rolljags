@@ -1,7 +1,11 @@
 import { downloadZip } from "client-zip";
 import { listObjects, findWeekFolder } from "../lib/r2.js";
+import { findScheduledGame, isEmbargoed } from "../lib/schedule.js";
 
 export async function handleZip(env, year, weekNum, level) {
+  if (isEmbargoed(findScheduledGame(year, weekNum))) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
   const found = await findWeekFolder(env.PHOTOS, year, weekNum);
   if (!found) {
     return Response.json({ error: "Not found" }, { status: 404 });

@@ -1,6 +1,7 @@
 import { loadHistory } from "../lib/history.js";
 import { listPrefixes, lastSegment, parseWeekFolder } from "../lib/r2.js";
 import { loadRoster } from "../lib/roster.js";
+import { findScheduledGame, isEmbargoed } from "../lib/schedule.js";
 
 // The static pages, with how often they actually change.
 const STATIC_PAGES = [
@@ -50,7 +51,7 @@ async function uploadedWeeks(bucket) {
       // doesn't match the week-NN_YYYY-MM-DD shape, so test the date rather
       // than the object itself.
       const parsed = parseWeekFolder(lastSegment(weekPrefix));
-      if (parsed.date) weeks.push({ year, ...parsed });
+      if (parsed.date && !isEmbargoed(findScheduledGame(year, parsed.weekNum))) weeks.push({ year, ...parsed });
     }
   }
 

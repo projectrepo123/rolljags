@@ -118,7 +118,14 @@ function photosCountdown(photosAt) {
     const left = Math.floor((at - Date.now()) / 1000);
     if (left <= 0) {
       clearInterval(timer);
-      box.replaceWith(soon());
+      // The worker lifts the embargo on the minute and its caches expire
+      // with it, so a reload brings the photos in for anyone watching. On a
+      // later visit the time has passed and this never runs, so a late
+      // upload can't cause a reload loop.
+      const posting = soon();
+      posting.textContent = "Photos are posting";
+      box.replaceWith(posting);
+      setTimeout(() => location.reload(), 4000);
       return;
     }
     const values = [Math.floor(left / 3600), Math.floor((left % 3600) / 60), left % 60].map(pad);
