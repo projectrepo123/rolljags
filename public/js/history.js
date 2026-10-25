@@ -6,6 +6,7 @@ import {
   openRecordsModal,
   renderLeaderboardCard,
 } from "./records-ui.js";
+import { linkRosterNames } from "./roster-links.js";
 
 const seasonsEl = document.getElementById("seasons");
 const leaderboardsEl = document.getElementById("leaderboards");
@@ -388,6 +389,7 @@ function renderLeaderboards(records) {
   container.appendChild(renderLeaderboardCard("Sacks", sacks, () => renderTeamSeasonStats(records.teamSeasonStats, records.programTotals, "Sacks")));
 
   leaderboardsEl.appendChild(container);
+  linkRosterNames(container);
 }
 
 function computeHeadToHead(data) {

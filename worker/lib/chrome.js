@@ -24,6 +24,7 @@ const SECTION_BY_PAGE = {
   season: "/history",
   records: "/records",
   roster: "/roster",
+  player: "/roster",
   podcast: "/podcast",
 };
 

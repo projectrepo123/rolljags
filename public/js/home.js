@@ -80,15 +80,51 @@ function seasonRecord(weeks) {
   return t ? `${w}-${l}-${t}` : `${w}-${l}`;
 }
 
+// "Photos in 2h 14m 09s", counting down to the schedule's photosAt, then
+// "Photos coming soon" once it passes (or when there's no time set).
+function photosCountdown(photosAt) {
+  const label = el("span", "home-hero-soon", "Photos coming soon");
+  const at = photosAt ? new Date(photosAt).getTime() : NaN;
+  if (Number.isNaN(at)) return label;
+
+  const pad = (n) => String(n).padStart(2, "0");
+  const tick = () => {
+    const left = Math.floor((at - Date.now()) / 1000);
+    if (left <= 0) {
+      label.textContent = "Photos coming soon";
+      clearInterval(timer);
+      return;
+    }
+    const h = Math.floor(left / 3600);
+    const m = Math.floor((left % 3600) / 60);
+    const s = left % 60;
+    label.textContent = `Photos in ${h > 0 ? `${h}h ` : ""}${pad(m)}m ${pad(s)}s`;
+  };
+  const timer = setInterval(tick, 1000);
+  tick();
+  return label;
+}
+
+function isHeroWeek(week) {
+  return week.status === "live" || (week.status === "coming-soon" && Boolean(week.result));
+}
+
 function renderHero(week, record = "") {
+  const photosUp = week.status === "live";
   heroEl.href = weekUrl(week.year, week.week);
-  heroEl.setAttribute("aria-label", `Latest game: ${photoAlt(week)}, ${week.photoCount} photos`);
+  heroEl.setAttribute(
+    "aria-label",
+    `Latest game: ${photoAlt(week)}, ${photosUp ? `${week.photoCount} photos` : "photos coming soon"}`
+  );
 
   // heroCover is a different shot from the one on this week's card just
   // below, so the screen doesn't show the same photo twice. Must match
   // preloadHomeHero in worker/index.js.
   const photo = week.heroCover || week.cover;
-  if (photo && !photo.startsWith("/")) {
+  if (!photosUp) {
+    heroEl.classList.add("home-hero-pending");
+    if (photo && photo.startsWith("/")) heroEl.appendChild(logoTile(photo, "home-hero-logo"));
+  } else if (photo && !photo.startsWith("/")) {
     const img = el("img", "home-hero-photo");
     img.src = photo.replace("/thumbs/", "/view/");
     // The 1080w WebP sits between the two JPEGs when this week has one.
@@ -137,7 +173,11 @@ function renderHero(week, record = "") {
   }
 
   const actions = el("div", "home-hero-actions");
-  actions.appendChild(el("span", "btn btn-gold", `See all ${week.photoCount} photos`));
+  actions.appendChild(
+    photosUp
+      ? el("span", "btn btn-gold", `See all ${week.photoCount} photos`)
+      : photosCountdown(week.photosAt)
+  );
   if (record) actions.appendChild(el("span", "home-hero-record", `${record} this season`));
   body.appendChild(actions);
   heroEl.appendChild(body);
@@ -279,8 +319,11 @@ async function init() {
 
     // Years arrive newest-first, and each year's weeks in date order.
     const allWeeks = data.years.flatMap((y) => y.weeks);
+    // The newest game with photos, or a newer one that has a final score but
+    // whose photos aren't up yet (it leads with the opponent's crest until
+    // they are). Must match preloadHomeHero in worker/index.js.
     const latest = data.years
-      .map((y) => y.weeks.filter((w) => w.status === "live").pop())
+      .map((y) => y.weeks.filter(isHeroWeek).pop())
       .find(Boolean);
     // A game that's been played but has no photos or score yet is still
     // "coming soon", so skip anything dated before today. en-CA formats as

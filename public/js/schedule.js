@@ -5,21 +5,169 @@ const DEFAULT_YEAR = "2026";
 const year = params.get("year") || DEFAULT_YEAR;
 
 const titleEl = document.getElementById("schedule-title");
-const tbodyEl = document.getElementById("schedule-tbody");
+// The edge can serve HTML cached before the schedule moved from a table to
+// cards for a few minutes after a deploy. Swap the old table for the list
+// rather than failing.
+const listEl = document.getElementById("game-list") || replaceLegacyTable();
+const statsEl = document.getElementById("schedule-stats");
 const statusEl = document.getElementById("schedule-status");
+
+const RESULT_WORD = { W: "Win", L: "Loss", T: "Tie" };
+const RESULT_CLASS = { W: "win", L: "loss", T: "tie" };
+
+function replaceLegacyTable() {
+  const list = document.createElement("ol");
+  list.className = "game-list";
+  document.getElementById("schedule-table")?.closest(".table-scroll")?.replaceWith(list);
+  return list;
+}
 
 function weekUrl(week) {
   return `/week?year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`;
 }
 
-// The weekday sits in its own span so phones can drop it and keep the date on
-// one line.
-function dateCellContent(cell, dateStr) {
-  const date = new Date(`${dateStr}T12:00:00`);
-  const weekday = document.createElement("span");
-  weekday.className = "date-weekday";
-  weekday.textContent = `${date.toLocaleDateString("en-US", { weekday: "short" })}, `;
-  cell.append(weekday, date.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Noon, so the date never slips a day in a timezone west of Central.
+function gameDate(game) {
+  return new Date(`${game.date}T12:00:00`);
+}
+
+function kickoffTime(game) {
+  return new Date(game.kickoff).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Chicago",
+  });
+}
+
+// "8-1", or "8-1-1" once there's a tie.
+function record(games) {
+  const count = (r) => games.filter((g) => g.result === r).length;
+  const [w, l, t] = [count("W"), count("L"), count("T")];
+  return t ? `${w}-${l}-${t}` : `${w}-${l}`;
+}
+
+// The season so far, for the row of numbers in the page hero.
+function seasonStats(games) {
+  const played = games.filter((g) => g.result);
+  if (played.length === 0) return [];
+
+  const pointsFor = played.reduce((sum, g) => sum + g.pointsFor, 0);
+  const pointsAgainst = played.reduce((sum, g) => sum + g.pointsAgainst, 0);
+
+  let streak = 0;
+  const last = played[played.length - 1].result;
+  for (let i = played.length - 1; i >= 0 && played[i].result === last; i--) streak++;
+
+  return [
+    ["Record", record(played)],
+    ["Home", record(played.filter((g) => g.homeAway === "Home"))],
+    ["Away", record(played.filter((g) => g.homeAway === "Away"))],
+    ["Points for", String(pointsFor)],
+    ["Points against", String(pointsAgainst)],
+    ["Streak", `${last}${streak}`],
+  ];
+}
+
+function renderStats(games) {
+  const stats = seasonStats(games);
+  if (!statsEl || stats.length === 0) return;
+  statsEl.innerHTML = "";
+  for (const [label, value] of stats) {
+    const item = el("div", "hero-stat");
+    item.append(el("dt", "", label), el("dd", "", value));
+    statsEl.appendChild(item);
+  }
+  statsEl.hidden = false;
+}
+
+// The opponent's crest on a white badge, or the Jaguar for an intrasquad
+// scrimmage or a jamboree.
+function logoSlot(game) {
+  const slot = el("div", "gc-logo");
+  const img = el("img", "logo-badge");
+  img.src = game.logo || "/logo.webp";
+  img.alt = "";
+  img.loading = "lazy";
+  slot.appendChild(img);
+  return slot;
+}
+
+function dateBlock(game) {
+  const date = gameDate(game);
+  const block = el("div", "gc-date");
+  block.append(
+    el("span", "gc-dow", date.toLocaleDateString("en-US", { weekday: "short" })),
+    el("span", "gc-day", String(date.getDate())),
+    el("span", "gc-mon", date.toLocaleDateString("en-US", { month: "short" }))
+  );
+  return block;
+}
+
+// The same angled slab the home page cards use, so a final looks the same
+// everywhere on the site.
+function scoreSlab(game) {
+  const score = el("div", "wc-score");
+  score.setAttribute("aria-label", `${RESULT_WORD[game.result] || game.result} ${game.pointsFor} to ${game.pointsAgainst}`);
+  score.append(
+    el("b", "us", String(game.pointsFor)),
+    el("i", "dash"),
+    el("b", "them", String(game.pointsAgainst)),
+    el("span", "res", RESULT_WORD[game.result] || game.result)
+  );
+  return score;
+}
+
+function renderBye(game) {
+  const li = el("li", "game-card bye");
+  const row = el("div", "game-row");
+  row.appendChild(dateBlock(game));
+  row.appendChild(el("span", "gc-bye", "Bye week"));
+  li.appendChild(row);
+  return li;
+}
+
+function renderGame(game, state) {
+  const li = el("li", `game-card ${RESULT_CLASS[game.result] || "plain"}`);
+  if (state === "next") li.classList.add("is-next");
+
+  const row = el("a", "game-row");
+  row.href = weekUrl(game.week);
+
+  row.appendChild(dateBlock(game));
+  row.appendChild(logoSlot(game));
+
+  const matchup = el("div", "gc-matchup");
+  if (game.opponent) matchup.appendChild(el("span", "wc-kick", game.homeAway === "Away" ? "At" : "Vs"));
+  matchup.appendChild(el("span", "gc-opp", game.opponent || game.label || "TBD"));
+  if (game.notes) matchup.appendChild(el("span", "gc-tag", game.notes));
+  row.appendChild(matchup);
+
+  const result = el("div", "gc-result");
+  if (game.result) {
+    result.appendChild(scoreSlab(game));
+  } else if (state === "next") {
+    result.appendChild(el("span", "gc-status gc-status-next", `Next game · ${kickoffTime(game)}`));
+  } else if (state === "upcoming") {
+    result.appendChild(el("span", "gc-status", kickoffTime(game)));
+  } else if (game.opponent) {
+    // Played, but the score isn't in yet.
+    result.appendChild(el("span", "gc-status", "Final score coming"));
+  }
+  row.appendChild(result);
+
+  const cta = el("span", "gc-cta", state === "past" ? "Photos" : "Game page");
+  cta.setAttribute("aria-hidden", "true");
+  row.appendChild(cta);
+
+  li.appendChild(row);
+  return li;
 }
 
 function render(games) {
@@ -31,105 +179,26 @@ function render(games) {
     document.title = `${year} Seckman Jaguars Football Schedule | Imperial, MO`;
   }
 
-  tbodyEl.innerHTML = "";
+  listEl.innerHTML = "";
 
   if (games.length === 0) {
     statusEl.innerHTML = '<p class="empty-state">No schedule posted for this season yet.</p>';
     return;
   }
 
+  renderStats(games);
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const nextIndex = games.findIndex((g) => !g.bye && new Date(`${g.date}T12:00:00`) >= today);
+  const nextIndex = games.findIndex((g) => !g.bye && gameDate(g) >= today);
 
   games.forEach((game, i) => {
-    const tr = document.createElement("tr");
-    const gameDate = new Date(`${game.date}T12:00:00`);
-    if (i === nextIndex) tr.classList.add("schedule-next");
-    else if (gameDate < today) tr.classList.add("schedule-past");
-    if (game.result) tr.classList.add(game.result === "W" ? "game-win" : game.result === "L" ? "game-loss" : "game-tie");
-
-    const dateCell = document.createElement("td");
-    dateCellContent(dateCell, game.date);
-    tr.appendChild(dateCell);
-
-    // An open Friday: no opponent, no photos page to link to.
     if (game.bye) {
-      tr.classList.add("schedule-bye");
-      const byeCell = document.createElement("td");
-      byeCell.className = "opponent-cell";
-      byeCell.textContent = "Bye week";
-      tr.appendChild(byeCell);
-      for (let c = 0; c < 3; c++) tr.appendChild(document.createElement("td"));
-      tbodyEl.appendChild(tr);
+      listEl.appendChild(renderBye(game));
       return;
     }
-
-    const opponentCell = document.createElement("td");
-    opponentCell.className = "opponent-cell";
-    if (game.logo) {
-      const logo = document.createElement("img");
-      logo.className = "opp-logo";
-      logo.src = game.logo;
-      logo.width = 24;
-      logo.height = 24;
-      logo.alt = "";
-      logo.loading = "lazy";
-      opponentCell.appendChild(logo);
-    }
-    const link = document.createElement("a");
-    link.href = weekUrl(game.week);
-    link.textContent = game.opponent || game.label || "TBD";
-    opponentCell.appendChild(link);
-    // Phones hide the Notes column, so the note rides under the opponent.
-    if (game.notes) {
-      const note = document.createElement("span");
-      note.className = "row-note";
-      note.textContent = game.notes;
-      opponentCell.appendChild(note);
-    }
-    tr.appendChild(opponentCell);
-
-    const locationCell = document.createElement("td");
-    if (game.homeAway) {
-      const isHome = game.homeAway === "Home";
-      const loc = document.createElement("span");
-      loc.className = `loc-badge ${isHome ? "loc-home" : "loc-away"}`;
-      loc.textContent = isHome ? "H" : "A";
-      // The cell shows a letter; the tooltip spells it out.
-      loc.title = game.homeAway;
-      locationCell.appendChild(loc);
-    }
-    tr.appendChild(locationCell);
-
-    const resultCell = document.createElement("td");
-    resultCell.className = "result-cell";
-    if (game.result) {
-      resultCell.textContent = `${game.result} ${game.pointsFor}-${game.pointsAgainst}`;
-    } else if (gameDate >= today && game.kickoff) {
-      // Upcoming games show their kickoff, and the next one says so.
-      const time = new Date(game.kickoff).toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        timeZone: "America/Chicago",
-      });
-      if (i === nextIndex) {
-        const chip = document.createElement("span");
-        chip.className = "next-chip";
-        chip.textContent = `Next · ${time}`;
-        resultCell.appendChild(chip);
-      } else {
-        resultCell.textContent = time;
-        resultCell.classList.add("result-upcoming");
-      }
-    }
-    tr.appendChild(resultCell);
-
-    const notesCell = document.createElement("td");
-    notesCell.textContent = game.notes || "";
-    tr.appendChild(notesCell);
-
-    tbodyEl.appendChild(tr);
+    const state = i === nextIndex ? "next" : gameDate(game) < today ? "past" : "upcoming";
+    listEl.appendChild(renderGame(game, state));
   });
 }
 

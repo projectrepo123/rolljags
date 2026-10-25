@@ -282,6 +282,36 @@ export function injectSeasonMeta(assetResponse, summary, url) {
   );
 }
 
+// A player page: "#12 Brody Kube" in the title and heading, so a search for a
+// player's name finds his page with the team and town attached. `player` is
+// a roster entry, or null when ?n= doesn't match anyone.
+export function injectPlayerMeta(assetResponse, player, rosterYear, url) {
+  const canonical = new URL(url.origin);
+  canonical.pathname = "/player";
+  const n = url.searchParams.get("n");
+  if (n !== null) canonical.searchParams.set("n", n);
+
+  let title = `Roster | ${SITE_NAME}`;
+  let description = `The ${SCHOOL_NAME} Jaguars football roster in ${LOCALITY}.`;
+  let heading = null;
+
+  if (player) {
+    title = `#${player.number} ${player.name}, ${player.pos} | ${SITE_NAME}`;
+    description = `${player.name} wears #${player.number} for the ${rosterYear} ${SCHOOL_NAME} Jaguars football team in ${LOCALITY}: ${player.pos}, ${player.class}. Record book entries and career stats.`;
+    heading = {
+      html: `<span class="h1-kicker">#${escapeAttr(String(player.number))} · ${escapeAttr(player.pos)} · ${escapeAttr(player.class)}</span> ${escapeAttr(player.name)}`,
+    };
+  }
+
+  return injectMeta(
+    assetResponse,
+    title,
+    buildMeta(title, description, `${url.origin}${DEFAULT_SHARE_IMAGE}`, canonical.toString()),
+    "#player-title",
+    heading
+  );
+}
+
 // The schedule page is the one that already earns impressions, so it gets the
 // full SportsEvent treatment. The games come from SCHEDULE rather than being
 // duplicated into schedule.html, so editing the season in one place keeps the

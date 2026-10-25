@@ -1,5 +1,6 @@
 import { loadHistory } from "../lib/history.js";
 import { listPrefixes, lastSegment, parseWeekFolder } from "../lib/r2.js";
+import { loadRoster } from "../lib/roster.js";
 
 // The static pages, with how often they actually change.
 const STATIC_PAGES = [
@@ -89,6 +90,9 @@ export async function handleSitemap(env, origin) {
   const today = new Date().toISOString().slice(0, 10);
   const newest = weeks.map((w) => w.date).find((date) => date <= today);
 
+  // One page per player on the current roster.
+  const players = (await loadRoster(env, origin).catch(() => null))?.players ?? [];
+
   const entries = [
     ...STATIC_PAGES.map(([path, changefreq, priority]) =>
       urlEntry({
@@ -111,6 +115,13 @@ export async function handleSitemap(env, origin) {
         loc: `${origin}/season?year=${year}`,
         changefreq: "yearly",
         priority: "0.5",
+      })
+    ),
+    ...players.map((player) =>
+      urlEntry({
+        loc: `${origin}/player?n=${player.number}`,
+        changefreq: "yearly",
+        priority: "0.4",
       })
     ),
   ];

@@ -1526,24 +1526,6 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
-.season-table .schedule-next {
-  background-color: var(--row-accent);
-  box-shadow: inset 3px 0 0 var(--gold);
-}
-
-.season-table .schedule-next td {
-  font-weight: 600;
-}
-
-.season-table .schedule-past td {
-  color: var(--text-muted);
-}
-
-.season-table .schedule-bye td {
-  color: var(--text-muted);
-  font-style: italic;
-}
-
 /* A still row people scroll themselves, under the season grid. */
 .archive-section {
   margin-top: 2.5rem;
@@ -2952,8 +2934,7 @@ header.site-header .skip-link:focus {
 
 @media (max-width: 560px) {
   .season-table th:nth-child(5),
-  .season-table td:nth-child(5),
-  .date-weekday {
+  .season-table td:nth-child(5) {
     display: none;
   }
 
@@ -3359,62 +3340,6 @@ header.site-header .skip-link:focus {
   font-size: var(--step--1);
 }
 
-/* ---- Schedule: logos, the next game, and kickoff times ---- */
-.opponent-cell {
-  position: relative;
-}
-
-.opp-logo {
-  width: 24px;
-  height: 24px;
-  margin-right: var(--space-2);
-  vertical-align: middle;
-  object-fit: contain;
-}
-
-/* The whole opponent cell is the link's tap target, not just the name. */
-.opponent-cell a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-.next-chip {
-  display: inline-block;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  background: var(--gold);
-  color: var(--navy-dark);
-  font-size: var(--step--1);
-  letter-spacing: var(--tracking-tight);
-  white-space: nowrap;
-  text-transform: uppercase;
-}
-
-.season-table .result-upcoming {
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: var(--step--1);
-  white-space: nowrap;
-}
-
-.season-table .schedule-next {
-  box-shadow: inset 4px 0 0 var(--gold);
-}
-
-@media (max-width: 480px) {
-  .opp-logo {
-    width: 20px;
-    height: 20px;
-    margin-right: 6px;
-  }
-
-  .next-chip {
-    font-size: var(--step--2);
-    padding: 0.2rem 0.4rem;
-  }
-}
-
 /* ---- Tabs that scroll sideways show a shadow where more is hidden ----
    Same local/scroll background trick as .table-scroll: the covers move with
    the content and uncover the shadow only while there's more to scroll to. */
@@ -3796,12 +3721,12 @@ header.site-header .skip-link:focus {
   text-transform: uppercase;
 }
 
-.week-card.win .wc-score .us,
-.week-card.win .wc-score .res {
+:is(.week-card, .game-card).win .wc-score .us,
+:is(.week-card, .game-card).win .wc-score .res {
   color: var(--gold);
 }
 
-.week-card.win .wc-score .them {
+:is(.week-card, .game-card).win .wc-score .them {
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -3966,17 +3891,17 @@ header.site-header .skip-link:focus {
   transform: skewX(9deg);
 }
 
-.week-card.win .wc-score {
+:is(.week-card, .game-card).win .wc-score {
   background: var(--gold);
   color: var(--navy-950);
 }
 
-.week-card.win .wc-score .us,
-.week-card.win .wc-score .res {
+:is(.week-card, .game-card).win .wc-score .us,
+:is(.week-card, .game-card).win .wc-score .res {
   color: var(--navy-950);
 }
 
-.week-card.win .wc-score .them {
+:is(.week-card, .game-card).win .wc-score .them {
   color: var(--navy-950);
   opacity: 0.72;
 }
@@ -4008,14 +3933,14 @@ header.site-header .skip-link:focus {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -2px 0 rgba(0, 0, 0, 0.25), 0 3px 8px rgba(0, 0, 0, 0.35);
 }
 
-.week-card.win .wc-score {
+:is(.week-card, .game-card).win .wc-score {
   background: linear-gradient(180deg, #ffe58a 0%, #ffc72c 48%, #d99a00 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(120, 78, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* A narrow band of light that sweeps across the gold slab every few seconds,
    and again, faster, when the card is hovered. */
-.week-card.win .wc-score::after {
+:is(.week-card, .game-card).win .wc-score::after {
   content: "";
   position: absolute;
   top: 0;
@@ -4029,7 +3954,7 @@ header.site-header .skip-link:focus {
 }
 
 @media (hover: hover) {
-  .week-card.win:hover .wc-score::after {
+  :is(.week-card, .game-card).win:hover .wc-score::after {
     animation-duration: 1.4s;
     animation-delay: 0s;
   }
@@ -4046,7 +3971,7 @@ header.site-header .skip-link:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .week-card.win .wc-score::after {
+  :is(.week-card, .game-card).win .wc-score::after {
     animation: none;
     display: none;
   }
@@ -4372,5 +4297,779 @@ header.site-header .site-nav a.active::after {
 @media (forced-colors: active) {
   .page-hero {
     border-bottom-color: CanvasText;
+  }
+}
+
+/* ---- Hero stats: a row of numbers under a page title ---- */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: var(--space-5) 0 0;
+}
+
+.hero-stats[hidden] {
+  display: none;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.hero-stat dt {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.hero-stat dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.hero-stat:first-child dd {
+  color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+
+  .hero-stat dd {
+    font-size: var(--step-2);
+  }
+}
+
+/* ===================================================================
+   Schedule: one card per game
+   =================================================================== */
+
+.game-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.game-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.game-card.win {
+  border-left-color: var(--gold);
+}
+
+.game-card.loss,
+.game-card.tie {
+  border-left-color: var(--season-loss-accent);
+}
+
+/* The next game is the one people come for, so it gets the gold outline. */
+.game-card.is-next {
+  border-color: var(--gold);
+  border-left-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), var(--shadow-2);
+}
+
+@media (hover: hover) {
+  .game-card:has(a.game-row):hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2), var(--surface-highlight);
+  }
+}
+
+.game-row {
+  display: grid;
+  grid-template-columns: 64px 64px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5) var(--space-3) var(--space-4);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.gc-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+
+.gc-dow,
+.gc-mon {
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--label-accent);
+}
+
+.gc-day {
+  margin: 3px 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--navy-text);
+}
+
+.gc-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+}
+
+.gc-logo .logo-badge {
+  max-width: 100%;
+  max-height: 100%;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-1);
+}
+
+.gc-matchup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+
+/* The AT/VS chip is shared with the home cards, where it sits over a photo
+   and carries a shadow. On a light card it needs none. */
+.gc-matchup .wc-kick {
+  margin: 0;
+  text-shadow: none;
+}
+
+.gc-opp {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  color: var(--navy-text);
+}
+
+.gc-tag {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--gold-100);
+  color: var(--gold-700);
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.gc-result .wc-score {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.gc-status {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.gc-status-next {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--gold);
+  color: var(--navy-950);
+}
+
+.gc-cta {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--navy-text);
+}
+
+.gc-cta::after {
+  content: " \2192";
+}
+
+.game-card.bye {
+  background: transparent;
+  border-style: dashed;
+  border-left-style: solid;
+  box-shadow: none;
+}
+
+.game-card.bye .game-row {
+  grid-template-columns: 64px minmax(0, 1fr);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.gc-bye {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .gc-tag {
+    background: rgba(255, 199, 44, 0.14);
+    color: var(--gold);
+  }
+}
+
+:root[data-theme="dark"] .gc-tag {
+  background: rgba(255, 199, 44, 0.14);
+  color: var(--gold);
+}
+
+/* Phones: date and crest down the left, matchup over the result. */
+@media (max-width: 640px) {
+  .game-row {
+    grid-template-columns: 44px 48px minmax(0, 1fr);
+    grid-template-areas:
+      "date logo match"
+      "date logo result";
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .gc-date { grid-area: date; }
+  .gc-logo { grid-area: logo; width: 48px; height: 48px; }
+  .gc-matchup { grid-area: match; }
+  .gc-result { grid-area: result; }
+
+  .gc-cta {
+    display: none;
+  }
+
+  .gc-day {
+    font-size: 1.5rem;
+  }
+
+  .gc-opp {
+    font-size: var(--step-1);
+  }
+
+  .gc-result .wc-score {
+    font-size: 1.5rem;
+    padding: 4px 12px 4px 10px;
+  }
+
+  .game-card.bye .game-row {
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-areas: "date match";
+  }
+
+  .gc-bye { grid-area: match; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card {
+    transition: none;
+  }
+
+  .game-card:hover {
+    transform: none;
+  }
+}
+
+/* ===================================================================
+   Score strip: the season's games in a thin band under the header
+   =================================================================== */
+
+/* Holds its height from the first paint so nothing below it moves when the
+   schedule lands. */
+.score-strip {
+  min-height: 62px;
+  background: var(--yardlines-on-navy), var(--navy-950);
+  border-bottom: 1px solid rgba(255, 199, 44, 0.35);
+}
+
+.score-strip-track {
+  display: flex;
+  gap: 1px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.score-strip-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ss-item {
+  flex: none;
+  display: grid;
+  grid-template-columns: 22px auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 2px 8px;
+  min-width: 128px;
+  padding: 10px 14px;
+  scroll-snap-align: start;
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 3px solid transparent;
+  transition: background var(--dur-fast) ease;
+}
+
+a.ss-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ss-item[aria-current="page"],
+.ss-item.is-next {
+  border-bottom-color: var(--gold);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.ss-logo {
+  grid-row: span 2;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  padding: 2px;
+  background: #fff;
+  border-radius: 3px;
+}
+
+.ss-opp,
+.ss-res {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ss-opp {
+  max-width: 17ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ss-res {
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.ss-item.win .ss-res {
+  color: var(--gold);
+}
+
+.ss-item.bye {
+  grid-template-columns: auto;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ss-item {
+    transition: none;
+  }
+}
+
+/* ===================================================================
+   Roster: jersey cards with unit and class filters
+   =================================================================== */
+
+.roster-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+  margin-bottom: var(--space-5);
+}
+
+.roster-filters[hidden],
+.roster-grid[hidden] {
+  display: none;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-label {
+  margin-right: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--label-accent);
+}
+
+.chip {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.chip:hover {
+  border-color: var(--gold);
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--grad-navy);
+  border-color: var(--navy);
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+
+.roster-count {
+  margin: 0 0 0 auto;
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A navy tile with the jersey number set huge and outlined behind the name,
+   the same treatment as the week number on the home cards. */
+.pc-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 132px;
+  padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) + 4px);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--yardlines-on-navy), var(--grad-navy);
+  box-shadow: inset 4px 0 0 var(--gold), var(--shadow-1);
+  color: #fff;
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+@media (hover: hover) {
+  .pc-link:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 4px 0 0 var(--gold), 0 0 0 2px var(--gold), var(--shadow-2);
+  }
+}
+
+.pc-num {
+  position: absolute;
+  top: -6px;
+  right: 10px;
+  font-family: var(--font-display);
+  font-size: 6.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.pc-name {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+}
+
+.pc-meta {
+  position: relative;
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.roster-name a {
+  color: inherit;
+}
+
+@media (max-width: 640px) {
+  .roster-count {
+    margin-left: 0;
+  }
+
+  .roster-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pc-link {
+    min-height: 112px;
+  }
+
+  .pc-num {
+    font-size: 5rem;
+  }
+}
+
+/* ===================================================================
+   Player page
+   =================================================================== */
+
+.page-hero-player .container {
+  position: relative;
+}
+
+/* The jersey number, as big as the band allows, behind the name. */
+.player-number {
+  position: absolute;
+  right: var(--space-5);
+  bottom: calc(-1 * var(--space-6));
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 16vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 3px rgba(255, 199, 44, 0.55);
+  pointer-events: none;
+}
+
+.page-hero-player h1 {
+  position: relative;
+  max-width: 70%;
+}
+
+.player-section {
+  margin-bottom: var(--space-7);
+}
+
+.record-entries {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-3);
+}
+
+.record-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "rank title"
+    "rank scope"
+    "rank value";
+  align-items: center;
+  column-gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.record-entry.top-five {
+  border-left-color: var(--gold);
+}
+
+@media (hover: hover) {
+  .record-entry:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+  }
+}
+
+.re-rank {
+  grid-area: rank;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--navy-text);
+}
+
+.re-hash {
+  font-size: 0.5em;
+  vertical-align: 0.7em;
+  color: var(--label-accent);
+}
+
+.re-title {
+  grid-area: title;
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+}
+
+.re-scope {
+  grid-area: scope;
+  font-size: var(--step--2);
+  color: var(--text-muted);
+}
+
+.re-value {
+  grid-area: value;
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--navy-text);
+}
+
+.player-stat-block {
+  margin-bottom: var(--space-5);
+}
+
+.player-stat-block h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--navy-text);
+}
+
+/* Current players' names on the record book and history cards. */
+.leaderboard-item .player a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .player-number {
+    right: 0;
+    bottom: calc(-1 * var(--space-5));
+  }
+
+  .page-hero-player h1 {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .pc-link,
+  .record-entry {
+    transition: none;
+  }
+}
+
+/* The jersey number runs past the band's bottom edge on purpose; the band
+   crops it. */
+.page-hero-player {
+  overflow: hidden;
+}
+
+/* ---- Home hero for a final whose photos aren't up yet ----
+   The opponent's crest stands in for the photo, on the same navy and yard
+   lines as the no-photo cards, until the upload replaces it. */
+.home-hero.home-hero-pending {
+  background:
+    var(--yardlines-on-navy),
+    radial-gradient(circle at 75% 45%, rgba(43, 83, 145, 0.9) 0%, transparent 60%),
+    var(--grad-navy);
+}
+
+.home-hero-logo {
+  position: absolute;
+  top: 50%;
+  /* Clear of the outlined week number in the right corner. */
+  right: 26%;
+  transform: translateY(-58%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(150px, 26vw, 280px);
+  height: clamp(150px, 26vw, 280px);
+}
+
+.home-hero-logo .logo-badge {
+  max-width: 100%;
+  max-height: 100%;
+  padding: clamp(10px, 1.6vw, 18px);
+  border-top: 4px solid var(--gold);
+  background: linear-gradient(180deg, #ffffff 0%, #eef1f6 100%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.home-hero-soon {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-sm);
+  background: rgba(11, 22, 40, 0.55);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .home-hero-logo {
+    top: 16px;
+    right: 96px;
+    transform: none;
+    width: 96px;
+    height: 96px;
   }
 }

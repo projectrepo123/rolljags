@@ -39,24 +39,12 @@
           game's date, opponent, and whether we're home or away. Click a game to see
           that week's photos.
         </p>
+        <!-- Filled by schedule.js once there's a result to count. -->
+        <dl class="hero-stats" id="schedule-stats" hidden></dl>
       </div>
     </section>
     <div class="container">
-      <div class="table-scroll">
-        <table class="season-table" id="schedule-table">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Opponent</th>
-              <th scope="col">H/A</th>
-              <th scope="col">Result</th>
-              <th scope="col">Notes</th>
-            </tr>
-          </thead>
-          <tbody id="schedule-tbody">
-          </tbody>
-        </table>
-      </div>
+      <ol class="game-list" id="game-list" aria-label="Games"></ol>
       <div id="schedule-status"></div>
       <noscript><p class="empty-state">The schedule needs JavaScript enabled to load.</p></noscript>
     </div>

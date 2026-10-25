@@ -36,6 +36,10 @@
 // next to that tab's photo count on the week page (see week.js/gallery.js) —
 // unlike `result` above, these never feed the season record.
 //
+// `photosAt: "YYYY-MM-DD HH:MM"` (Central time) is when a played game's photos
+// are expected. Until they're uploaded, the home page counts down to it. It
+// does nothing once the photos are up, so it can stay in place.
+//
 // `bye: true` (with just a `date`, no `week`) marks an open Friday. It shows as
 // a "Bye week" row on /schedule and nowhere else: no week card, no photos page.
 //
@@ -158,6 +162,7 @@ export const SCHEDULE = {
       result: "W",
       pointsFor: 21,
       pointsAgainst: 14,
+      photosAt: "2026-10-25 17:00",
     },
     { date: "2026-10-30", bye: true },
     { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home", notes: "District Playoffs", cover: "/logos/northwestlions.webp" },
@@ -188,10 +193,21 @@ function centralOffset(year, month, day) {
 // "2026-08-28T19:00:00-05:00", so clients can count down to it correctly
 // no matter what timezone the visitor is in.
 export function kickoffInstant(game) {
-  const [year, month, day] = game.date.split("-").map(Number);
-  const time = game.time || DEFAULT_KICKOFF;
+  return centralInstant(game.date, game.time || DEFAULT_KICKOFF);
+}
+
+// "2026-10-25", "17:00" (Central) -> "2026-10-25T17:00:00-05:00".
+export function centralInstant(date, time) {
+  const [year, month, day] = date.split("-").map(Number);
   const offset = centralOffset(year, month - 1, day);
-  return `${game.date}T${time}:00-0${offset}:00`;
+  return `${date}T${time}:00-0${offset}:00`;
+}
+
+// `photosAt: "2026-10-25 17:00"` (Central) -> the same as an ISO instant.
+export function photosInstant(game) {
+  if (!game.photosAt) return null;
+  const [date, time] = game.photosAt.split(" ");
+  return centralInstant(date, time);
 }
 
 // The next game that hasn't kicked off yet, across every scheduled season.

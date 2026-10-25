@@ -7,7 +7,8 @@ import { handleBanner } from "./routes/banner.js";
 import { handlePhoto } from "./routes/photo.js";
 import { handleSitemap } from "./routes/sitemap.js";
 import { handleGetLikes, handleLike } from "./routes/likes.js";
-import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, opponentPhrase } from "./lib/meta.js";
+import { injectWeekMeta, injectSeasonMeta, injectScheduleMeta, injectPlayerMeta, opponentPhrase } from "./lib/meta.js";
+import { loadRoster, findPlayer, injectRoster } from "./lib/roster.js";
 import { isValidYear, isValidWeekNum, isValidLevel, isValidPhotoKey } from "./lib/validate.js";
 import { nextGame } from "./lib/schedule.js";
 import { headerHtml, FOOTER_HTML } from "./lib/chrome.js";
@@ -86,9 +87,12 @@ async function preloadHomeHero(asset, url, env, ctx) {
       return asset;
     }
     const data = await cached.json();
+    // Same pick as isHeroWeek in home.js: a newer final with no photos yet
+    // leads with a crest, and a crest needs no preload.
     const latest = (data.years || [])
-      .map((y) => y.weeks.filter((w) => w.status === "live").pop())
+      .map((y) => y.weeks.filter((w) => w.status === "live" || (w.status === "coming-soon" && w.result)).pop())
       .find(Boolean);
+    if (latest?.status !== "live") return asset;
     // Must match the photo renderHero in home.js picks.
     const cover = latest?.heroCover || latest?.cover;
     if (!cover || cover.startsWith("/") || !cover.includes("/thumbs/")) return asset;
@@ -277,6 +281,35 @@ async function handle(request, env, ctx) {
       };
 
       return withCache(request, ctx, buildResponse, ["year"], "/schedule");
+    }
+
+    if (url.pathname === "/roster.html" || url.pathname === "/roster") {
+      // Same "fetch the canonical extensionless path" reasoning as /week.
+      const buildResponse = async () => {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = "/roster";
+        const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+        return injectRoster(asset, await loadRoster(env, url.origin));
+      };
+      return withCache(request, ctx, buildResponse, [], "/roster");
+    }
+
+    if (url.pathname === "/player.html" || url.pathname === "/player") {
+      const n = url.searchParams.get("n");
+      const buildResponse = async () => {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = "/player";
+        const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+        const roster = await loadRoster(env, url.origin);
+        const player = findPlayer(roster, n);
+        const response = injectPlayerMeta(asset, player, roster?.year, url);
+        // No such player: still the page (it says so), but not a 200 for
+        // search engines to index.
+        return player ? response : new Response(response.body, { status: 404, headers: response.headers });
+      };
+      return findPlayer(await loadRoster(env, url.origin), n)
+        ? withCache(request, ctx, buildResponse, ["n"], "/player")
+        : buildResponse();
     }
 
     if (url.pathname === "/" || url.pathname === "/index.html") {

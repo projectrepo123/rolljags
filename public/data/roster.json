@@ -1,0 +1,371 @@
+{
+  "year": 2026,
+  "players": [
+    {
+      "number": 1,
+      "name": "Nick Weidler",
+      "pos": "WR",
+      "class": "Sr."
+    },
+    {
+      "number": 2,
+      "name": "Logan Harris",
+      "pos": "WR/K",
+      "class": "So."
+    },
+    {
+      "number": 3,
+      "name": "JJ Jablonski",
+      "pos": "RB",
+      "class": "Jr."
+    },
+    {
+      "number": 4,
+      "name": "Elliot Burris",
+      "pos": "LB",
+      "class": "Sr."
+    },
+    {
+      "number": 5,
+      "name": "Gus Maytas",
+      "pos": "TB",
+      "class": "So."
+    },
+    {
+      "number": 7,
+      "name": "Chase Borawski",
+      "pos": "LB",
+      "class": "Sr."
+    },
+    {
+      "number": 8,
+      "name": "Jackson Rutledge",
+      "pos": "DB",
+      "class": "Sr."
+    },
+    {
+      "number": 9,
+      "name": "Ryan Woods",
+      "pos": "DE",
+      "class": "Sr."
+    },
+    {
+      "number": 10,
+      "name": "Jacob Derleth",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 11,
+      "name": "Brody Mosello",
+      "pos": "LB",
+      "class": "Sr."
+    },
+    {
+      "number": 12,
+      "name": "Brody Kube",
+      "pos": "QB",
+      "class": "Sr."
+    },
+    {
+      "number": 13,
+      "name": "Liam Wild",
+      "pos": "LB",
+      "class": "Sr."
+    },
+    {
+      "number": 14,
+      "name": "Mason Altman",
+      "pos": "DE",
+      "class": "Jr."
+    },
+    {
+      "number": 15,
+      "name": "Hayden Beene",
+      "pos": "LB",
+      "class": "So."
+    },
+    {
+      "number": 16,
+      "name": "Tony Fite",
+      "pos": "LB",
+      "class": "Sr."
+    },
+    {
+      "number": 17,
+      "name": "Luke Maxwell",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 18,
+      "name": "Josh Whitworth",
+      "pos": "WR",
+      "class": "Jr."
+    },
+    {
+      "number": 19,
+      "name": "Josef Chitwood",
+      "pos": "RB",
+      "class": "Sr."
+    },
+    {
+      "number": 20,
+      "name": "Carter Baugh",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 22,
+      "name": "Cohner Baer",
+      "pos": "QB",
+      "class": "Jr."
+    },
+    {
+      "number": 23,
+      "name": "Jackson Sell",
+      "pos": "WR",
+      "class": "Jr."
+    },
+    {
+      "number": 25,
+      "name": "Logan Campbell",
+      "pos": "WR",
+      "class": "Jr."
+    },
+    {
+      "number": 26,
+      "name": "Boyer Hart",
+      "pos": "DB",
+      "class": "Sr."
+    },
+    {
+      "number": 28,
+      "name": "Braden Leach",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 29,
+      "name": "Levi Gowan",
+      "pos": "WR",
+      "class": "Jr."
+    },
+    {
+      "number": 31,
+      "name": "Nick Picha",
+      "pos": "DB",
+      "class": "So."
+    },
+    {
+      "number": 33,
+      "name": "Ben Loucks",
+      "pos": "WR",
+      "class": "Sr."
+    },
+    {
+      "number": 34,
+      "name": "Kaeden Andrews",
+      "pos": "TE/P",
+      "class": "Jr."
+    },
+    {
+      "number": 35,
+      "name": "Rain Hernandez",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 36,
+      "name": "Trey Connor",
+      "pos": "RB",
+      "class": "Jr."
+    },
+    {
+      "number": 38,
+      "name": "Rayan Pan",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 40,
+      "name": "Leyton Brillhart",
+      "pos": "LB",
+      "class": "Jr."
+    },
+    {
+      "number": 42,
+      "name": "Dylan Hart",
+      "pos": "FB",
+      "class": "Jr."
+    },
+    {
+      "number": 43,
+      "name": "Jayden O'Day",
+      "pos": "LB",
+      "class": "Jr."
+    },
+    {
+      "number": 44,
+      "name": "Victor Martin",
+      "pos": "DL",
+      "class": "So."
+    },
+    {
+      "number": 50,
+      "name": "William Lauter",
+      "pos": "DL/K",
+      "class": "Jr."
+    },
+    {
+      "number": 51,
+      "name": "Dane Heinemeier",
+      "pos": "OL",
+      "class": "Sr."
+    },
+    {
+      "number": 54,
+      "name": "Landon Medlock",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 55,
+      "name": "Nick Honeycutt",
+      "pos": "OL",
+      "class": "So."
+    },
+    {
+      "number": 56,
+      "name": "Brady Shearer",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 57,
+      "name": "Caleb Eichorn",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 58,
+      "name": "Henry Watson",
+      "pos": "OL",
+      "class": "Sr."
+    },
+    {
+      "number": 60,
+      "name": "Jake Kramer",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 62,
+      "name": "Carson Schneider",
+      "pos": "DL",
+      "class": "Jr."
+    },
+    {
+      "number": 64,
+      "name": "Mason Zeller",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 66,
+      "name": "Cannon Cooper",
+      "pos": "OL",
+      "class": "So."
+    },
+    {
+      "number": 67,
+      "name": "Chase Smith",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 68,
+      "name": "Nolan Nappier",
+      "pos": "DL",
+      "class": "Jr."
+    },
+    {
+      "number": 70,
+      "name": "Blake Maya",
+      "pos": "DL",
+      "class": "Sr."
+    },
+    {
+      "number": 71,
+      "name": "RJ Oberkrom",
+      "pos": "OL",
+      "class": "Jr."
+    },
+    {
+      "number": 75,
+      "name": "Evan Hufford",
+      "pos": "OL",
+      "class": "Sr."
+    },
+    {
+      "number": 77,
+      "name": "Bennett Stivers",
+      "pos": "DL",
+      "class": "Sr."
+    },
+    {
+      "number": 82,
+      "name": "Trevor Moravec",
+      "pos": "LB",
+      "class": "Jr."
+    },
+    {
+      "number": 87,
+      "name": "Edis Krantic",
+      "pos": "TE",
+      "class": "Jr."
+    },
+    {
+      "number": 88,
+      "name": "Braden Huck",
+      "pos": "DL",
+      "class": "Sr."
+    },
+    {
+      "number": 89,
+      "name": "Griffin Goad",
+      "pos": "DB",
+      "class": "Jr."
+    },
+    {
+      "number": 92,
+      "name": "Matt Muessig",
+      "pos": "DL",
+      "class": "Jr."
+    },
+    {
+      "number": 95,
+      "name": "Chase Gaugh",
+      "pos": "DL",
+      "class": "Sr."
+    },
+    {
+      "number": 96,
+      "name": "Gabe Artz",
+      "pos": "FB",
+      "class": "Sr."
+    },
+    {
+      "number": 98,
+      "name": "Austin Reese",
+      "pos": "LS",
+      "class": "So."
+    },
+    {
+      "number": 99,
+      "name": "Klayton Williams",
+      "pos": "DL",
+      "class": "Sr."
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, coverLevels, publicUrl } from "../lib/r2.js";
-import { SCHEDULE, scheduleCaption } from "../lib/schedule.js";
+import { SCHEDULE, scheduleCaption, photosInstant } from "../lib/schedule.js";
 import { todayKey, pickDaily, pickDailyOther } from "../lib/daily.js";
 
 async function loadRealWeeks(env, year, yearPrefix, day) {
@@ -128,6 +128,7 @@ export async function handleWeeks(env) {
         opponent: game.opponent,
         homeAway: game.homeAway,
         ...(game.notes ? { notes: game.notes } : {}),
+        ...(game.photosAt ? { photosAt: photosInstant(game) } : {}),
         ...(game.result
           ? { result: game.result, pointsFor: game.pointsFor, pointsAgainst: game.pointsAgainst }
           : {}),
