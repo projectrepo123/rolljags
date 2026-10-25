@@ -5048,8 +5048,8 @@ a.ss-item:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(150px, 26vw, 280px);
-  height: clamp(150px, 26vw, 280px);
+  width: clamp(170px, 32vw, 360px);
+  height: clamp(170px, 32vw, 360px);
 }
 
 .home-hero-logo .logo-badge {
@@ -5077,8 +5077,8 @@ a.ss-item:hover {
     top: 16px;
     right: 96px;
     transform: none;
-    width: 96px;
-    height: 96px;
+    width: 116px;
+    height: 116px;
   }
 }
 
