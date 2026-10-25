@@ -80,29 +80,60 @@ function seasonRecord(weeks) {
   return t ? `${w}-${l}-${t}` : `${w}-${l}`;
 }
 
-// "Photos in 2h 14m 09s", counting down to the schedule's photosAt, then
-// "Photos coming soon" once it passes (or when there's no time set).
+// A game-clock countdown to the schedule's photosAt: hours, minutes and
+// seconds on flip tiles under a "Photos drop in" label. Once the time passes
+// (or when there's no time set) it's the plain "Photos coming soon" chip.
 function photosCountdown(photosAt) {
-  const label = el("span", "home-hero-soon", "Photos coming soon");
+  const soon = () => el("span", "home-hero-soon", "Photos coming soon");
   const at = photosAt ? new Date(photosAt).getTime() : NaN;
-  if (Number.isNaN(at)) return label;
+  if (Number.isNaN(at) || at <= Date.now()) return soon();
+
+  const when = new Date(at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" });
+  const box = el("div", "photo-drop");
+  // The tiles change every second, so screen readers get the fixed time once
+  // instead of a running count.
+  box.setAttribute("role", "img");
+  box.setAttribute("aria-label", `Photos post at ${when} Central`);
+
+  const label = el("span", "pd-label");
+  label.innerHTML =
+    '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+  label.append("Photos drop in");
+  box.appendChild(label);
+
+  const clock = el("div", "pd-clock");
+  clock.setAttribute("aria-hidden", "true");
+  const tiles = ["hrs", "min", "sec"].map((unit, i) => {
+    if (i > 0) clock.appendChild(el("span", "pd-colon", ":"));
+    const tile = el("span", "pd-unit");
+    const num = el("b", "pd-num", "00");
+    tile.append(num, el("i", "pd-cap", unit));
+    clock.appendChild(tile);
+    return num;
+  });
+  box.appendChild(clock);
 
   const pad = (n) => String(n).padStart(2, "0");
   const tick = () => {
     const left = Math.floor((at - Date.now()) / 1000);
     if (left <= 0) {
-      label.textContent = "Photos coming soon";
       clearInterval(timer);
+      box.replaceWith(soon());
       return;
     }
-    const h = Math.floor(left / 3600);
-    const m = Math.floor((left % 3600) / 60);
-    const s = left % 60;
-    label.textContent = `Photos in ${h > 0 ? `${h}h ` : ""}${pad(m)}m ${pad(s)}s`;
+    const values = [Math.floor(left / 3600), Math.floor((left % 3600) / 60), left % 60].map(pad);
+    values.forEach((value, i) => {
+      if (tiles[i].textContent === value) return;
+      tiles[i].textContent = value;
+      // Restart the flip each time a tile changes.
+      tiles[i].classList.remove("flip");
+      void tiles[i].offsetWidth;
+      tiles[i].classList.add("flip");
+    });
   };
   const timer = setInterval(tick, 1000);
   tick();
-  return label;
+  return box;
 }
 
 function isHeroWeek(week) {
