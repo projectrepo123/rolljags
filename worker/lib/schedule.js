@@ -150,7 +150,7 @@ export const SCHEDULE = {
     },
     { week: "09", date: "2026-10-23", time: "18:30", opponent: "Parkway North", homeAway: "Away", cover: "/logos/pkwynorth.webp" },
     { date: "2026-10-30", bye: true },
-    { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home" },
+    { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home", cover: "/logos/northwestlions.webp" },
   ],
 };
 
