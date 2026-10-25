@@ -10,7 +10,7 @@
     "check-stats": "node scripts/import-stats.mjs --check"
   },
   "devDependencies": {
-    "wrangler": "4.123.0"
+    "wrangler": "4.152.0"
   },
   "dependencies": {
     "client-zip": "2.5.0"
