@@ -152,10 +152,13 @@ function renderLevel() {
     img.src = photo.thumbUrl;
     // 400w for the small desktop tiles, 640w for dense phone screens; the JPEG
     // above stays as the fallback for photos without WebP copies.
+    // The first photo is the featured tile, two columns wide, so it also
+    // gets the 1080w WebP for sharp display on dense screens.
     if (photo.thumbSrcset) {
-      img.srcset = photo.thumbSrcset;
-      img.sizes = "(max-width: 480px) 50vw, 180px";
+      img.srcset = i === 0 && photo.midUrl ? `${photo.thumbSrcset}, ${photo.midUrl} 1080w` : photo.thumbSrcset;
+      img.sizes = i === 0 ? "(max-width: 560px) 100vw, 440px" : "(max-width: 560px) 50vw, 220px";
     }
+    if (i === 0) btn.className = "photo-featured";
     // The first rows are on screen at once, so lazy-loading them only delays
     // what people see first. The rest wait until they're scrolled near.
     if (i < 12) {

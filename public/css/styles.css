@@ -848,27 +848,33 @@ main h1 {
   box-shadow: var(--shadow-1), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* A frosted-glass gold, rather than a flat gradient sticker: translucent
-   enough that backdrop-filter actually has something to blur, a light rim to
-   read as a distinct pane, and the existing inset highlight doubling as the
-   glass's top-edge sheen. Falls back to the plain translucent color (no
-   blur, but still legible) wherever backdrop-filter isn't supported. */
+/* Gold buttons share the score slabs' glossy gold: a light-to-deep gradient,
+   a lit top edge, a darker bottom lip, and the hover sheen from .btn. */
 .btn.btn-gold {
-  background: linear-gradient(180deg, rgba(255, 215, 94, 0.62) 0%, rgba(245, 184, 0, 0.62) 100%);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
-  backdrop-filter: blur(14px) saturate(180%);
-  color: var(--navy-dark);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  background: linear-gradient(180deg, #ffe58a 0%, #ffc72c 48%, #d99a00 100%);
+  color: var(--navy-950);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -2px 0 rgba(120, 78, 0, 0.45),
+    0 4px 14px rgba(0, 0, 0, 0.3);
 }
 
 .btn.btn-gold:hover {
-  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  filter: brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -2px 0 rgba(120, 78, 0, 0.45),
+    0 6px 22px rgba(255, 199, 44, 0.35);
 }
 
+/* Tiles are 3:2, the shape the photos are shot in, so a tile shows most of
+   the frame. The first photo leads as a 2x2 featured tile; dense flow fills
+   the space beside it. */
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-auto-flow: dense;
   gap: 0.5rem;
 }
 
@@ -879,7 +885,7 @@ main h1 {
   border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 2;
   box-shadow: var(--shadow-1);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   -webkit-tap-highlight-color: transparent;
@@ -2258,7 +2264,7 @@ footer.site-footer p + p {
   }
 
   .photo-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .kickoff-countdown {
@@ -2380,7 +2386,7 @@ header.site-header .skip-link:focus {
 }
 
 .skeleton-thumb {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 2;
 }
 
 /* Cards ease up into place as they render, staggered by --enter-delay. */
@@ -3039,26 +3045,6 @@ header.site-header .skip-link:focus {
   max-width: 62ch;
 }
 
-/* ---- Buttons: solid gold, no sheen ---- */
-.btn::after {
-  display: none;
-}
-
-.btn.btn-gold {
-  background: var(--gold);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border: none;
-  color: var(--navy-dark);
-  box-shadow: var(--shadow-1);
-}
-
-.btn.btn-gold:hover {
-  filter: none;
-  background: #ffd147;
-  box-shadow: var(--shadow-2);
-}
-
 /* ---- Footer ---- */
 .footer-inner {
   display: flex;
@@ -3295,6 +3281,23 @@ header.site-header .skip-link:focus {
   .home-hero-team {
     display: block;
   }
+
+  /* A phone-width hero is too short for the eyebrow, a two-line score and
+     the buttons, which pushed the eyebrow up under the LATEST tag. Here the
+     hero grows to fit, with the text clear of the tag. */
+  .home-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: auto;
+    min-height: 340px;
+  }
+
+  .home-hero-body {
+    position: relative;
+    inset: auto;
+    padding-top: 64px;
+  }
 }
 
 /* ===================================================================
@@ -3322,11 +3325,17 @@ header.site-header .skip-link:focus {
   gap: var(--space-3);
 }
 
-.home-hero-record {
+/* Frosted glass over the photo: it blurs what's behind it, with a lit rim
+   along the top. Without backdrop-filter it's still a dark translucent pane. */
+.home-hero-record,
+.home-hero-soon {
   padding: 0.35rem 0.7rem;
-  border: 1px solid rgba(255, 199, 44, 0.6);
-  border-radius: var(--radius-sm);
-  background: rgba(11, 22, 40, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(11, 22, 40, 0.45);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 4px 14px rgba(0, 0, 0, 0.3);
   font-family: var(--font-display);
   font-size: var(--step--1);
   font-weight: 600;
@@ -3822,7 +3831,10 @@ header.site-header .skip-link:focus {
   left: 10px;
   padding: 5px 26px 5px 16px;
   clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
-  background: var(--gold);
+  background: linear-gradient(180deg, #ffe58a 0%, #ffc72c 48%, #d99a00 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(120, 78, 0, 0.45);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
   color: var(--navy-950);
   font-family: var(--font-display);
   font-size: var(--step--1);
@@ -5049,18 +5061,14 @@ a.ss-item:hover {
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.08);
 }
 
+/* The countdown is the hero's call to action while photos are pending, so
+   it's the same glass as the record chip at button size, with a gold rim. */
 .home-hero-soon {
   display: inline-block;
-  padding: 0.55rem 1rem;
-  border: 2px solid var(--gold);
-  border-radius: var(--radius-sm);
-  background: rgba(11, 22, 40, 0.55);
-  color: var(--gold);
-  font-family: var(--font-display);
+  padding: 0.6rem 1.1rem;
+  border-color: rgba(255, 199, 44, 0.7);
   font-size: var(--step-0);
   font-weight: 700;
-  letter-spacing: var(--tracking-display);
-  text-transform: uppercase;
   font-variant-numeric: tabular-nums;
 }
 
@@ -5071,5 +5079,84 @@ a.ss-item:hover {
     transform: none;
     width: 96px;
     height: 96px;
+  }
+}
+
+/* ---- Gallery: the featured first photo ---- */
+.photo-grid .photo-featured {
+  position: relative;
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: auto;
+  box-shadow: var(--shadow-2);
+}
+
+/* A gold rule along the bottom, drawn over the photo. */
+.photo-grid .photo-featured::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: var(--gold);
+}
+
+/* ===================================================================
+   Home: "From the Archives" as a full-width navy band
+   =================================================================== */
+
+.archive-band {
+  margin-top: var(--space-7);
+  padding: var(--space-6) 0 var(--space-7);
+  background: var(--yardlines-on-navy), linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-950) 100%);
+  border-top: 4px solid var(--gold);
+  color: #fff;
+}
+
+.archive-band .archive-section {
+  margin: 0;
+}
+
+/* banner.js hides the section when there are no archive photos. */
+.archive-band:has(.archive-section[hidden]) {
+  display: none;
+}
+
+.archive-band .year-section h2 {
+  color: #fff;
+  box-shadow: none;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .archive-band .year-section h2 {
+    background-image: var(--text-grad-gold);
+  }
+}
+
+.archive-sub {
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+  font-size: var(--step--1);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.archive-band .photo-banner {
+  height: 240px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.archive-band .photo-banner-track button {
+  width: 200px;
+}
+
+.archive-band + .container .home-outro {
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 480px) {
+  .archive-band .photo-banner {
+    height: 150px;
+  }
+
+  .archive-band .photo-banner-track button {
+    width: 125px;
   }
 }

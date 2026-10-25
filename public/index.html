@@ -135,20 +135,28 @@
         </div>
         <noscript><p class="empty-state">Photos need JavaScript enabled to load.</p></noscript>
       </div>
-      <section class="archive-section year-section" id="photo-banner" aria-labelledby="archive-heading">
-        <h2 id="archive-heading">From the Archives</h2>
-        <div class="archive-carousel">
-          <div class="photo-banner" id="photo-banner-scroller">
-            <div class="photo-banner-track" id="photo-banner-track"></div>
+    </div>
+    <!-- Full width, outside the container, like the page bands. -->
+    <div class="archive-band">
+      <div class="container">
+        <section class="archive-section year-section" id="photo-banner" aria-labelledby="archive-heading">
+          <h2 id="archive-heading">From the Archives</h2>
+          <p class="archive-sub">Photos from past Jaguar seasons. Tap one to see it full size.</p>
+          <div class="archive-carousel">
+            <div class="photo-banner" id="photo-banner-scroller">
+              <div class="photo-banner-track" id="photo-banner-track"></div>
+            </div>
+            <button class="archive-arrow prev" type="button" aria-label="Previous photos">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button class="archive-arrow next" type="button" aria-label="Next photos">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
           </div>
-          <button class="archive-arrow prev" type="button" aria-label="Previous photos">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-          </button>
-          <button class="archive-arrow next" type="button" aria-label="Next photos">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-      </section>
+        </section>
+      </div>
+    </div>
+    <div class="container">
       <!-- Below the photos rather than above them, so the page reads game to
            game; the text is still here for search engines. -->
       <p class="page-intro home-outro">
