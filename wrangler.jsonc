@@ -9,6 +9,10 @@
   "account_id": "f869f349882f6a87ab0a1421507a703a",
   "main": "./worker/index.js",
   "compatibility_date": "2026-08-17",
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
