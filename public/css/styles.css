@@ -5041,10 +5041,10 @@ a.ss-item:hover {
 
 .home-hero-logo {
   position: absolute;
+  /* Centered across the hero, and lifted so it sits above the score. */
   top: 50%;
-  /* Clear of the outlined week number in the right corner. */
-  right: 26%;
-  transform: translateY(-58%);
+  left: 50%;
+  transform: translate(-50%, -68%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5075,6 +5075,7 @@ a.ss-item:hover {
 @media (max-width: 640px) {
   .home-hero-logo {
     top: 16px;
+    left: auto;
     right: 96px;
     transform: none;
     width: 116px;
