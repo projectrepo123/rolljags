@@ -160,7 +160,7 @@ export const SCHEDULE = {
       pointsAgainst: 14,
     },
     { date: "2026-10-30", bye: true },
-    { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home", cover: "/logos/northwestlions.webp" },
+    { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home", notes: "District Playoffs", cover: "/logos/northwestlions.webp" },
   ],
 };
 
