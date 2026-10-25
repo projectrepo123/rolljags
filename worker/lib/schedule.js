@@ -36,6 +36,9 @@
 // next to that tab's photo count on the week page (see week.js/gallery.js) —
 // unlike `result` above, these never feed the season record.
 //
+// `bye: true` (with just a `date`, no `week`) marks an open Friday. It shows as
+// a "Bye week" row on /schedule and nowhere else: no week card, no photos page.
+//
 // Template for a new game. `week` is a two-digit string ("09", not 9),
 // `date` is YYYY-MM-DD, `homeAway` is exactly "Home" or "Away", and `cover`
 // starts with /logos/ and matches the file's name and case exactly. Add the
@@ -146,6 +149,8 @@ export const SCHEDULE = {
       pointsAgainst: 0,
     },
     { week: "09", date: "2026-10-23", time: "18:30", opponent: "Parkway North", homeAway: "Away", cover: "/logos/pkwynorth.webp" },
+    { date: "2026-10-30", bye: true },
+    { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home" },
   ],
 };
 

@@ -282,7 +282,11 @@ async function init() {
     const latest = data.years
       .map((y) => y.weeks.filter((w) => w.status === "live").pop())
       .find(Boolean);
-    const nextUp = data.years[0].weeks.find((w) => w.status === "coming-soon");
+    // A game that's been played but has no photos or score yet is still
+    // "coming soon", so skip anything dated before today. en-CA formats as
+    // YYYY-MM-DD in the visitor's own timezone.
+    const today = new Date().toLocaleDateString("en-CA");
+    const nextUp = data.years[0].weeks.find((w) => w.status === "coming-soon" && w.date >= today);
 
     const latestYear = latest && data.years.find((y) => y.weeks.includes(latest));
     const heroShown = Boolean(latest);

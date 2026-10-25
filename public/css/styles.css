@@ -1550,6 +1550,11 @@ footer.site-footer p + p {
   color: var(--text-muted);
 }
 
+.season-table .schedule-bye td {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 /* A still row people scroll themselves, under the season grid. */
 .archive-section {
   margin-top: 2.5rem;

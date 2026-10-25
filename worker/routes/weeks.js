@@ -114,7 +114,7 @@ export async function handleWeeks(env) {
     if (!years.has(year)) years.set(year, new Map());
     const weeks = years.get(year);
     for (const game of games) {
-      if (weeks.has(game.week)) continue;
+      if (game.bye || weeks.has(game.week)) continue;
       weeks.set(game.week, {
         year,
         week: game.week,

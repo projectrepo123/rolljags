@@ -40,7 +40,7 @@ function render(games) {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const nextIndex = games.findIndex((g) => new Date(`${g.date}T12:00:00`) >= today);
+  const nextIndex = games.findIndex((g) => !g.bye && new Date(`${g.date}T12:00:00`) >= today);
 
   games.forEach((game, i) => {
     const tr = document.createElement("tr");
@@ -52,6 +52,18 @@ function render(games) {
     const dateCell = document.createElement("td");
     dateCellContent(dateCell, game.date);
     tr.appendChild(dateCell);
+
+    // An open Friday: no opponent, no photos page to link to.
+    if (game.bye) {
+      tr.classList.add("schedule-bye");
+      const byeCell = document.createElement("td");
+      byeCell.className = "opponent-cell";
+      byeCell.textContent = "Bye week";
+      tr.appendChild(byeCell);
+      for (let c = 0; c < 3; c++) tr.appendChild(document.createElement("td"));
+      tbodyEl.appendChild(tr);
+      return;
+    }
 
     const opponentCell = document.createElement("td");
     opponentCell.className = "opponent-cell";

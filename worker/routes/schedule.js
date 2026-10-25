@@ -10,6 +10,7 @@ export function scheduleGames(year) {
     homeAway: game.homeAway || null,
     label: game.label || null,
     notes: game.notes || null,
+    bye: Boolean(game.bye),
     result: game.result || null,
     pointsFor: game.pointsFor ?? null,
     pointsAgainst: game.pointsAgainst ?? null,
