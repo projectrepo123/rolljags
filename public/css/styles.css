@@ -496,11 +496,9 @@ main {
    <h1> now so each page has its own heading, and this pins them to the old <h2>
    metrics so nothing moves. Pages with a class on the heading (.week-title,
    .season-title) win on specificity and keep their own sizing. */
-/* Every page title sits in a banded plate: yard lines behind it, a navy edge
-   down the left, and a goal-line rule under it. The band stays inside
-   .container rather than bleeding full-width — a full-bleed version needs
-   calc(50% - 50vw), and 100vw includes the scrollbar, which introduces a
-   horizontal scroll on desktop. */
+/* Page titles live in the .page-hero band (see "Page hero" below), which
+   supplies the color and spacing. This is the plain type ramp, which the 404
+   page uses as is. */
 main h1 {
   font-family: var(--font-display);
   font-size: var(--step-3);
@@ -509,15 +507,6 @@ main h1 {
   text-transform: uppercase;
   letter-spacing: var(--tracking-tight);
   line-height: 1.15;
-  padding: 0.65rem 0.9rem 0.7rem;
-  background:
-    var(--yardlines),
-    linear-gradient(90deg, var(--row-accent) 0%, transparent 55%);
-  border-left: 4px solid var(--navy-text);
-  border-bottom: 3px solid var(--gold);
-  /* The hairline under the gold is what makes it a goal line rather than an
-     underline. */
-  box-shadow: 0 1px 0 var(--rule-navy);
 }
 
 .year-section {
@@ -641,8 +630,8 @@ main h1 {
 
 /* Week gallery page */
 
-/* Inherits the page-title band from main h1; only the metrics differ, because
-   a week heading carries an opponent and a date and runs long. */
+/* Smaller than other page titles, because a week heading carries an opponent
+   and a date and runs long. */
 .week-title {
   margin: 0.4rem 0 1.1rem;
   font-size: var(--step-2);
@@ -2310,10 +2299,8 @@ footer.site-footer p + p {
     font-size: 1.3rem;
   }
 
-  /* The title band keeps its rules and yard lines, just at phone metrics. */
   main h1 {
     font-size: var(--step-2);
-    padding: 0.55rem 0.7rem 0.6rem;
   }
 
   .week-title,
@@ -4136,29 +4123,21 @@ header.site-header .skip-link:focus {
    One treatment for every title: navy to deep navy on light, white to light
    gold on dark (the swap lives in the tokens). The gold goal line under each
    heading is the accent, so no second bar. No text-shadow on these: a shadow
-   shows through the clipped fill and muddies it.
-   The page title already paints the yard-line plate with its background, so
-   the gradient is the first layer, clipped to the glyphs, with the plate
-   layers below it clipped to the border box exactly as before. Keep those
-   two plate layers in step with `main h1` above. */
+   shows through the clipped fill and muddies it. Titles in the navy
+   .page-hero band take the white to gold fill in both themes. */
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .section-heading,
   .year-section h2,
-  .season-leaders-heading {
+  .season-leaders-heading,
+  main h1 {
     background-image: var(--text-grad-navy);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  main h1 {
-    background:
-      var(--text-grad-navy),
-      var(--yardlines),
-      linear-gradient(90deg, var(--row-accent) 0%, transparent 55%);
-    -webkit-background-clip: text, border-box, border-box;
-    background-clip: text, border-box, border-box;
-    -webkit-text-fill-color: transparent;
+  .page-hero h1 {
+    background-image: var(--text-grad-gold);
   }
 
   /* The kicker lives inside the h1 and keeps its own solid color. */
@@ -4279,5 +4258,119 @@ header.site-header .site-nav a.active::after {
   .back-link,
   main p a {
     transition: none;
+  }
+}
+
+/* ===================================================================
+   Page hero: the navy band every inner page opens with
+   =================================================================== */
+
+/* It sits directly in <main>, outside .container, so it runs edge to edge
+   without 100vw (which counts the scrollbar and adds a horizontal scroll).
+   Layers, top first: yard lines, a navy wash that is darkest behind the
+   text, then that page's game photo. The photos come from R2, which the CSP
+   already allows for images. */
+.page-hero {
+  --page-hero-photo: none;
+  position: relative;
+  margin: -1.5rem 0 var(--space-6);
+  padding: var(--space-7) 0 var(--space-6);
+  color: #fff;
+  background:
+    var(--yardlines-on-navy),
+    linear-gradient(90deg, rgba(11, 22, 40, 0.96) 0%, rgba(20, 44, 82, 0.88) 45%, rgba(20, 44, 82, 0.5) 100%),
+    var(--page-hero-photo) center 30% / cover no-repeat,
+    var(--navy-dark);
+  border-bottom: 4px solid var(--gold);
+  box-shadow: 0 1px 0 var(--rule-navy);
+}
+
+.page-hero-schedule { --page-hero-photo: url("https://photos.rolljags.com/2026/week-02_2026-09-04/varsity/view/0009_npgrizzliesvsjagsVarsity-009.1080.webp"); }
+.page-hero-history { --page-hero-photo: url("https://photos.rolljags.com/2026/week-06_2026-10-02/varsity/view/0253_jagsvsHazlewoodCentral-Varsity-253.1080.webp"); }
+.page-hero-records { --page-hero-photo: url("https://photos.rolljags.com/2026/week-90_2026-08-21/instagram/view/K37A4388.1080.webp"); }
+.page-hero-roster { --page-hero-photo: url("https://photos.rolljags.com/2026/week-01_2026-08-28/varsity/view/0076_seckmanvsoakville_2026-177.1080.webp"); }
+.page-hero-podcast { --page-hero-photo: url("https://photos.rolljags.com/2026/week-05_2026-09-25/varsity/view/0155_jagsvsFoxVarsity-noedits-155.1080.webp"); }
+.page-hero-season { --page-hero-photo: url("https://photos.rolljags.com/2026/week-03_2026-09-11/varsity/view/0014_jagsvsflyersVarsity-014.1080.webp"); }
+
+/* The podcast column is narrower than the rest of the site, and its title
+   should line up with it. */
+.page-hero-podcast .container {
+  max-width: 840px;
+}
+
+.page-hero h1 {
+  margin: 0;
+  font-size: var(--step-4);
+  line-height: 1.05;
+  color: #fff;
+  text-shadow: none;
+}
+
+.page-hero .h1-kicker {
+  margin-bottom: var(--space-2);
+  color: var(--gold);
+}
+
+.page-hero .page-intro {
+  margin: var(--space-3) 0 0;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.page-hero .page-intro strong {
+  color: #fff;
+}
+
+.page-hero .back-link {
+  margin-bottom: var(--space-4);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.page-hero .back-link:hover {
+  color: #fff;
+}
+
+.page-hero .week-eyebrow {
+  color: var(--gold);
+}
+
+.page-hero .week-title,
+.page-hero .season-title {
+  font-size: var(--step-3);
+}
+
+@media (max-width: 640px) {
+  .page-hero {
+    padding: var(--space-6) 0 var(--space-5);
+    margin-bottom: var(--space-5);
+    /* On a phone the text covers most of the band, so the wash stays dark
+       all the way across. */
+    background:
+      var(--yardlines-on-navy),
+      linear-gradient(90deg, rgba(11, 22, 40, 0.94) 0%, rgba(20, 44, 82, 0.8) 100%),
+      var(--page-hero-photo) center 30% / cover no-repeat,
+      var(--navy-dark);
+  }
+
+  .page-hero h1 {
+    font-size: var(--step-3);
+  }
+
+  .page-hero .week-title,
+  .page-hero .season-title {
+    font-size: var(--step-2);
+  }
+}
+
+/* Matches main's smaller top padding at this width, so the band still meets
+   the header. */
+@media (max-width: 480px) {
+  .page-hero {
+    margin-top: -1rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .page-hero {
+    border-bottom-color: CanvasText;
   }
 }
