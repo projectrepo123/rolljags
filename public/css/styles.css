@@ -4731,7 +4731,9 @@ a.ss-item:hover {
 }
 
 .roster-filters[hidden],
-.roster-grid[hidden] {
+.roster-list[hidden],
+.roster-group[hidden],
+.roster-unit[hidden] {
   display: none;
 }
 
@@ -4784,72 +4786,133 @@ a.ss-item:hover {
   color: var(--text-muted);
 }
 
-.roster-grid {
+.roster-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-6);
+}
+
+.roster-unit {
+  scroll-margin-top: 80px;
+}
+
+.roster-unit .section-heading {
+  margin-bottom: var(--space-4);
+}
+
+.roster-group + .roster-group {
+  margin-top: var(--space-5);
+}
+
+.roster-group-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--label-accent);
+}
+
+.roster-group-count {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.roster-rows {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* A navy tile with the jersey number set huge and outlined behind the name,
-   the same treatment as the week number on the home cards. */
-.pc-link {
-  position: relative;
+/* One player: a glossy jersey-number badge beside the name. */
+.rr-link {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 132px;
-  padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) + 4px);
-  overflow: hidden;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 8px 12px 8px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--yardlines-on-navy), var(--grad-navy);
-  box-shadow: inset 4px 0 0 var(--gold), var(--shadow-1);
-  color: #fff;
+  box-shadow: var(--shadow-1), var(--surface-highlight);
+  color: var(--text);
   text-decoration: none;
-  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
 @media (hover: hover) {
-  .pc-link:hover {
-    transform: translateY(-3px);
-    box-shadow: inset 4px 0 0 var(--gold), 0 0 0 2px var(--gold), var(--shadow-2);
+  .rr-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+    box-shadow: var(--shadow-2), var(--surface-highlight);
   }
 }
 
-.pc-num {
-  position: absolute;
-  top: -6px;
-  right: 10px;
+/* The same tile as the countdown's flip digits: navy with a lit top edge and
+   gold gradient numerals. */
+.rr-num {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #2b5391 0%, #1b3a6b 50%, #0b1628 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -2px 0 rgba(0, 0, 0, 0.35), inset -3px 0 0 var(--gold);
   font-family: var(--font-display);
-  font-size: 6.5rem;
+  font-size: 1.45rem;
   font-weight: 700;
   line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.4);
-  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
 }
 
-.pc-name {
-  position: relative;
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .rr-num {
+    color: transparent;
+    background-image:
+      linear-gradient(180deg, #fff3c4 0%, #ffc72c 50%, #e0a200 100%),
+      linear-gradient(180deg, #2b5391 0%, #1b3a6b 50%, #0b1628 100%);
+    -webkit-background-clip: text, padding-box;
+    background-clip: text, padding-box;
+  }
+}
+
+.rr-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rr-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: var(--font-display);
-  font-size: var(--step-1);
+  font-size: var(--step-0);
   font-weight: 700;
-  line-height: 1.1;
   letter-spacing: var(--tracking-tight);
   text-transform: uppercase;
+  color: var(--navy-text);
 }
 
-.pc-meta {
-  position: relative;
-  margin-top: 4px;
-  font-family: var(--font-display);
-  font-size: var(--step--1);
+.rr-meta {
+  font-size: var(--step--2);
   font-weight: 600;
-  letter-spacing: var(--tracking-display);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--text-muted);
+}
+
+a.chip {
+  text-decoration: none;
 }
 
 .roster-name a {
@@ -4861,16 +4924,26 @@ a.ss-item:hover {
     margin-left: 0;
   }
 
-  .roster-grid {
+  .roster-rows {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .pc-link {
-    min-height: 112px;
+  .rr-link {
+    gap: var(--space-2);
+    padding: 6px 8px 6px 6px;
   }
 
-  .pc-num {
-    font-size: 5rem;
+  .rr-num {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+  }
+
+  /* Two columns leave a name ~110px; wrap it rather than cut it off. */
+  .rr-name {
+    font-size: var(--step--1);
+    white-space: normal;
+    line-height: 1.15;
   }
 }
 
@@ -5017,7 +5090,7 @@ a.ss-item:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .chip,
-  .pc-link,
+  .rr-link,
   .record-entry {
     transition: none;
   }
