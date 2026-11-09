@@ -165,7 +165,25 @@ export const SCHEDULE = {
       photosAt: "2026-10-25 17:00",
     },
     { date: "2026-10-30", bye: true },
-    { week: "10", date: "2026-11-06", opponent: "Northwest", homeAway: "Home", notes: "District Playoffs", cover: "/logos/northwestlions.webp" },
+    {
+      week: "10",
+      date: "2026-11-06",
+      opponent: "Northwest",
+      homeAway: "Away",
+      notes: "District Playoffs",
+      cover: "/logos/northwestlions.webp",
+      result: "W",
+      pointsFor: 38,
+      pointsAgainst: 7,
+    },
+    {
+      week: "11",
+      date: "2026-11-13",
+      opponent: "Jackson",
+      homeAway: "Away",
+      notes: "District Playoffs",
+      cover: "/logos/jacksonindians.webp",
+    },
   ],
 };
 
