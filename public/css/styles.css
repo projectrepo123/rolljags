@@ -3689,18 +3689,6 @@ header.site-header .skip-link:focus {
   text-wrap: balance;
 }
 
-/* Gold underline that draws in on hover and keyboard focus. */
-.wc-opp span {
-  padding-bottom: 3px;
-  background: linear-gradient(var(--gold), var(--gold)) 0 100% / 0 3px no-repeat;
-  transition: background-size 0.3s var(--ease);
-}
-
-.week-card:hover .wc-opp span,
-.week-card:focus-visible .wc-opp span {
-  background-size: 100% 3px;
-}
-
 /* Scoreboard score: gold for a win, muted for a loss or tie. */
 .wc-score {
   display: flex;
@@ -4042,11 +4030,83 @@ header.site-header .skip-link:focus {
 }
 
 .wc-shade {
-  background: linear-gradient(180deg, rgba(8, 16, 30, 0) 22%, rgba(8, 16, 30, 0.6) 52%, rgba(8, 16, 30, 0.96) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(8, 16, 30, 0) 26%,
+    rgba(8, 16, 30, 0.22) 38%,
+    rgba(8, 16, 30, 0.58) 50%,
+    rgba(8, 16, 30, 0.82) 64%,
+    rgba(8, 16, 30, 0.96) 100%
+  );
 }
 
 .wc-meta {
   color: rgba(255, 255, 255, 0.92);
+}
+
+/* ---- Graphics that melt into the photo instead of sitting hard on it ----
+   Scoped to .week-card: the schedule's game cards share the chip and slab but
+   sit on a light surface, where a fade would just look washed out. */
+
+/* AT/VS chip: translucent glass feathered at both ends, with the gold rule
+   fading in from above and running out with the chip. The extra right padding
+   is what the fade eats, so the letters stay fully solid. */
+.week-grid .week-card {
+  container-type: inline-size;
+}
+
+.week-card .wc-kick {
+  /* The negative margin hangs the chip's padding left of the text column, so
+     the letters line up with the opponent name below. */
+  margin-left: -10px;
+  padding: 3px 24px 3px 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 199, 44, 0), var(--gold)) 0 100% / 100% 3px no-repeat,
+    linear-gradient(180deg, rgba(47, 93, 163, 0.55) 0%, rgba(27, 58, 107, 0.82) 35%, rgba(20, 44, 82, 0.88) 100%);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7px, #000 calc(100% - 24px), transparent 100%);
+}
+
+/* Left edge bar: bright at the card edge, dissolving into the photo. */
+.week-grid .week-card::before {
+  width: 13px;
+  background: linear-gradient(90deg, #ffd65a 0%, var(--gold) 34%, rgba(255, 199, 44, 0.42) 62%, rgba(255, 199, 44, 0) 100%);
+}
+
+/* Week number: small and tucked into the top corner, clear of the players.
+   The meta line already says which week it is, so this is only an accent. */
+.wc-ghost {
+  right: 44px;
+  top: 16px;
+  font-size: 4.25rem;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.34);
+}
+
+/* Score slab: eased corners, feathered bevels, and a tight halo that blurs the
+   edge against the photo. The numbers stay sharp. Sized off the card so a
+   wide score still fits the narrowest grid column. */
+.week-card .wc-score {
+  font-size: 2.2rem;
+  font-size: clamp(1.45rem, 11.5cqi, 2.2rem);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.22),
+    inset 0 -6px 8px -6px rgba(0, 0, 0, 0.4),
+    0 0 4px rgba(93, 106, 131, 0.8),
+    0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.week-card.win .wc-score {
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.6),
+    inset 0 -6px 8px -6px rgba(120, 78, 0, 0.55),
+    0 0 4px rgba(255, 199, 44, 0.75),
+    0 0 16px rgba(255, 199, 44, 0.28),
+    0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 /* ===================================================================
