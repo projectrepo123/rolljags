@@ -26,10 +26,10 @@ const SECURITY_HEADERS = {
   "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
   "Content-Security-Policy": [
     "default-src 'self'",
-    "img-src 'self' https://photos.rolljags.com",
+    "img-src 'self' https://photos.rolljags.com https://*.google-analytics.com https://*.googletagmanager.com",
     "style-src 'self'",
-    "script-src 'self' https://static.cloudflareinsights.com",
-    "connect-src 'self'",
+    "script-src 'self' https://static.cloudflareinsights.com https://*.googletagmanager.com",
+    "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
     "frame-src https://www.youtube.com https://open.spotify.com",
     "base-uri 'none'",
     "form-action 'none'",
@@ -37,6 +37,13 @@ const SECURITY_HEADERS = {
     "object-src 'none'",
   ].join("; "),
 };
+
+// GA4. The config call is in public/js/analytics.js since the CSP blocks
+// inline scripts; it queues onto dataLayer, so load order doesn't matter.
+const GA_ID = "G-FS8FK1Z6C1";
+const ANALYTICS_HTML =
+  `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>` +
+  `<script src="/js/analytics.js"></script>`;
 
 export default {
   async fetch(request, env, ctx) {
@@ -55,7 +62,8 @@ function decorateHtml(response, url) {
   const header = headerHtml(url.pathname);
   let rewriter = new HTMLRewriter()
     .on("header.site-header", { element: (el) => el.setInnerContent(header, { html: true }) })
-    .on("footer.site-footer", { element: (el) => el.setInnerContent(FOOTER_HTML, { html: true }) });
+    .on("footer.site-footer", { element: (el) => el.setInnerContent(FOOTER_HTML, { html: true }) })
+    .on("head", { element: (el) => el.append(ANALYTICS_HTML, { html: true }) });
 
   const upcoming = nextGame();
   if (upcoming) {

@@ -183,6 +183,9 @@ export const SCHEDULE = {
       homeAway: "Away",
       notes: "District Playoffs",
       cover: "/logos/jacksonindians.webp",
+      result: "L",
+      pointsFor: 7,
+      pointsAgainst: 47,
     },
   ],
 };
