@@ -45,8 +45,15 @@ const ANALYTICS_HTML =
   `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>` +
   `<script src="/js/analytics.js"></script>`;
 
+// The deployed version's id, folded into every edge cache key (cacheKeyFor).
+// Each Cloudflare data center keeps its own cache, so without this a deploy
+// could take 5 to 10 minutes to reach a visitor whose data center still held
+// a copy built by the old code. A new deploy now starts every cache fresh.
+let deployVersion = "";
+
 export default {
   async fetch(request, env, ctx) {
+    deployVersion = env.CF_VERSION_METADATA?.id || "";
     const response = await handle(request, env, ctx);
     return withSecurityHeaders(decorateHtml(response, new URL(request.url)));
   },
@@ -404,6 +411,7 @@ function cacheKeyFor(request, varyParams, canonicalPath) {
     const value = url.searchParams.get(name);
     if (value !== null) kept.set(name, value);
   }
+  if (deployVersion) kept.set("_deploy", deployVersion);
   url.search = kept.toString();
   return new Request(url.toString(), { method: "GET" });
 }

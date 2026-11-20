@@ -8,6 +8,13 @@ import { readJpegSize } from "../lib/jpeg.js";
 // none of the first few are wide, keep the usual pick rather than fail.
 const HERO_TRIES = 6;
 
+// Photos that stay in their gallery but are never picked for a week card or
+// the home hero. File names as uploaded (the last part of the R2 key).
+const NEVER_COVER = new Set([
+  // Week 11 at Jackson: tall crop that reads as just a hand on the banner.
+  "0007_jagsvsJackson_Varsity_Insta_Vertical-07.jpg",
+]);
+
 async function pickWideHero(env, candidates, seed) {
   const order = dailyOtherOrder(candidates, seed, HERO_TRIES);
   for (const url of order) {
@@ -50,6 +57,7 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
         const fileName = obj.key.split("/").pop();
         // upload-week.mjs writes a thumbs/ sibling for every file it uploads,
         // so any photo here is usable as a cover.
+        if (NEVER_COVER.has(fileName)) continue;
         candidates.push(publicUrl(`${levelPrefix}thumbs/${fileName}`));
       }
     }
