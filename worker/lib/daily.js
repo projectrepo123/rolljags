@@ -46,7 +46,25 @@ export function pickDaily(items, seed) {
 // pick alone could land on the next frame of the same burst, which reads as
 // the same shot twice. Null when there is only one item.
 export function pickDailyOther(items, seed) {
-  if (!items || items.length < 2) return null;
-  const i = hash32(seed) % items.length;
-  return items[(i + Math.floor(items.length / 2)) % items.length];
+  return dailyOtherOrder(items, seed, 1)[0] ?? null;
+}
+
+// The hero's candidates in the order to try them: pickDailyOther's photo
+// first, then others spread around the week, never within a few frames of
+// the card's photo (same burst). Lets the hero pass over a tall shot, which
+// a wide banner can only show a thin slice of, while staying stable per day.
+export function dailyOtherOrder(items, seed, max) {
+  if (!items || items.length < 2) return [];
+  const n = items.length;
+  const i = hash32(seed) % n;
+  const start = (i + Math.floor(n / 2)) % n;
+  const stride = Math.max(1, Math.floor(n / max));
+  const nearCard = (j) => Math.min((j - i + n) % n, (i - j + n) % n) < 3;
+  const order = [];
+  for (let k = 0; k < n && order.length < max; k++) {
+    const j = (start + k * stride) % n;
+    if (k > 0 && (nearCard(j) || order.includes(items[j]))) continue;
+    order.push(items[j]);
+  }
+  return order;
 }

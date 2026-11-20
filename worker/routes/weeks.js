@@ -1,6 +1,22 @@
 import { listPrefixes, listObjects, lastSegment, parseWeekFolder, formatWeekLabel, findWeekLevels, coverLevels, publicUrl } from "../lib/r2.js";
 import { SCHEDULE, scheduleCaption, photosInstant, isEmbargoed } from "../lib/schedule.js";
-import { todayKey, pickDaily, pickDailyOther } from "../lib/daily.js";
+import { todayKey, pickDaily, dailyOtherOrder } from "../lib/daily.js";
+import { readJpegSize } from "../lib/jpeg.js";
+
+// The hero is a wide banner, so a tall photo only shows a thin band across its
+// middle (a hand, a jersey). Take the first wide shot in the day's order; if
+// none of the first few are wide, keep the usual pick rather than fail.
+const HERO_TRIES = 6;
+
+async function pickWideHero(env, candidates, seed) {
+  const order = dailyOtherOrder(candidates, seed, HERO_TRIES);
+  for (const url of order) {
+    const key = decodeURIComponent(new URL(url).pathname.slice(1));
+    const size = await readJpegSize(env.PHOTOS, key).catch(() => null);
+    if (size && size.width > size.height) return url;
+  }
+  return order[0] ?? null;
+}
 
 async function loadRealWeeks(env, year, yearPrefix, day) {
   const weekPrefixes = await listPrefixes(env.PHOTOS, yearPrefix);
@@ -47,7 +63,7 @@ async function loadRealWeeks(env, year, yearPrefix, day) {
     const cover = pickDaily(candidates, seed) || scheduledGame?.cover || null;
     // Only the newest week is ever the hero, but every week gets one so the
     // home page never has to know which that is in advance.
-    const heroCover = pickDailyOther(candidates, seed);
+    const heroCover = await pickWideHero(env, candidates, seed);
     // The 1080w WebP the hero offers phones; weeks uploaded before it existed
     // simply don't get one. Its name is derived from the thumb's key.
     // Same for the card photo, which high-density screens upgrade to 1080w.
