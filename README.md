@@ -188,23 +188,27 @@ stray HTTP requests.
 
 **Add the next opponent's logo** (2 files, then deploy)
 
-1. Save it to `public/logos/`, about 474px wide, as `.webp`.
+1. Keep the original in `assets-src/logos/` (not deployed). Export a copy to
+   `public/logos/` at most 720px on the long side, as `.webp` around quality
+   72. That is 2x the largest size it shows at (the home hero, 360px).
 2. Set `cover: "/logos/<file>.webp"` on that game in `schedule.js`. The path
    is case-sensitive and nothing checks it, so copy the file name exactly.
-3. `npm run deploy`. Replacing a logo under the same name can take up to a
-   week to show for returning visitors, so use a new file name instead.
+3. `npm run deploy`. Replacing a logo under the same name can take up to
+   30 days to show for returning visitors, so use a new file name instead.
 
 The home page and week pages can take up to 5 minutes to show any of this.
 
 ## New season checklist
 
-The year is hard-coded in four places:
+The year is hard-coded in these places:
 
 1. `worker/lib/schedule.js`: add a new `"2027": [...]` key.
 2. `worker/index.js`: `DEFAULT_SCHEDULE_YEAR`.
 3. `public/js/schedule.js`: `DEFAULT_YEAR`.
-4. `public/schedule.html`: "2026" in the meta description, `og:description`
-   and the intro paragraph.
+4. `public/schedule.html`: "2026" in the `<title>`, `og:title`, meta
+   description, `og:description` and the intro paragraph.
+5. `public/roster.html` and `public/history.html`: "2026" in the `<title>`,
+   `og:title`, meta description and `og:description`.
 
 Add the finished season to `public/data/history.json` so it gets its own
 /season page.

@@ -3,6 +3,10 @@ import { listPrefixes, lastSegment, parseWeekFolder } from "../lib/r2.js";
 import { loadRoster } from "../lib/roster.js";
 import { findScheduledGame, isEmbargoed } from "../lib/schedule.js";
 
+// Sitemap URLs are always the canonical https apex, whatever host served
+// the request (wrangler dev answers on http://localhost).
+const SITE_ORIGIN = "https://rolljags.com";
+
 // The static pages, with how often they actually change.
 const STATIC_PAGES = [
   ["/", "weekly", "1.0"],
@@ -97,7 +101,7 @@ export async function handleSitemap(env, origin) {
   const entries = [
     ...STATIC_PAGES.map(([path, changefreq, priority]) =>
       urlEntry({
-        loc: `${origin}${path}`,
+        loc: `${SITE_ORIGIN}${path}`,
         lastmod: newest,
         changefreq,
         priority,
@@ -105,7 +109,7 @@ export async function handleSitemap(env, origin) {
     ),
     ...weeks.map((week) =>
       urlEntry({
-        loc: `${origin}/week?year=${week.year}&week=${week.weekNum}`,
+        loc: `${SITE_ORIGIN}/week?year=${week.year}&week=${week.weekNum}`,
         lastmod: week.date,
         changefreq: "monthly",
         priority: "0.9",
@@ -113,14 +117,14 @@ export async function handleSitemap(env, origin) {
     ),
     ...seasons.map((year) =>
       urlEntry({
-        loc: `${origin}/season?year=${year}`,
+        loc: `${SITE_ORIGIN}/season?year=${year}`,
         changefreq: "yearly",
         priority: "0.5",
       })
     ),
     ...players.map((player) =>
       urlEntry({
-        loc: `${origin}/player?n=${player.number}`,
+        loc: `${SITE_ORIGIN}/player?n=${player.number}`,
         changefreq: "yearly",
         priority: "0.4",
       })

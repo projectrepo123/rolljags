@@ -23,5 +23,9 @@ export function scheduleGames(year) {
 }
 
 export function handleSchedule(year) {
-  return Response.json({ year, games: scheduleGames(year) });
+  // Scores land here after each game, so only a few minutes.
+  return Response.json(
+    { year, games: scheduleGames(year) },
+    { headers: { "Cache-Control": "public, max-age=300" } }
+  );
 }

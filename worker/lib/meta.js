@@ -109,12 +109,12 @@ function injectMeta(assetResponse, title, metaHtml, headingSelector, heading) {
 // a blank one. `data` is the result of getWeekData(), or null when the
 // query params are missing or don't resolve to a known week.
 export function injectWeekMeta(assetResponse, data, url) {
-  const fallbackImage = `${url.origin}${DEFAULT_SHARE_IMAGE}`;
+  const fallbackImage = `${SITE_ORIGIN}${DEFAULT_SHARE_IMAGE}`;
 
   // Both "/week.html?..." and "/week?..." serve this page, and links shared
   // around usually pick up tracking params. Point canonical/og:url at one
   // normalized form so search engines don't treat them as separate pages.
-  const canonical = new URL(url.origin);
+  const canonical = new URL(SITE_ORIGIN);
   canonical.pathname = "/week";
   for (const name of ["year", "week"]) {
     const value = url.searchParams.get(name);
@@ -251,23 +251,23 @@ function scoreboardHtml(data) {
 // is the result of getSeasonSummary(), or null when the year is missing
 // or not present in history.json.
 export function injectSeasonMeta(assetResponse, summary, url) {
-  const fallbackImage = `${url.origin}${DEFAULT_SHARE_IMAGE}`;
+  const fallbackImage = `${SITE_ORIGIN}${DEFAULT_SHARE_IMAGE}`;
 
   // Same normalization as injectWeekMeta: strip tracking params so shared
   // links with different query junk all canonicalize to one URL per year.
-  const canonical = new URL(url.origin);
+  const canonical = new URL(SITE_ORIGIN);
   canonical.pathname = "/season";
   const year = url.searchParams.get("year");
   if (year !== null) canonical.searchParams.set("year", year);
   const pageUrl = canonical.toString();
 
-  let title = `Team History | ${SITE_NAME}`;
+  let title = `${SITE_NAME} Seasons | Results by Year`;
   let description = `Season records and game results for ${SCHOOL_NAME} Jaguars football in ${LOCALITY}, from 1999 to today.`;
   let heading = null;
 
   if (summary) {
-    title = `${summary.year} ${SITE_NAME} Season (${summary.record}) | ${LOCALITY}`;
-    description = `Game-by-game results for the ${summary.year} ${SCHOOL_NAME} Jaguars football season (${summary.record}) in ${LOCALITY}.`;
+    title = `${SITE_NAME} ${summary.year} Season: ${summary.record} Results & Scores`;
+    description = `Game-by-game results and final scores for the ${summary.year} ${SITE_NAME} season (${summary.record}), ${SCHOOL_NAME} in ${LOCALITY}.`;
     heading = {
       html: `<span class="h1-kicker">${SITE_NAME}</span> ${escapeAttr(summary.year)} Season`,
     };
@@ -286,7 +286,7 @@ export function injectSeasonMeta(assetResponse, summary, url) {
 // player's name finds his page with the team and town attached. `player` is
 // a roster entry, or null when ?n= doesn't match anyone.
 export function injectPlayerMeta(assetResponse, player, rosterYear, url) {
-  const canonical = new URL(url.origin);
+  const canonical = new URL(SITE_ORIGIN);
   canonical.pathname = "/player";
   const n = url.searchParams.get("n");
   if (n !== null) canonical.searchParams.set("n", n);
@@ -306,7 +306,7 @@ export function injectPlayerMeta(assetResponse, player, rosterYear, url) {
   return injectMeta(
     assetResponse,
     title,
-    buildMeta(title, description, `${url.origin}${DEFAULT_SHARE_IMAGE}`, canonical.toString()),
+    buildMeta(title, description, `${SITE_ORIGIN}${DEFAULT_SHARE_IMAGE}`, canonical.toString()),
     "#player-title",
     heading
   );
@@ -318,7 +318,7 @@ export function injectPlayerMeta(assetResponse, player, rosterYear, url) {
 // structured data correct. Purely additive: it appends to <head> and removes
 // nothing, so the page's own og tags still win where they overlap.
 export function injectScheduleMeta(assetResponse, games, year, url) {
-  const canonical = `${url.origin}/schedule`;
+  const canonical = `${SITE_ORIGIN}/schedule`;
 
   const events = games
     // A SportsEvent needs two competitors. An intrasquad scrimmage or a
@@ -333,7 +333,7 @@ export function injectScheduleMeta(assetResponse, games, year, url) {
         startDate: game.kickoff || game.date,
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-        url: `${url.origin}/week?year=${year}&week=${game.week}`,
+        url: `${SITE_ORIGIN}/week?year=${year}&week=${game.week}`,
         sport: "American Football",
         homeTeam: {
           "@type": "SportsTeam",

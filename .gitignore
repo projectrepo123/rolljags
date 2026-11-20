@@ -4,3 +4,8 @@ scripts/.env
 .wrangler/
 .dev.vars
 .claude/
+.env
+.env.*
+secrets.*
+*keys.json
+*.pem

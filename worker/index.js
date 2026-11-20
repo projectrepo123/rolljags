@@ -127,6 +127,16 @@ async function handle(request, env, ctx) {
   const url = new URL(request.url);
   const parts = url.pathname.split("/").filter(Boolean);
 
+  // "/week.html?year=2026&week=10" and "/week?year=2026&week=10" were both
+  // answering 200 and both got indexed. One permanent hop to the clean URL,
+  // query string kept, so search engines settle on a single address.
+  // 404.html is the not-found page itself and is never linked.
+  if (url.pathname.endsWith(".html") && url.pathname !== "/404.html") {
+    const clean = new URL(url);
+    clean.pathname = url.pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
+    return Response.redirect(clean.toString(), 301);
+  }
+
   try {
     if (parts[0] === "api") {
       // GET /api/weeks
@@ -223,11 +233,10 @@ async function handle(request, env, ctx) {
       return Response.json({ error: "Not found" }, { status: 404 });
     }
 
-    if (url.pathname === "/week.html" || url.pathname === "/week") {
-      // The assets binding 307-redirects "/week.html" -> "/week" (its
-      // canonical extensionless URL) internally, even when called from
-      // here, so fetch the canonical path directly to get real content
-      // instead of a redirect response to rewrite.
+    if (url.pathname === "/week") {
+      // "/week.html" never gets here: the 301 at the top of handle() sends it
+      // to "/week" first. The asset is still fetched by its extensionless path,
+      // the one the assets binding answers without a redirect.
       const year = url.searchParams.get("year");
       const week = url.searchParams.get("week");
       const validParams = year && week && isValidYear(year) && isValidWeekNum(week);
@@ -240,15 +249,14 @@ async function handle(request, env, ctx) {
         return injectWeekMeta(asset, data, url);
       };
 
-      // "/week.html" and "/week" serve identical content, so cache them under
-      // the one canonical path instead of duplicating every week's entry.
+      // Keyed on year and week only, so tracking params share one entry.
       return validParams
         ? withCache(request, ctx, buildResponse, ["year", "week"], "/week")
         : buildResponse();
     }
 
-    if (url.pathname === "/season.html" || url.pathname === "/season") {
-      // Same rationale as the /week.html case above: fetch the canonical
+    if (url.pathname === "/season") {
+      // Same rationale as the /week case above: fetch the canonical
       // extensionless path directly rather than following the redirect.
       const year = url.searchParams.get("year");
       const validParams = year && isValidYear(year);
@@ -266,7 +274,7 @@ async function handle(request, env, ctx) {
         : buildResponse();
     }
 
-    if (url.pathname === "/schedule.html" || url.pathname === "/schedule") {
+    if (url.pathname === "/schedule") {
       // Same "fetch the canonical extensionless path" reasoning as /week above.
       // This branch only appends SportsEvent structured data; the page keeps
       // its own title and og tags, which sit earlier in <head> and win.
@@ -291,7 +299,7 @@ async function handle(request, env, ctx) {
       return withCache(request, ctx, buildResponse, ["year"], "/schedule");
     }
 
-    if (url.pathname === "/roster.html" || url.pathname === "/roster") {
+    if (url.pathname === "/roster") {
       // Same "fetch the canonical extensionless path" reasoning as /week.
       const buildResponse = async () => {
         const assetUrl = new URL(request.url);
@@ -302,7 +310,7 @@ async function handle(request, env, ctx) {
       return withCache(request, ctx, buildResponse, [], "/roster");
     }
 
-    if (url.pathname === "/player.html" || url.pathname === "/player") {
+    if (url.pathname === "/player") {
       const n = url.searchParams.get("n");
       const buildResponse = async () => {
         const assetUrl = new URL(request.url);
@@ -320,7 +328,7 @@ async function handle(request, env, ctx) {
         : buildResponse();
     }
 
-    if (url.pathname === "/" || url.pathname === "/index.html") {
+    if (url.pathname === "/") {
       return preloadHomeHero(await env.ASSETS.fetch(request), url, env, ctx);
     }
 
@@ -348,7 +356,11 @@ async function handle(request, env, ctx) {
 // content-hashed, so the CSS/JS window is deliberately short: long enough to
 // cover a browsing session, short enough that a deploy still lands promptly.
 const ASSET_CACHE_RULES = [
-  [/\.(webp|avif|png|jpe?g|gif|svg|ico|woff2?)$/i, "public, max-age=604800"],
+  // The one font file never changes, so it is safe to cache for good.
+  [/\.woff2?$/i, "public, max-age=31536000, immutable"],
+  // 30 days. A replaced logo or image should get a new filename, or some
+  // visitors keep the old one until this runs out.
+  [/\.(webp|avif|png|jpe?g|gif|svg|ico)$/i, "public, max-age=2592000"],
   // The record book fetches a JSON file per scope tab, so give the data the same
   // short window as the code that reads it.
   // No stale-while-revalidate: it let a returning browser run a day-old

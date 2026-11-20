@@ -1,0 +1,16 @@
+# Never upload these from public/, even if one lands here by accident.
+# Same syntax as .gitignore. This file itself is not uploaded either.
+.env
+.env.*
+.dev.vars
+secrets.*
+*keys.json
+*_config.json
+*.pem
+*.key
+*.bak
+*.old
+*.orig
+*~
+.DS_Store
+Thumbs.db
