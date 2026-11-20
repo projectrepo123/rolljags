@@ -4065,6 +4065,69 @@ header.site-header .skip-link:focus {
     0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
+/* ---- Compact corner caption ----
+   The text and pills sit small in the bottom-left corner so the photo
+   carries the card. Home page week cards only: the schedule's game cards
+   share these classes. Sizes follow the card width (cqi) with floors so the
+   narrowest column stays readable. */
+.week-grid .week-card .wc-info {
+  right: auto;
+  max-width: 82%;
+  padding: 0 12px 12px 14px;
+}
+
+.week-grid .week-card .wc-kick {
+  margin-left: -8px;
+  margin-bottom: 3px;
+  padding: 1px 16px 1px 8px;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  background-size: 100% 2px, auto;
+}
+
+.week-grid .week-card .wc-opp {
+  margin-top: 0;
+  font-size: clamp(0.95rem, 6.5cqi, 1.15rem);
+  line-height: 1.05;
+}
+
+.week-grid .week-card .wc-score {
+  gap: 5px;
+  margin-top: 6px;
+  padding: 3px 10px 3px 8px;
+  font-size: clamp(0.95rem, 6.5cqi, 1.2rem);
+  border-radius: 3px;
+}
+
+.week-grid .week-card .wc-score .dash {
+  width: 8px;
+  height: 3px;
+}
+
+.week-grid .week-card .wc-score .res {
+  margin-left: 3px;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+}
+
+.week-grid .week-card .wc-meta {
+  margin-top: 6px;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+}
+
+/* Less text, so the dark fade behind it only needs the bottom of the card. */
+.week-grid .week-card .wc-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 16, 30, 0) 52%,
+    rgba(8, 16, 30, 0.45) 70%,
+    rgba(8, 16, 30, 0.85) 88%,
+    rgba(8, 16, 30, 0.95) 100%
+  );
+}
+
 /* ===================================================================
    Text treatments: heading fill, labels, links, button and nav text.
    Text only. Nothing here changes a card container (surface, border,
