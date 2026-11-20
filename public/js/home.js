@@ -147,7 +147,38 @@ function isHeroWeek(week) {
   return week.status === "live" || (week.status === "coming-soon" && Boolean(week.result));
 }
 
-function renderHero(week, record = "") {
+// The caption in a card's bottom-left corner: AT/VS chip, opponent, score
+// pill, then week, date and photo count. The home hero uses the same one.
+function cardCaption(week) {
+  const info = el("div", "wc-info");
+  if (week.opponent) info.appendChild(el("span", "wc-kick", week.homeAway === "Away" ? "At" : "Vs"));
+  const title = el("h3", "wc-opp");
+  title.appendChild(el("span", "", week.opponent || labelWithoutDate(week.label)));
+  info.appendChild(title);
+
+  if (week.result) {
+    const score = el("div", "wc-score");
+    score.setAttribute("aria-label", `${{ W: "Win", L: "Loss", T: "Tie" }[week.result] || week.result} ${week.pointsFor} to ${week.pointsAgainst}`);
+    score.append(
+      el("b", "us", String(week.pointsFor)),
+      el("i", "dash"),
+      el("b", "them", String(week.pointsAgainst)),
+      el("span", "res", { W: "Win", L: "Loss", T: "Tie" }[week.result] || week.result)
+    );
+    info.appendChild(score);
+  }
+
+  const count = week.status === "no-photos" ? "No photos" : `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
+  // Two lines so a long occasion ("Senior Night", "Homecoming") never pushes
+  // the photo count onto a line that starts with a stray dot.
+  const meta = el("div", "wc-meta");
+  meta.appendChild(el("span", "", [cardEyebrow(week), week.opponent ? week.notes : null].filter(Boolean).join(" · ")));
+  meta.appendChild(el("span", "wc-count", [count, week.moreToCome ? "More coming" : null].filter(Boolean).join(" · ")));
+  info.appendChild(meta);
+  return info;
+}
+
+function renderHero(week) {
   const photosUp = week.status === "live";
   heroEl.href = weekUrl(week.year, week.week);
   heroEl.setAttribute(
@@ -184,40 +215,12 @@ function renderHero(week, record = "") {
     heroEl.appendChild(g);
   }
 
-  const body = el("div", "home-hero-body");
-  // Week, date and occasion.
-  body.appendChild(el("p", "home-hero-eyebrow", [cardEyebrow(week), week.notes].filter(Boolean).join(" · ")));
-
-  if (week.result && week.opponent) {
-    const score = el("p", "home-hero-score");
-    const ours = Number(week.pointsFor);
-    const theirs = Number(week.pointsAgainst);
-    // Each team is one unbreakable unit, so a narrow screen stacks them
-    // "Seckman 26" over "Ritenour 0" rather than splitting a name from its score.
-    const team = (name, points, lead) => {
-      const span = el("span", "home-hero-team", `${name} `);
-      span.appendChild(el("span", `home-hero-points${lead ? " lead" : ""}`, String(points)));
-      return span;
-    };
-    score.append(
-      team("Seckman", ours, ours > theirs),
-      el("span", "home-hero-sep", " · "),
-      team(week.opponent, theirs, theirs > ours)
-    );
-    body.appendChild(score);
-  } else {
-    body.appendChild(el("p", "home-hero-score", cardTitle(week)));
-  }
-
-  const actions = el("div", "home-hero-actions");
-  actions.appendChild(
-    photosUp
-      ? el("span", "btn btn-gold", `See all ${week.photoCount} photos`)
-      : photosCountdown(week.photosAt)
-  );
-  if (record) actions.appendChild(el("span", "home-hero-record", `${record} this season`));
-  body.appendChild(actions);
-  heroEl.appendChild(body);
+  // Same caption as the cards below, in the same corner. Before the photos
+  // are posted, the countdown to them follows it.
+  heroEl.classList.add({ W: "win", L: "loss", T: "tie" }[week.result] || "plain");
+  const caption = cardCaption(week);
+  if (!photosUp) caption.appendChild(photosCountdown(week.photosAt));
+  heroEl.appendChild(caption);
   heroEl.classList.add("ready");
 }
 
@@ -290,32 +293,7 @@ function renderCard(week, i) {
     card.appendChild(g);
   }
 
-  const info = el("div", "wc-info");
-  if (week.opponent) info.appendChild(el("span", "wc-kick", week.homeAway === "Away" ? "At" : "Vs"));
-  const title = el("h3", "wc-opp");
-  title.appendChild(el("span", "", week.opponent || labelWithoutDate(week.label)));
-  info.appendChild(title);
-
-  if (week.result) {
-    const score = el("div", "wc-score");
-    score.setAttribute("aria-label", `${{ W: "Win", L: "Loss", T: "Tie" }[week.result] || week.result} ${week.pointsFor} to ${week.pointsAgainst}`);
-    score.append(
-      el("b", "us", String(week.pointsFor)),
-      el("i", "dash"),
-      el("b", "them", String(week.pointsAgainst)),
-      el("span", "res", { W: "Win", L: "Loss", T: "Tie" }[week.result] || week.result)
-    );
-    info.appendChild(score);
-  }
-
-  const count = week.status === "no-photos" ? "No photos" : `${week.photoCount} photo${week.photoCount === 1 ? "" : "s"}`;
-  // Two lines so a long occasion ("Senior Night", "Homecoming") never pushes
-  // the photo count onto a line that starts with a stray dot.
-  const meta = el("div", "wc-meta");
-  meta.appendChild(el("span", "", [cardEyebrow(week), week.opponent ? week.notes : null].filter(Boolean).join(" · ")));
-  meta.appendChild(el("span", "wc-count", [count, week.moreToCome ? "More coming" : null].filter(Boolean).join(" · ")));
-  info.appendChild(meta);
-  card.appendChild(info);
+  card.appendChild(cardCaption(week));
 
   cell.appendChild(card);
   return cell;
@@ -370,7 +348,7 @@ async function init() {
 
     const latestYear = latest && data.years.find((y) => y.weeks.includes(latest));
     const heroShown = Boolean(latest);
-    if (latest) renderHero(latest, seasonRecord(latestYear.weeks));
+    if (latest) renderHero(latest);
     else heroEl.remove();
 
     if (nextUp) renderNextUp(nextUp);

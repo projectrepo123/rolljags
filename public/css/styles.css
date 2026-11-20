@@ -3723,12 +3723,12 @@ header.site-header .skip-link:focus {
   text-transform: uppercase;
 }
 
-:is(.week-card, .game-card).win .wc-score .us,
-:is(.week-card, .game-card).win .wc-score .res {
+:is(.week-card, .game-card, .home-hero).win .wc-score .us,
+:is(.week-card, .game-card, .home-hero).win .wc-score .res {
   color: var(--gold);
 }
 
-:is(.week-card, .game-card).win .wc-score .them {
+:is(.week-card, .game-card, .home-hero).win .wc-score .them {
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -3848,17 +3848,17 @@ header.site-header .skip-link:focus {
   transform: skewX(9deg);
 }
 
-:is(.week-card, .game-card).win .wc-score {
+:is(.week-card, .game-card, .home-hero).win .wc-score {
   background: var(--gold);
   color: var(--navy-950);
 }
 
-:is(.week-card, .game-card).win .wc-score .us,
-:is(.week-card, .game-card).win .wc-score .res {
+:is(.week-card, .game-card, .home-hero).win .wc-score .us,
+:is(.week-card, .game-card, .home-hero).win .wc-score .res {
   color: var(--navy-950);
 }
 
-:is(.week-card, .game-card).win .wc-score .them {
+:is(.week-card, .game-card, .home-hero).win .wc-score .them {
   color: var(--navy-950);
   opacity: 0.72;
 }
@@ -3890,14 +3890,14 @@ header.site-header .skip-link:focus {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -2px 0 rgba(0, 0, 0, 0.25), 0 3px 8px rgba(0, 0, 0, 0.35);
 }
 
-:is(.week-card, .game-card).win .wc-score {
+:is(.week-card, .game-card, .home-hero).win .wc-score {
   background: linear-gradient(180deg, #ffe58a 0%, #ffc72c 48%, #d99a00 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(120, 78, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* A narrow band of light that sweeps across the gold slab every few seconds,
    and again, faster, when the card is hovered. */
-:is(.week-card, .game-card).win .wc-score::after {
+:is(.week-card, .game-card, .home-hero).win .wc-score::after {
   content: "";
   position: absolute;
   top: 0;
@@ -3911,7 +3911,7 @@ header.site-header .skip-link:focus {
 }
 
 @media (hover: hover) {
-  :is(.week-card, .game-card).win:hover .wc-score::after {
+  :is(.week-card, .game-card, .home-hero).win:hover .wc-score::after {
     animation-duration: 1.4s;
     animation-delay: 0s;
   }
@@ -3928,7 +3928,7 @@ header.site-header .skip-link:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :is(.week-card, .game-card).win .wc-score::after {
+  :is(.week-card, .game-card, .home-hero).win .wc-score::after {
     animation: none;
     display: none;
   }
@@ -4008,11 +4008,12 @@ header.site-header .skip-link:focus {
 /* AT/VS chip: translucent glass feathered at both ends, with the gold rule
    fading in from above and running out with the chip. The extra right padding
    is what the fade eats, so the letters stay fully solid. */
-.week-grid .week-card {
+.week-grid .week-card,
+.home-hero {
   container-type: inline-size;
 }
 
-.week-card .wc-kick {
+:is(.week-card, .home-hero) .wc-kick {
   /* The negative margin hangs the chip's padding left of the text column, so
      the letters line up with the opponent name below. */
   margin-left: -10px;
@@ -4045,7 +4046,7 @@ header.site-header .skip-link:focus {
 /* Score slab: eased corners, feathered bevels, and a tight halo that blurs the
    edge against the photo. The numbers stay sharp. Sized off the card so a
    wide score still fits the narrowest grid column. */
-.week-card .wc-score {
+:is(.week-card, .home-hero) .wc-score {
   font-size: 2.2rem;
   font-size: clamp(1.45rem, 11.5cqi, 2.2rem);
   border-radius: 4px;
@@ -4056,7 +4057,7 @@ header.site-header .skip-link:focus {
     0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
-.week-card.win .wc-score {
+:is(.week-card, .home-hero).win .wc-score {
   box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.6),
     inset 0 -6px 8px -6px rgba(120, 78, 0, 0.55),
@@ -4070,13 +4071,13 @@ header.site-header .skip-link:focus {
    carries the card. Home page week cards only: the schedule's game cards
    share these classes. Sizes follow the card width (cqi) with floors so the
    narrowest column stays readable. */
-.week-grid .week-card .wc-info {
+:is(.week-grid .week-card, .home-hero) .wc-info {
   right: auto;
   max-width: 82%;
   padding: 0 12px 12px 14px;
 }
 
-.week-grid .week-card .wc-kick {
+:is(.week-grid .week-card, .home-hero) .wc-kick {
   margin-left: -8px;
   margin-bottom: 3px;
   padding: 1px 16px 1px 8px;
@@ -4085,13 +4086,13 @@ header.site-header .skip-link:focus {
   background-size: 100% 2px, auto;
 }
 
-.week-grid .week-card .wc-opp {
+:is(.week-grid .week-card, .home-hero) .wc-opp {
   margin-top: 0;
   font-size: clamp(0.95rem, 6.5cqi, 1.15rem);
   line-height: 1.05;
 }
 
-.week-grid .week-card .wc-score {
+:is(.week-grid .week-card, .home-hero) .wc-score {
   gap: 5px;
   margin-top: 6px;
   padding: 3px 10px 3px 8px;
@@ -4099,18 +4100,18 @@ header.site-header .skip-link:focus {
   border-radius: 3px;
 }
 
-.week-grid .week-card .wc-score .dash {
+:is(.week-grid .week-card, .home-hero) .wc-score .dash {
   width: 8px;
   height: 3px;
 }
 
-.week-grid .week-card .wc-score .res {
+:is(.week-grid .week-card, .home-hero) .wc-score .res {
   margin-left: 3px;
   font-size: 0.55rem;
   letter-spacing: 0.14em;
 }
 
-.week-grid .week-card .wc-meta {
+:is(.week-grid .week-card, .home-hero) .wc-meta {
   margin-top: 6px;
   font-size: 0.6rem;
   letter-spacing: 0.06em;
@@ -4118,7 +4119,8 @@ header.site-header .skip-link:focus {
 }
 
 /* Less text, so the dark fade behind it only needs the bottom of the card. */
-.week-grid .week-card .wc-shade {
+.week-grid .week-card .wc-shade,
+.home-hero::after {
   background: linear-gradient(
     180deg,
     rgba(8, 16, 30, 0) 52%,
