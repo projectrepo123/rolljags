@@ -4076,10 +4076,15 @@ header.site-header .skip-link:focus {
   mask-image: linear-gradient(90deg, transparent 0, #000 7px, #000 calc(100% - 24px), transparent 100%);
 }
 
-/* Left edge bar: bright at the card edge, dissolving into the photo. */
+/* No edge bar: the photo itself fades out toward the left edge, into the
+   card's navy, so the white type there stays readable in either theme. */
 .week-grid .week-card::before {
-  width: 13px;
-  background: linear-gradient(90deg, #ffd65a 0%, var(--gold) 34%, rgba(255, 199, 44, 0.42) 62%, rgba(255, 199, 44, 0) 100%);
+  display: none;
+}
+
+.week-card .wc-media .cover {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.35) 7%, rgba(0, 0, 0, 0.8) 18%, #000 30%);
+  mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.35) 7%, rgba(0, 0, 0, 0.8) 18%, #000 30%);
 }
 
 /* Week number: small and tucked into the top corner, clear of the players.

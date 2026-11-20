@@ -136,7 +136,7 @@ async function handle(request, env, ctx) {
 
       // GET /api/photo?key=<original photo key>
       if (parts[1] === "photo" && parts.length === 2) {
-        return handlePhoto(env, url.searchParams.get("key"));
+        return handlePhoto(env, url.searchParams.get("key"), request, ctx);
       }
 
       // GET /api/week/:year/:week
