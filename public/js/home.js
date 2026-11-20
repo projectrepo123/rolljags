@@ -177,7 +177,6 @@ function renderHero(week, record = "") {
     heroEl.appendChild(img);
   }
 
-  heroEl.appendChild(el("span", "home-tag", "Latest"));
   const ghost = weekNumber(week);
   if (ghost) {
     const g = el("span", "home-hero-ghost", ghost);
@@ -186,7 +185,7 @@ function renderHero(week, record = "") {
   }
 
   const body = el("div", "home-hero-body");
-  // Week, date and occasion. The "Latest" tag sits on the photo's corner.
+  // Week, date and occasion.
   body.appendChild(el("p", "home-hero-eyebrow", [cardEyebrow(week), week.notes].filter(Boolean).join(" · ")));
 
   if (week.result && week.opponent) {

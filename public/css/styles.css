@@ -3523,7 +3523,6 @@ header.site-header .skip-link:focus {
   background: var(--navy-dark);
   box-shadow: none;
   color: #fff;
-  clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 0 100%);
 }
 
 @media (hover: hover) {
@@ -3747,7 +3746,6 @@ header.site-header .skip-link:focus {
   aspect-ratio: 4 / 5;
   border: 0;
   border-radius: 0;
-  clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 0 100%);
 }
 
 #weeks .skeleton-cover {
@@ -3800,41 +3798,6 @@ header.site-header .skip-link:focus {
 .home-hero {
   border-radius: 0;
   box-shadow: none;
-  clip-path: polygon(0 0, calc(100% - 44px) 0, 100% 44px, 100% 100%, 0 100%);
-}
-
-.home-hero::before {
-  content: "";
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  background: var(--gold);
-}
-
-.home-hero-body {
-  padding-left: calc(var(--space-5) + 10px);
-}
-
-.home-tag {
-  position: absolute;
-  z-index: 4;
-  top: 18px;
-  left: 10px;
-  padding: 5px 26px 5px 16px;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
-  background: linear-gradient(180deg, #ffe58a 0%, #ffc72c 48%, #d99a00 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(120, 78, 0, 0.45);
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
-  color: var(--navy-950);
-  font-family: var(--font-display);
-  font-size: var(--step--1);
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 .home-hero-ghost {
@@ -3844,18 +3807,6 @@ header.site-header .skip-link:focus {
 }
 
 @media (max-width: 600px) {
-  .home-hero {
-    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
-  }
-
-  .home-hero-body {
-    padding-left: calc(var(--space-4) + 8px);
-  }
-
-  .home-hero::before {
-    width: 8px;
-  }
-
   .home-hero-ghost {
     right: 18px;
     top: 56px;
@@ -4076,15 +4027,9 @@ header.site-header .skip-link:focus {
   mask-image: linear-gradient(90deg, transparent 0, #000 7px, #000 calc(100% - 24px), transparent 100%);
 }
 
-/* No edge bar: the photo itself fades out toward the left edge, into the
-   card's navy, so the white type there stays readable in either theme. */
+/* No edge bar: the photo runs edge to edge. */
 .week-grid .week-card::before {
   display: none;
-}
-
-.week-card .wc-media .cover {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.35) 7%, rgba(0, 0, 0, 0.8) 18%, #000 30%);
-  mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.35) 7%, rgba(0, 0, 0, 0.8) 18%, #000 30%);
 }
 
 /* Week number: small and tucked into the top corner, clear of the players.
