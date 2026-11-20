@@ -121,6 +121,13 @@ async function init() {
   }
 
   numberEl.textContent = String(player.number);
+
+  if (player.allConference) {
+    const { team, pos } = player.allConference;
+    const tag = el("a", "honor-tag honor-tag-lg", `${roster.year} All-Conference · ${team === 1 ? "1st" : "2nd"} Team ${pos}`);
+    tag.href = "/roster#roster-honors";
+    document.getElementById("player-title").after(tag);
+  }
   statusEl.innerHTML = '<p class="sr-only" role="status">Loading records</p>';
 
   try {

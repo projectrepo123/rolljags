@@ -5,7 +5,11 @@
       "number": 1,
       "name": "Nick Weidler",
       "pos": "WR",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 1,
+        "pos": "WR"
+      }
     },
     {
       "number": 2,
@@ -17,7 +21,11 @@
       "number": 3,
       "name": "JJ Jablonski",
       "pos": "RB",
-      "class": "Jr."
+      "class": "Jr.",
+      "allConference": {
+        "team": 2,
+        "pos": "RB"
+      }
     },
     {
       "number": 4,
@@ -35,19 +43,31 @@
       "number": 7,
       "name": "Chase Borawski",
       "pos": "LB",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 1,
+        "pos": "LB"
+      }
     },
     {
       "number": 8,
       "name": "Jackson Rutledge",
       "pos": "DB",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 1,
+        "pos": "DB"
+      }
     },
     {
       "number": 9,
       "name": "Ryan Woods",
       "pos": "DE",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 1,
+        "pos": "DL"
+      }
     },
     {
       "number": 10,
@@ -59,13 +79,21 @@
       "number": 11,
       "name": "Brody Mosello",
       "pos": "LB",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 2,
+        "pos": "LB"
+      }
     },
     {
       "number": 12,
       "name": "Brody Kube",
       "pos": "QB",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 2,
+        "pos": "Athlete"
+      }
     },
     {
       "number": 13,
@@ -137,7 +165,11 @@
       "number": 26,
       "name": "Boyer Hart",
       "pos": "DB",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 2,
+        "pos": "DB"
+      }
     },
     {
       "number": 28,
@@ -251,7 +283,11 @@
       "number": 58,
       "name": "Henry Watson",
       "pos": "OL",
-      "class": "Sr."
+      "class": "Sr.",
+      "allConference": {
+        "team": 2,
+        "pos": "OL"
+      }
     },
     {
       "number": 60,
@@ -269,7 +305,11 @@
       "number": 64,
       "name": "Mason Zeller",
       "pos": "OL",
-      "class": "Jr."
+      "class": "Jr.",
+      "allConference": {
+        "team": 1,
+        "pos": "OL"
+      }
     },
     {
       "number": 66,
@@ -341,7 +381,11 @@
       "number": 92,
       "name": "Matt Muessig",
       "pos": "DL",
-      "class": "Jr."
+      "class": "Jr.",
+      "allConference": {
+        "team": 2,
+        "pos": "DL"
+      }
     },
     {
       "number": 95,

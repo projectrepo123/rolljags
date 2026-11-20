@@ -54,6 +54,7 @@ function readPlayers() {
     name: tr.querySelector(".roster-name").textContent.trim(),
     pos: tr.dataset.pos,
     cls: tr.dataset.class,
+    honor: tr.dataset.honor,
   }));
 }
 
@@ -68,7 +69,9 @@ function row(player) {
   const name = el("span", "rr-name", player.name);
   // The number is visible in the badge; screen readers get it with the name.
   name.setAttribute("aria-label", `#${player.number} ${player.name}`);
-  text.append(name, el("span", "rr-meta", `${player.pos} · ${player.cls}`));
+  const meta = el("span", "rr-meta", `${player.pos} · ${player.cls}`);
+  if (player.honor) meta.appendChild(el("span", "honor-tag", player.honor));
+  text.append(name, meta);
   link.append(num, text);
   li.appendChild(link);
   return li;
